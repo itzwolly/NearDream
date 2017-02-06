@@ -1,0 +1,5 @@
+C:\Users\jeyhun\Documents\project-2d-physics\sourcefiles\GXPEngine\bin\Debug\GXPEngine.exe
+C:\Users\jeyhun\Documents\project-2d-physics\sourcefiles\GXPEngine\bin\Debug\GXPEngine.pdb
+C:\Users\jeyhun\Documents\project-2d-physics\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.csprojResolveAssemblyReference.cache
+C:\Users\jeyhun\Documents\project-2d-physics\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.exe
+C:\Users\jeyhun\Documents\project-2d-physics\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.pdb
