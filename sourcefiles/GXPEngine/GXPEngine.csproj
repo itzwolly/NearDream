@@ -35,9 +35,9 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arrow.cs" />
+    <Compile Include="Components\Arrow.cs" />
     <Compile Include="Ball.cs" />
-    <Compile Include="DragHandler.cs" />
+    <Compile Include="Components\DragHandler.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
     <Compile Include="GXPEngine\GameObject.cs" />
@@ -65,16 +65,14 @@
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="LineSegment.cs" />
+    <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
-    <Compile Include="NLineSegment.cs" />
+    <Compile Include="Components\NLineSegment.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="test.cs" />
-    <Compile Include="TextField.cs" />
+    <Compile Include="Components\test.cs" />
+    <Compile Include="Components\TextField.cs" />
     <Compile Include="Unmovable.cs" />
     <Compile Include="Vec2.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

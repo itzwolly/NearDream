@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-    class Unmovable
+    class Unmovable:Sprite
     {
+        public Unmovable() : base("assets\\sprites\\colors.png")
+        { }
     }
 
