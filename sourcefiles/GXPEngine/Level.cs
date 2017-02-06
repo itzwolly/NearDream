@@ -10,6 +10,7 @@ class Level:GameObject
 {
     const int SPEED = 10;
     const int DIVIDER = 20;
+    const int GRAVITY = 15;
     private Vec2 _gravity = new Vec2(0, 1);
     public enum direction
     {
@@ -67,7 +68,8 @@ class Level:GameObject
             _player.position.x -= 10;
         if (Input.GetKeyDown(Key.SPACE))
         {
-            
+            _player.position.y--;
+            _player.velocity.y = -GRAVITY;
         }
         if (Input.GetMouseButton(0))
         {
@@ -76,29 +78,39 @@ class Level:GameObject
             _ball.velocity.x = (Input.mouseX - _player.x)/DIVIDER;
             _ball.velocity.y = (Input.mouseY - _player.y)/DIVIDER;
         }
-        //if (Input.GetKey(Key.S))
-        //    _player.y += 10;
-        //if (Input.GetKey(Key.W))
-        //    _player.y -= 10;
 
-
+        _ball.velocity.y += 0.5f;
         _ball.Step();
 
-        CheckPlayerCollision(_player, ref collision);
+        CheckPlayerCollision(_player, ref collision); 
 
         if (collision.dir != direction.none)
         {
             if (collision.dir == direction.above)
+            {
                 _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
+                _player.velocity = Vec2.zero;
+            }
             if (collision.dir == direction.below)
+            {
                 _player.position.y = collision.obj.y + collision.obj.height / 2 + _player.height / 2;
-
+                _player.velocity = Vec2.zero;
+            }
             if (collision.dir == direction.right)
-                _player.position.x = collision.obj.x + collision.obj.width / 2 + _player.width / 2 + 1;
+            {
+                _player.position.x = collision.obj.x + collision.obj.width / 2 + _player.width / 2;
+                _player.velocity = Vec2.zero;
+            }
             if (collision.dir == direction.left)
-                _player.position.x = collision.obj.x - collision.obj.width / 2 - _player.width / 2 - 1;
+            {
+                _player.position.x = collision.obj.x - collision.obj.width / 2 - _player.width / 2;
+                _player.velocity = Vec2.zero;
+            }
         }
-        else _player.position.y += _gravity.y*SPEED;
+        else if(collision.obj==null)
+        {
+            _player.velocity.y += _gravity.y;
+        }
 
         _player.Step();
        

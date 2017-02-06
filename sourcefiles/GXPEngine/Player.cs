@@ -19,6 +19,8 @@ class Player:Sprite
 
     public void Step()
     {
+        if (velocity.y > 19)
+            velocity.y = 19;
         position.Add(velocity);
         x = position.x;
         y = position.y;

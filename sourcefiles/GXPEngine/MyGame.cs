@@ -6,7 +6,7 @@ public class MyGame : Game //MyGame is a Game
 {
     Level level;
 	//initialize game here
-	public MyGame () : base(1900, 1000, false,false)
+	public MyGame () : base(800, 600, false,false)
 	{
         targetFps=60;
         level = new Level();
