@@ -5,7 +5,12 @@ using System.Text;
 using GXPEngine;
 
 
-    class Level
+    class Level:GameObject
     {
+    private List<Unmovable> _colidables;
+        public Level()
+        {
+            _colidables = new List<Unmovable>();
+        }
     }
 

@@ -47,7 +47,7 @@ namespace GXPEngine
 			Vec2 endPoint = _startPoint.Clone().Add (_vector.Clone().Scale (scale));
 			LineSegment.RenderLine (_startPoint, endPoint, color, lineWidth, true);
 
-			Vec2 smallVec = endPoint.Clone().Sub(_startPoint).Normalize ().Scale (-10);
+			Vec2 smallVec = endPoint.Clone().Subtract(_startPoint).Normalize ().Scale (-10);
 			Vec2 left = new Vec2 (-smallVec.y, smallVec.x);
 			Vec2 right = new Vec2 (smallVec.y, -smallVec.x);
 			left.Add (smallVec).Add (endPoint);

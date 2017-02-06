@@ -11,6 +11,9 @@ namespace GXPEngine
 	{
 		public Vec2 start;
 		public Vec2 end;
+		public Vec2 lineOnOriginNormalized;
+
+		public float lineLenght;
 
 		public uint color = 0xffffffff;
 		public uint lineWidth = 1;
@@ -30,6 +33,7 @@ namespace GXPEngine
 			color = pColor;
 			lineWidth = pLineWidth;
 			useGlobalCoords = pGlobalCoords;
+
 		}
 	
 		//------------------------------------------------------------------------------------------------------------------------
@@ -38,6 +42,7 @@ namespace GXPEngine
 		override protected void RenderSelf(GLContext glContext) {
 			if (game != null && start != null && end != null) {
 				RenderLine (start, end, color, lineWidth);
+				//Console.WriteLine(lineOnOriginNormalized);
 			}
 		}
 
