@@ -178,7 +178,8 @@ namespace GXPEngine
 
 		public void Reflect(Vec2 other,float elasticity)
 		{
-			this.Subtract(other.Normal().Clone().Scale( 2*this.Dot(other.Normal().Clone())*elasticity));
+			this.Subtract(other.Normal().Clone().Scale( 2*this.Dot(other.Normal().Clone())));
+            this.Scale(elasticity);
 		}
 
 		public float Dot(Vec2 pOther)
