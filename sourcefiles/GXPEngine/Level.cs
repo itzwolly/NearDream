@@ -271,18 +271,7 @@ public class Level:GameObject
         PlayerCamera();
         //Console.WriteLine(_ball.velocity.Length());
 
-        if (Input.GetKey(Key.D))
-            _player.position.x += SPEED / 2;
-        if (Input.GetKey(Key.A))
-            _player.position.x -= SPEED / 2;
-        if (Input.GetKeyDown(Key.R))
-        {
-            _ball.position.x = _player.x;
-            _ball.position.y = _player.y;
-            _ball.velocity = Vec2.zero;
-            _ball.OnPlayer = true;
-            _ball.Step();
-        }
+      
 
         if (Input.GetKeyDown(Key.SPACE))
         {
