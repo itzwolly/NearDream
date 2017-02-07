@@ -74,6 +74,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
+    <Compile Include="Stone.cs" />
     <Compile Include="Unmovable.cs" />
     <Compile Include="Utils\Pausable.cs" />
     <Compile Include="Utils\TMXParser.cs" />
