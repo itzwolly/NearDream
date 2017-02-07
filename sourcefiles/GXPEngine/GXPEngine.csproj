@@ -72,6 +72,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
+    <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="Unmovable.cs" />
     <Compile Include="Vec2.cs" />

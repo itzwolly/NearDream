@@ -38,7 +38,7 @@ class Level:GameObject
     private Vec2 _intersection;
     private LineSegment _ballToLine;
     private LineSegment _line;
-    //private float _distance;
+    private float _distance;
 
 
     public Level()
@@ -58,7 +58,7 @@ class Level:GameObject
 
     private void CreateLevel()
     {
-        _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
+        _ball = new Ball(25, new Vec2(673, 469 /*game.width / 2, game.height / 2*/), null, Color.Red);
         AddChild(_ball);
         _ball.velocity = Vec2.zero;
         _ballToLine = new LineSegment(null, null);
@@ -82,15 +82,26 @@ class Level:GameObject
         AddChild(_line);
         _lines.Add(_line);
 
+        //_ball.velocity = new Vec2(1, 1);
+        //_ball.UpdateNextPosition();
+
         _line = new NLineSegment(new Vec2(700, 200), new Vec2(700, 500), 0xffffff00, 4);
         AddChild(_line);
         _lines.Add(_line);
+
+        //_intersection = CheckIntersection(_line.start.Clone(), _line.end.Clone(), _ball.position, _ball.nextPosition, _line.lineOnOriginNormalized.Normal().Scale(_ball.radius+_line.lineWidth/2));//try on border
+        //ActualBounce(_ball, _line);
+        //Console.WriteLine(_intersection +"||"+_distance);
+
+        //  Destroy();
+        //  return;
+
 
         _line = new NLineSegment(new Vec2(0, 0), new Vec2(game.width, 0), 0xffffffff, 4);
         AddChild(_line);
         _lines.Add(_line);
 
-        _line = new NLineSegment(new Vec2(200,400),new Vec2(700,500),0xffffffff,4);
+        _line = new NLineSegment(new Vec2(200, 400), new Vec2(700, 500), 0xffffffff, 4);
         AddChild(_line);
         _lines.Add(_line);
 
@@ -164,14 +175,16 @@ class Level:GameObject
                 stone.velocity.Add(_gravity);
                 stone.Step();
             }
-            if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius)
+            if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
                 stone.velocity = new Vec2(1, 0).Scale(_ball.velocity.Length());
                 //stone.Step();
+                _ball.velocity = Vec2.zero;
                 _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 stone.active = true;
+                stone.hitPlayer = true;
             }
 
             for(int j=0;j<_stones.Count;j++)
@@ -181,7 +194,7 @@ class Level:GameObject
                 {
                     stone2.active = true;
                     stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
-                    stone.velocity.Scale(0.5f);
+                    stone.velocity.Scale(0.0f);
                     stone2.Step();
                 }
             }
@@ -397,7 +410,7 @@ class Level:GameObject
         //Console.WriteLine(ua+"||"+ub);
         Vec2 _tempIntersect = new Vec2(v1.x + ua * (v2.x - v1.x), v1.y + ua * (v2.y - v1.y));
         if (Mathf.Abs(ub) < 1 && Inside(v1, v2, _tempIntersect))
-            return _tempIntersect;
+            return _tempIntersect;//.Add(addition.Normalize());
         else
         {
             ua = ((v4.x - v3.x) * (v1Back.y - v3.y) - (v4.y - v3.y) * (v1Back.x - v3.x)) / ((v4.y - v3.y) * (v2Back.x - v1Back.x) - (v4.x - v3.x) * (v2Back.y - v1Back.y));
@@ -405,7 +418,7 @@ class Level:GameObject
             //Console.WriteLine(ua+"||"+ub);
             _tempIntersect = new Vec2(v1Back.x + ua * (v2Back.x - v1Back.x), v1Back.y + ua * (v2Back.y - v1Back.y));
             if (Mathf.Abs(ub) < 1 && Inside(v1Back, v2Back, _tempIntersect))
-                return _tempIntersect;
+                return _tempIntersect;//.Subtract(addition.Normalize());
             else return Vec2.zero;
         }
     }
@@ -413,8 +426,8 @@ class Level:GameObject
     void ActualBounce(Ball ball, LineSegment line)
     {
         _ballToLineStart = _ball.position.Clone().Subtract(line.start);
-        //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
-        _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius));//try on border
+        _distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
+        _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
         float _distanceToStart = line.start.DistanceTo(ball.position);
         float _distanceToEnd = line.end.DistanceTo(ball.position);
 
@@ -422,24 +435,29 @@ class Level:GameObject
         if (_intersection.y != 0)
         {
             ball.position = _intersection;
+            ball.UpdateNextPosition();
             //ball.velocity = Vec2.zero;
             ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
             ball.UptadeInfo();
             ball.Step();
         }
-        else if (_distanceToStart <= ball.radius)
+        //else
+        //{
+        //    if (line.start.y == 200) Console.WriteLine(ball.position); //here
+        //}
+        else if (_distanceToStart < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius-_distanceToStart));
+            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius - _distanceToStart));
             ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
             ball.Step();
         }
-        else if (_distanceToEnd <= ball.radius)
+        else if (_distanceToEnd < ball.radius)
         {
             ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius - _distanceToEnd));
             ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
             ball.Step();
         }
-        
+
     }
 }
 
