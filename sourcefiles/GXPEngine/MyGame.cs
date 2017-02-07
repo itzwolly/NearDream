@@ -16,8 +16,11 @@ public class MyGame : Game //MyGame is a Game
     //update game here
     void Update ()
 	{
-		//empty
-	}
+        if (Input.GetKeyDown(Key.H))
+            targetFps = 1;
+        if (Input.GetKeyDown(Key.J))
+            targetFps = 60;
+    }
 	
 	//system starts here
 	static void Main() 

@@ -8,13 +8,14 @@ namespace GXPEngine
 		public Vec2 position;
 		public Vec2 velocity;
 		public Vec2 nextPosition;
-
+        public bool OnPlayer;
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;
 
 		public Ball (int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null):base (pRadius*2, pRadius*2)
 		{
+            OnPlayer = true;
 			radius = pRadius;
 			SetOrigin (radius, radius);
 			position = pPosition ?? Vec2.zero;
