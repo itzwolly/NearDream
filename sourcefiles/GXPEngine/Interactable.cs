@@ -7,7 +7,7 @@ using GXPEngine;
 class Interactable:Sprite
 {
     private String _type;
-
+    
     public Interactable(String pType):base("assets\\sprites\\checkers.png")
     {
         _type = pType;
