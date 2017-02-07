@@ -68,6 +68,7 @@
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Components\NLineSegment.cs" />
+    <Compile Include="Interactable.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />

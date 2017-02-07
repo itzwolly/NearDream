@@ -9,7 +9,6 @@ using GXPEngine;
 class Level:GameObject
 {
     const int SPEED = 10;
-    const int DIVIDER = 20;
     const int GRAVITY = 15;
     const int REPETITIONS=1;
     const float ELASTICITY = 0.9f;
@@ -28,6 +27,7 @@ class Level:GameObject
     private List<Unmovable> _colidables;
     private List<LineSegment> _lines;
     private Player _player;
+    private float _startingBallVelocity;
 
     private CollidedOption collision;
 
@@ -46,14 +46,22 @@ class Level:GameObject
         _lines = new List<LineSegment>();
         _player = new Player(300,300);
         AddChild(_player);
+        _startingBallVelocity = SPEED / 2;
 
+        CreateLevel();
+
+        collision = new CollidedOption();
+    }
+
+    private void CreateLevel()
+    {
         _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
         AddChild(_ball);
         _ball.velocity = Vec2.zero;
         _ballToLine = new LineSegment(null, null);
         AddChild(_ballToLine);
 
-        _line = new NLineSegment(new Vec2(400, 100), new Vec2(700, 100), 0xffffff00, 4);
+        _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
         AddChild(_line);
         _lines.Add(_line);
 
@@ -65,27 +73,22 @@ class Level:GameObject
         AddChild(_line);
         _lines.Add(_line);
 
-        Unmovable wall = new Unmovable(400,400);
+        Unmovable wall = new Unmovable(400, 400);
         AddChild(wall);
         _colidables.Add(wall);
 
         wall = new Unmovable(336, 436);
         AddChild(wall);
         _colidables.Add(wall);
-
-        wall = new Unmovable(260, 436);
-        AddChild(wall);
-        _colidables.Add(wall);
-
-        collision = new CollidedOption();
+        
     }
 
     public void Update()
     {
         if (Input.GetKey(Key.D))
-            _player.position.x += 10;
+            _player.position.x += SPEED/2;
         if (Input.GetKey(Key.A))
-            _player.position.x -= 10;
+            _player.position.x -= SPEED/2;
         if (Input.GetKeyDown(Key.R))
         {
             _ball.position.x = _player.x;
@@ -101,11 +104,17 @@ class Level:GameObject
         }
         if (Input.GetMouseButton(0) && _ball.OnPlayer)
         {
+            _startingBallVelocity+=0.3f;
+        }
+        else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
+        {
             _ball.position.x = _player.x;
             _ball.position.y = _player.y;
-            _ball.velocity.x = (Input.mouseX - _player.x) / DIVIDER;
-            _ball.velocity.y = (Input.mouseY - _player.y) / DIVIDER;
+            _ball.velocity.x = (Input.mouseX - _player.x);
+            _ball.velocity.y = (Input.mouseY - _player.y);
+            _ball.velocity.Normalize().Scale(_startingBallVelocity);
             _ball.OnPlayer = false;
+            _startingBallVelocity = SPEED / 2;
         }
         else if(!_ball.OnPlayer)
         {
@@ -176,7 +185,7 @@ class Level:GameObject
                     return;
                 }
 
-                if (pPlayer.position.x > wall.x + wall.width - 20)// sees if who is on the right of enemy
+                if (pPlayer.position.x > wall.x + wall.width - 20)// sees if who is on the right of enemy5
                 {
                     co.obj = wall;
                     co.dir = direction.right;
