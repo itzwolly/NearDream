@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-class Unmovable:Sprite
+public class Unmovable : GameTile
 {
-    public Unmovable(float pX, float pY) : base("assets\\sprites\\colors.png")
+    //Level pLevel, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow
+    public Unmovable(Level pLevel, string pFileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow) : base(pLevel, pFileName, pTile, pSpriteSheetCol, pSpriteSheetRow)
     {
-    SetOrigin(width / 2, height / 2);
-        x = pX;
-        y = pY;
+        SetOrigin(width / 2, height / 2);
     }
 }
 

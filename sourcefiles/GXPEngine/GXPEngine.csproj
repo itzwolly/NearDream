@@ -33,11 +33,13 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Arrow.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Components\DragHandler.cs" />
+    <Compile Include="GameTile.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
     <Compile Include="GXPEngine\GameObject.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
@@ -74,7 +77,23 @@
     <Compile Include="Components\TextField.cs" />
     <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
+    <Compile Include="Throphy.cs" />
+    <Compile Include="TMX\Data.cs" />
+    <Compile Include="TMX\Ellipse.cs" />
+    <Compile Include="TMX\Image.cs" />
+    <Compile Include="TMX\Layer.cs" />
+    <Compile Include="TMX\Map.cs" />
+    <Compile Include="TMX\ObjectGroup.cs" />
+    <Compile Include="TMX\Polygon.cs" />
+    <Compile Include="TMX\Polyline.cs" />
+    <Compile Include="TMX\Properties.cs" />
+    <Compile Include="TMX\Property.cs" />
+    <Compile Include="TMX\Tile.cs" />
+    <Compile Include="TMX\TiledObject.cs" />
+    <Compile Include="TMX\TileSet.cs" />
     <Compile Include="Unmovable.cs" />
+    <Compile Include="utilisi\Pausable.cs" />
+    <Compile Include="utilisi\TMXParser.cs" />
     <Compile Include="Vec2.cs" />
   </ItemGroup>
   <ItemGroup />
