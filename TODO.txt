@@ -1,0 +1,1 @@
+Shooting breaks when you move : when your mouse is on the right it shoots to the left anyway
