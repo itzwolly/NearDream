@@ -5,13 +5,14 @@ using System.Text;
 using System.Drawing;
 using GXPEngine;
 
+//673,469 position where ball was on verge
 
 public class Level:GameObject
 {
     const int SPEED = 10;
     const int GRAVITY = 15;
     int REPETITIONS=1;
-    const float ELASTICITY = 0.9f;
+    const float ELASTICITY = 0.7f;
     private Vec2 _gravity = new Vec2(0, 1);
 
     private float _yOffset;
