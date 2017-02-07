@@ -14,6 +14,9 @@ public class Level:GameObject
     const float ELASTICITY = 0.9f;
     private Vec2 _gravity = new Vec2(0, 1);
 
+    private float _yOffset;
+    private float _xOffset;
+
     private const string ASSET_FILE_PATH = "assets\\";
 
     private bool _debug;
@@ -243,8 +246,9 @@ public class Level:GameObject
     private void PlayerCamera()
     {
         x = game.width / 2 - _player.x;
+        _xOffset = x;
         y = game.height / 1.25f - _player.y;
-
+        _yOffset = y;
         if (x > 0)
         {
             x = 0;
@@ -270,9 +274,7 @@ public class Level:GameObject
     {
         PlayerCamera();
         //Console.WriteLine(_ball.velocity.Length());
-
-      
-
+        
         if (Input.GetKeyDown(Key.SPACE))
         {
             _debug = true;
@@ -287,13 +289,13 @@ public class Level:GameObject
         {
             _ball.position.x = _player.x;
             _ball.position.y = _player.y;
-            _ball.velocity.x = (Input.mouseX - _player.x);
-            _ball.velocity.y = (Input.mouseY - _player.y);
-            if (_startingBallVelocity > 20)
-                _startingBallVelocity = 20;
+            _ball.velocity.x = (Input.mouseX - _player.x - _xOffset);
+            _ball.velocity.y = (Input.mouseY - _player.y - _yOffset);
+            if (_startingBallVelocity > 30)
+                _startingBallVelocity = 30;
             _ball.velocity.Normalize().Scale(_startingBallVelocity);
             _ball.OnPlayer = false;
-            _startingBallVelocity = SPEED / 2;
+            _startingBallVelocity = SPEED;
         }
         else if(!_ball.OnPlayer)
         {
