@@ -96,7 +96,7 @@ namespace GXPEngine
 		}
 
 		// HELPER FUNCTION TO CREATE SIZED TEXTFIELD
-		private static Image _stub = new Bitmap(1,1);
+		private static Bitmap _stub = new System.Drawing.Bitmap(1,1);
 		private static Graphics _stubGraphics = Graphics.FromImage(_stub);
 		private static Font _font = new Font ("Times New Roman", 16);
 

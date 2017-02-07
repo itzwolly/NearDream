@@ -6,13 +6,16 @@ using System.Drawing;
 using GXPEngine;
 
 
-class Level:GameObject
+public class Level : GameObject
 {
-    const int SPEED = 10;
-    const int GRAVITY = 15;
-    const int REPETITIONS=1;
-    const float ELASTICITY = 0.9f;
+    private const int SPEED = 10;
+    private const int GRAVITY = 15;
+    private const int REPETITIONS=1;
+    private const float ELASTICITY = 0.9f;
     private Vec2 _gravity = new Vec2(0, 1);
+
+    private const string ASSET_FILE_PATH = "assets\\";
+
     public enum direction
     {
         none, middle, left, right,below,above
@@ -24,10 +27,12 @@ class Level:GameObject
         public Sprite obj;
     }
 
-    private List<Unmovable> _colidables;
+    private List<GameTile> _collidables;
     private List<LineSegment> _lines;
     private Player _player;
     private float _startingBallVelocity;
+    private TMXParser _tmxParser = new TMXParser();
+    private Map _map;
 
     private CollidedOption collision;
 
@@ -38,53 +43,110 @@ class Level:GameObject
     private LineSegment _line;
     private float _distance;
 
+    private int _currentLevel;
+    private uint[,] _level;
+    private GameTile _tile;
 
-    public Level()
+    public int CurrentLevel {
+        get { return _currentLevel; }
+        set { _currentLevel = value; }
+    }
+
+    public Level(MyGame pMyGame, int pCurrentLevel)
     {
+        _currentLevel = pCurrentLevel;
+        _map = _tmxParser.ParseFile(ASSET_FILE_PATH +"level_" + _currentLevel + ".tmx");
 
-        _colidables = new List<Unmovable>();
+        _collidables = new List<GameTile>();
         _lines = new List<LineSegment>();
-        _player = new Player(300,300);
+        _player = new Player(200, game.height / 2);
         AddChild(_player);
         _startingBallVelocity = SPEED / 2;
 
         CreateLevel();
-
         collision = new CollidedOption();
     }
 
-    private void CreateLevel()
-    {
+    private void CreateBall() {
         _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
         AddChild(_ball);
         _ball.velocity = Vec2.zero;
         _ballToLine = new LineSegment(null, null);
         AddChild(_ballToLine);
+    }
 
-        _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
-        AddChild(_line);
-        _lines.Add(_line);
+    public void PlayerCamera() {
+        x = game.width / 2 - _player.x;
+        y = game.height / 1.25f - _player.y;
 
-        _line = new NLineSegment(new Vec2(200, 400), new Vec2(200, 0), 0xffffff00, 4);
-        AddChild(_line);
-        _lines.Add(_line);
+        if (x > 0) {
+            x = 0;
+        }
 
-        _line = new NLineSegment(new Vec2(700, 000), new Vec2(700, 500), 0xffffff00, 4);
-        AddChild(_line);
-        _lines.Add(_line);
+        if (y > 0) {
+            y = 0;
+        }
 
-        Unmovable wall = new Unmovable(400, 400);
-        AddChild(wall);
-        _colidables.Add(wall);
+        if (y < -(game.height)) {
+            y = -(game.height);
+        }
 
-        wall = new Unmovable(336, 436);
-        AddChild(wall);
-        _colidables.Add(wall);
+        if (x < -((game.width * 3) - (game.width / 5))) {
+            x = -((game.width * 3) - (game.width / 5));
+        }
+    }
+
+    private void CreateLevel()
+    {
+        CreateBall();
+
+        /* For when we use tiles */
+        foreach (Layer layer in _map.Layer) {
+            layer.Data.SetLevelArray(_map.Height, _map.Width);
+            _level = layer.Data.GetLevelArray();
+            for (int row = 0; row < _level.GetLength(0); row++) {
+                for (int col = 0; col < _level.GetLength(1); col++) {
+                    uint tile = _level[row, col];
+                    CreateTile(row, col, tile);
+                }
+            }
+        }
+
+        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            if (objGroup.Name == "Points") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
+                        _line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
+                        _lines.Add(_line);
+                    }
+                }
+            }
+        }
+
+        foreach (NLineSegment line in _lines) {
+            AddChild(line);
+        }
+    }
+
+    private void CreateTile(int pRow, int pCol, uint pTile) {
+        // It gets the first tileset in order to create the level.
+        // so the designer has to make sure its the first one,
+        // because otherwise every tileset will be created.
+
+        // Unbreakable Wall
+        if (pTile == 1) {
+            _tile = new Unmovable(this, ASSET_FILE_PATH + "\\sprites\\" + _map.TileSet[0].Image.Source, pTile, 1, 1);
+            _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
+            _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
+            _collidables.Add(_tile);
+            AddChild(_tile);
+        }
         
     }
 
     public void Update()
     {
+        PlayerCamera();
         if (Input.GetKey(Key.D))
             _player.position.x += SPEED/2;
         if (Input.GetKey(Key.A))
@@ -167,9 +229,9 @@ class Level:GameObject
 
         float _distanceX,_distanceY;
 
-        for (int obj = 0; obj < _colidables.Count; obj++)//goes through all the walls in the list
+        for (int obj = 0; obj < _collidables.Count; obj++)//goes through all the walls in the list
         {
-            Sprite wall = _colidables[obj];//selects one of the walls
+            Sprite wall = _collidables[obj];//selects one of the walls
             _distanceX = wall.width / 2 + pPlayer.width / 2;//sets the horizontal distance between who and wall
             _distanceY = wall.height / 2 + pPlayer.height / 2;//sets the vertical distance between who and wall
             if (pPlayer.position.x + _distanceX >= wall.x &&
@@ -194,9 +256,9 @@ class Level:GameObject
                 }
             }
         }
-        for (int obj = 0; obj < _colidables.Count; obj++)
+        for (int obj = 0; obj < _collidables.Count; obj++)
         {
-            Sprite wall = _colidables[obj];
+            Sprite wall = _collidables[obj];
             _distanceX = wall.width / 2 + pPlayer.width / 2;
             _distanceY = wall.height / 2 + pPlayer.height / 2;
             if (pPlayer.position.x + _distanceX >= wall.x &&

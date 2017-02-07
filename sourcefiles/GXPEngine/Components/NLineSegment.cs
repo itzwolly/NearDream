@@ -22,7 +22,7 @@ namespace GXPEngine
 			lineOnOriginNormalized = end.Clone().Subtract(start).Normalize();
 			lineLenght = Mathf.Sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y));
 			_normal = new Arrow (null, null, 40, 0xffff0000, 1);
-			AddChild (_normal);
+			//AddChild (_normal);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------

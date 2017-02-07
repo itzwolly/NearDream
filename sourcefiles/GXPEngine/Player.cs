@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-class Player:Sprite
+public class Player : Sprite
 {
     public Vec2 position;
     public Vec2 velocity;
