@@ -68,6 +68,7 @@
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Items\Trophy.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Components\TextField.cs" />
     <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
-    <Compile Include="Throphy.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="TMX\Data.cs" />
     <Compile Include="TMX\Ellipse.cs" />
     <Compile Include="TMX\Image.cs" />

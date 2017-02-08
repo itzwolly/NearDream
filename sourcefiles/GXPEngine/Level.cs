@@ -41,6 +41,7 @@ public class Level:GameObject
     private List<LineSegment> _lines;
     private List<Stone> _stones;
     private List<Trophy> _trophies = new List<Trophy>();
+
     private Player _player;
     private float _startingBallVelocity;
     private TMXParser _tmxParser = new TMXParser();
@@ -73,23 +74,34 @@ public class Level:GameObject
         _destroyables = new List<GameTile>();
         _colidables = new List<GameTile>();
         _lines = new List<LineSegment>();
+
+        _startingBallVelocity = SPEED / 2;
+
         _stones = new List<Stone>();
+        collision = new CollidedOption();
+
         CreateLevel();
         CreateStones();
+        CreatePlayer();
+        CreateBall();
+        CreateForegroundTrees();
+    }
+
+    private void CreatePlayer() {
+        _player = new Player(200, game.height / 2);
+        AddChildAt(_player, 30);
+
         _player = new Player(300,300);
         AddChild(_player);
-        _startingBallVelocity = SPEED / 2;
 
         _reticle = new Ball(7, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
         AddChild(_reticle);
-
-        collision = new CollidedOption();
     }
 
     private void CreateBall()
     {
         _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
-        AddChild(_ball);
+        AddChildAt(_ball, 31);
         _ball.velocity = new Vec2();
         _ballToLine = new LineSegment(null, null);
         AddChild(_ballToLine);
@@ -114,8 +126,6 @@ public class Level:GameObject
 
     private void CreateLevel()
     {
-        CreateBall();
-
         /* For when we use tiles */
         foreach (Layer layer in _map.Layer)
         {
@@ -143,13 +153,11 @@ public class Level:GameObject
                     }
                 }
             }
-            if (objGroup.Name == "Trophies")
-            {
-                foreach (TiledObject obj in objGroup.Object)
-                {
-                    Trophy trophy = new Trophy(ASSET_FILE_PATH + "sprites\\trophy_animation_test.png", 1, 1);
-                    trophy.x = obj.X;
-                    trophy.y = obj.Y;
+            if (objGroup.Name == "Trophies") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Trophy trophy = new Trophy(ASSET_FILE_PATH + "sprites\\trophy_animation_test.png", 7, 7);
+                    trophy.x = obj.X + obj.Width / 4;
+                    trophy.y = obj.Y + obj.Height / 4;
                     _trophies.Add(trophy);
                 }
             }
@@ -160,77 +168,9 @@ public class Level:GameObject
             AddChild(line);
         }
 
-        foreach (Trophy trophy in _trophies)
-        {
+        foreach (Trophy trophy in _trophies) {
             AddChild(trophy);
         }
-
-
-
-
-        //_ball = new Ball(25, new Vec2(673, 469 /*game.width / 2, game.height / 2*/), null, Color.Red);
-        //AddChild(_ball);
-        //_ball.velocity = Vec2.zero;
-        //_ballToLine = new LineSegment(null, null);
-        //AddChild(_ballToLine);
-
-        //Stone _stone = new Stone(25, new Vec2(game.width / 2, game.height / 9), null, Color.Blue, false);
-        //AddChild(_stone);
-        //_stones.Add(_stone);
-        //_stone.velocity = Vec2.zero;
-
-        //_stone = new Stone(25, new Vec2(game.width / 2+100, game.height / 9), null, Color.Blue, false);
-        //AddChild(_stone);
-        //_stones.Add(_stone);
-        //_stone.velocity = Vec2.zero;
-
-        //_line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        //_line = new NLineSegment(new Vec2(200, 400), new Vec2(200, 0), 0xffffff00, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        ////_ball.velocity = new Vec2(1, 1);
-        ////_ball.UpdateNextPosition();
-
-        //_line = new NLineSegment(new Vec2(700, 200), new Vec2(700, 500), 0xffffff00, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        ////_intersection = CheckIntersection(_line.start.Clone(), _line.end.Clone(), _ball.position, _ball.nextPosition, _line.lineOnOriginNormalized.Normal().Scale(_ball.radius+_line.lineWidth/2));//try on border
-        ////ActualBounce(_ball, _line);
-        ////Console.WriteLine(_intersection +"||"+_distance);
-
-        ////  Destroy();
-        ////  return;
-
-
-        //_line = new NLineSegment(new Vec2(0, 0), new Vec2(game.width, 0), 0xffffffff, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        //_line = new NLineSegment(new Vec2(200, 400), new Vec2(700, 500), 0xffffffff, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        //_line = new NLineSegment(new Vec2(800, 0), new Vec2(800, 500), 0xffffff00, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        //_line = new NLineSegment(new Vec2(700, 500), new Vec2(800, 500), 0xffffff00, 4);
-        //AddChild(_line);
-        //_lines.Add(_line);
-
-        //Unmovable wall = new Unmovable(400, 400);
-        //AddChild(wall);
-        //_colidables.Add(wall);
-
-        //wall = new Unmovable(336, 436);
-        //AddChild(wall);
-        //_colidables.Add(wall);
-        
     }
 
     private void CreateTile(int pRow, int pCol, uint pTile)
@@ -240,9 +180,8 @@ public class Level:GameObject
         // because otherwise every tileset will be created.
 
         // Unbreakable Wall
-        if (pTile == 1)
-        {
-            _tile = new Unmovable(this, ASSET_FILE_PATH + "\\sprites\\" + _map.TileSet[0].Image.Source, pTile, 1, 1);
+        if (pTile == 1) { // assets\\sprites\sprites/circle.png cannot be 
+            _tile = new Unmovable(this, ASSET_FILE_PATH + _map.TileSet[0].Image.Source, pTile, 1, 1);
             _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
             _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
             _colidables.Add(_tile);
@@ -330,34 +269,42 @@ public class Level:GameObject
         CheckStones();
         BallBoom();
         CheckTrophyCollision();
-
+    }
+    
         
 
-    }
+    
 
-    private void BallBoom()
+private void BallBoom()
+{
+    if (_ball.StartedTimer)
     {
-        if (_ball.StartedTimer)
+        if (_explosionWait == WAITFORBOOM)
         {
-            if (_explosionWait == WAITFORBOOM)
-            {
-                ResetBall();
-                _explosionWait = 0;
-                _ball.StartedTimer = false;
+            ResetBall();
+            _explosionWait = 0;
+            _ball.StartedTimer = false;
+        }
+        _explosionWait++;
+    }
+}
+    private void CreateForegroundTrees() {
+        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            if (objGroup.Name == "ForegroundTree") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
+                    tree.x = obj.X - obj.Width;
+                    tree.y = obj.Y + obj.Height;
+                    AddChildAt(tree, 100);
+                }
             }
-            _explosionWait++;
         }
     }
 
-    private void CheckTrophyCollision()
-    {
-        foreach (Trophy trophy in _trophies)
-        {
-            if (_player.x > trophy.x && _player.x < trophy.x + trophy.width &&
-                _player.y > trophy.y && _player.y < trophy.y + trophy.height)
-            {
-                if (!trophy.IsDestroyed())
-                {
+    private void CheckTrophyCollision() {
+        foreach (Trophy trophy in _trophies) {
+            if (_player.HitTest(trophy)) {
+                if (!trophy.IsDestroyed()) {
                     _player.AmountOfTrophies++;
                 }
                 trophy.Destroy();
