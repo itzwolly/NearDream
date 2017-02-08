@@ -11,8 +11,10 @@ public class Level:GameObject
 {
     const int SPEED = 10;
     const int GRAVITY = 15;
-    int REPETITIONS=2;
+    const int REPETITIONS=2;
     const float ELASTICITY = 0.7f;
+    private const string ASSET_FILE_PATH = "assets\\";
+
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
@@ -20,9 +22,8 @@ public class Level:GameObject
     private float _yOffset;
     private float _xOffset;
 
-    private const string ASSET_FILE_PATH = "assets\\";
-
     private bool _debug;
+
     public enum direction
     {
         none, middle, left, right,below,above
@@ -38,6 +39,11 @@ public class Level:GameObject
     private List<LineSegment> _lines;
     private List<Stone> _stones;
     private List<Trophy> _trophies = new List<Trophy>();
+    private List<Rope> _ropes = new List<Rope>();
+    private List<Bridge> _bridges = new List<Bridge>();
+    private List<Pot> _pots = new List<Pot>();
+
+    private Random rnd = new Random();
 
     private Player _player;
     private float _startingBallVelocity;
@@ -80,18 +86,64 @@ public class Level:GameObject
         CreateStones();
         CreatePlayer();
         CreateBall();
-        CreateForegroundTrees();
+        CreateTiledObjects();
+        CreateReticle();
     }
 
     private void CreatePlayer() {
         _player = new Player(200, game.height / 2);
         AddChildAt(_player, 30);
+    }
 
-        _player = new Player(300,300);
-        AddChild(_player);
-
+    private void CreateReticle() {
         _reticle = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
         AddChild(_reticle);
+    }
+
+    private void CreateTiledObjects() {
+        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            if (objGroup.Name == "Bridge") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Bridge bridge = new Bridge(315);
+                    bridge.x = obj.X;
+                    bridge.y = obj.Y;
+                    bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
+                    _bridges.Add(bridge);
+                    AddChild(bridge);
+                }
+            }
+            if (objGroup.Name == "Rope") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Rope rope = new Rope();
+                    rope.x = obj.X;
+                    rope.y = obj.Y;
+                    rope.rotation = 340;
+                    rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                    _ropes.Add(rope);
+                    AddChild(rope);
+                }
+            }
+            if (objGroup.Name == "Pots") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Pot pot = new Pot();
+                    pot.x = obj.X + obj.Width / 2;
+                    pot.y = obj.Y + obj.Height / 2;
+                    _pots.Add(pot);
+                    AddChildAt(pot, 0);
+                    pot.Canvas.x = pot.x - pot.width / 2;
+                    pot.Canvas.y = pot.y - pot.height * 0.8f;
+                    AddChildAt(pot.Canvas, 101);
+                }
+            }
+            if (objGroup.Name == "ForegroundTree") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
+                    tree.x = obj.X - obj.Width;
+                    tree.y = obj.Y + obj.Height;
+                    AddChildAt(tree, 100);
+                }
+            }
+        }
     }
 
     private void CreateBall()
@@ -255,17 +307,21 @@ public class Level:GameObject
         HandlePlayer();
         CheckStones();
         CheckTrophyCollision();
+        CheckRopeCollision();
+        CheckPotCollision();
     }
 
-    private void CreateForegroundTrees() {
-        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
-            if (objGroup.Name == "ForegroundTree") {
-                foreach (TiledObject obj in objGroup.Object) {
-                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
-                    tree.x = obj.X - obj.Width;
-                    tree.y = obj.Y + obj.Height;
-                    AddChildAt(tree, 100);
+    private void CheckRopeCollision() {
+        foreach (Rope rope in _ropes) {
+            if (_ball.HitTest(rope)) {
+                if (!rope.IsDestroyed()) {
+                    foreach (Bridge bridge in _bridges) {
+                        if (bridge.BridgeName == rope.BridgeToDrop) {
+                            bridge.rotation = 0;
+                        }
+                    }
                 }
+                rope.Destroy();
             }
         }
     }
@@ -277,6 +333,22 @@ public class Level:GameObject
                     _player.AmountOfTrophies++;
                 }
                 trophy.Destroy();
+            }
+        }
+    }
+
+    private void CheckPotCollision() {
+        if (!_ball.OnPlayer) {
+            foreach (Pot pot in _pots) {
+                if (_ball.HitTest(pot)) {
+                    if (!pot.IsDestroyed()) {
+                        int score = rnd.Next(50, 750);
+                        _player.Score += score;
+                        pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
+                        new Timer(1000, pot.Canvas.Destroy);
+                    }
+                    pot.Destroy();
+                }
             }
         }
     }

@@ -8,15 +8,20 @@ namespace GXPEngine
 		public Vec2 position;
 		public Vec2 velocity;
 		public Vec2 nextPosition;
-        public bool OnPlayer;
+		private bool _OnPlayer;
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;
-        //public bool stationary=false;
+		//public bool stationary=false;
+
+		public bool OnPlayer {
+			get { return _OnPlayer; }
+			set { _OnPlayer = value; }
+		}
 
 		public Ball (int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null):base (pRadius*2, pRadius*2)
 		{
-            OnPlayer = true;
+			_OnPlayer = true;
 			radius = pRadius;
 			SetOrigin (radius, radius);
 			position = pPosition ?? Vec2.zero;
@@ -40,27 +45,27 @@ namespace GXPEngine
 		public void Step(bool skipVelocity = false) {
 			if (position == null || velocity == null)
 				return;
-            //Console.WriteLine(velocity.Length());
-            //if (velocity.x < 0.01f)
-            //    velocity.x = 0;
-            //if (velocity.y < 0.01f)
-            //    velocity.y = 0;
+			//Console.WriteLine(velocity.Length());
+			//if (velocity.x < 0.01f)
+			//    velocity.x = 0;
+			//if (velocity.y < 0.01f)
+			//    velocity.y = 0;
 			position.Add(velocity);
 			UpdateNextPosition();
-        }
+		}
 
 		public void UpdateNextPosition()
 		{ 
 			x = position.x;
 			y = position.y;
 
-            UptadeInfo();
-        }
-        public void UptadeInfo()
-        {
-            nextPosition = position.Clone().Add(velocity);
-            nextPositionBorder = position.Clone().Add(velocity.Clone().Normalize().Scale(velocity.Length() + radius));
-        }
+			UptadeInfo();
+		}
+		public void UptadeInfo()
+		{
+			nextPosition = position.Clone().Add(velocity);
+			nextPositionBorder = position.Clone().Add(velocity.Clone().Normalize().Scale(velocity.Length() + radius));
+		}
 
 		public Color ballColor {
 			get {
