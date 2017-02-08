@@ -10,6 +10,7 @@ namespace GXPEngine
 		public Vec2 nextPosition;
         public bool OnPlayer;
         public bool IsExploding;
+        public bool StartedTimer;
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;

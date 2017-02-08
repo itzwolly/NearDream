@@ -9,6 +9,7 @@ using GXPEngine;
 
 public class Level:GameObject
 {
+    private List<GameTile> _destroyables;
     private const int SPEED = 10;
     private const int GRAVITY = 15;
     private int REPETITIONS=2;
@@ -16,9 +17,11 @@ public class Level:GameObject
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
-
+    private const float BLASTSIZE=30;
+    private const int WAITFORBOOM = 180;
     private float _yOffset;
     private float _xOffset;
+    private int _explosionWait;
 
     private const string ASSET_FILE_PATH = "assets\\";
 
@@ -67,6 +70,7 @@ public class Level:GameObject
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
 
+        _destroyables = new List<GameTile>();
         _colidables = new List<GameTile>();
         _lines = new List<LineSegment>();
         _stones = new List<Stone>();
@@ -93,12 +97,12 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(400,900 ), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(400,990 ), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        _stone = new Stone(25, new Vec2(600,1000), null, Color.Blue, false);
+        _stone = new Stone(25, new Vec2(300,990), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
@@ -242,6 +246,7 @@ public class Level:GameObject
             _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
             _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
             _colidables.Add(_tile);
+            _destroyables.Add(_tile);
             AddChild(_tile);
         }
     }
@@ -324,6 +329,23 @@ public class Level:GameObject
 
         CheckTrophyCollision();
 
+        if (_ball.StartedTimer)
+        {
+            if(_explosionWait==WAITFORBOOM)
+            {
+                CheckDestructibles();
+                ResetBall();
+                _explosionWait = 0;
+                _ball.StartedTimer = false;
+            }
+            _explosionWait++;
+        }
+
+    }
+
+    private void CheckDestructibles()
+    {
+
     }
 
     private void CheckTrophyCollision()
@@ -352,7 +374,7 @@ public class Level:GameObject
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
                 stone.velocity = new Vec2(1, 0).Scale(_ball.velocity.Length());
-                //stone.Step();
+                stone.Step();
                 _ball.velocity = Vec2.zero;
                 _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
 
@@ -360,7 +382,7 @@ public class Level:GameObject
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 stone.active = true;
-                stone.hitPlayer = true;
+                //stone.hitPlayer = true;
             }
             if (stone.active)
             {
@@ -383,6 +405,7 @@ public class Level:GameObject
                         stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
                         stone2.started = true;
                     }
+                    stone.hitPlayer = false;
                     stone.velocity.Scale(0.0f);
                     stone.Step();
                     stone2.Step();
@@ -627,6 +650,7 @@ public class Level:GameObject
             if (stick)
             {
                 ball.velocity = Vec2.zero;
+                ball.StartedTimer = true;
                 ball.OnPlayer = true;
             }
             else {
@@ -647,6 +671,7 @@ public class Level:GameObject
             if (stick)
             {
                 ball.velocity = Vec2.zero;
+                ball.StartedTimer = true;
                 ball.OnPlayer = true;
             }
             else
@@ -661,6 +686,7 @@ public class Level:GameObject
             if (stick)
             {
                 ball.velocity = Vec2.zero;
+                ball.StartedTimer = true;
                 ball.OnPlayer = true;
             }
             else
