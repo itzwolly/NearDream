@@ -9,11 +9,13 @@ using GXPEngine;
 
 public class Level:GameObject
 {
+    const int SPEED = 10;
+    const int GRAVITY = 15;
+    const int REPETITIONS=2;
+    const float ELASTICITY = 0.7f;
+    private const string ASSET_FILE_PATH = "assets\\";
+
     private List<GameTile> _destroyables;
-    private const int SPEED = 10;
-    private const int GRAVITY = 15;
-    private int REPETITIONS=2;
-    private const float ELASTICITY = 0.7f;
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
@@ -23,9 +25,8 @@ public class Level:GameObject
     private float _xOffset;
     private int _explosionWait;
 
-    private const string ASSET_FILE_PATH = "assets\\";
-
     private bool _debug;
+
     public enum direction
     {
         none, middle, left, right,below,above
@@ -41,6 +42,11 @@ public class Level:GameObject
     private List<LineSegment> _lines;
     private List<Stone> _stones;
     private List<Trophy> _trophies = new List<Trophy>();
+    private List<Rope> _ropes = new List<Rope>();
+    private List<Bridge> _bridges = new List<Bridge>();
+    private List<Pot> _pots = new List<Pot>();
+
+    private Random rnd = new Random();
 
     private Player _player;
     private float _startingBallVelocity;
@@ -84,18 +90,64 @@ public class Level:GameObject
         CreateStones();
         CreatePlayer();
         CreateBall();
-        CreateForegroundTrees();
+        CreateTiledObjects();
+        CreateReticle();
     }
 
     private void CreatePlayer() {
         _player = new Player(200, game.height / 2);
         AddChildAt(_player, 30);
+    }
 
-        _player = new Player(300,300);
-        AddChild(_player);
-
+    private void CreateReticle() {
         _reticle = new Ball(7, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
         AddChild(_reticle);
+    }
+
+    private void CreateTiledObjects() {
+        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            if (objGroup.Name == "Bridge") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Bridge bridge = new Bridge(315);
+                    bridge.x = obj.X;
+                    bridge.y = obj.Y;
+                    bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
+                    _bridges.Add(bridge);
+                    AddChild(bridge);
+                }
+            }
+            if (objGroup.Name == "Rope") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Rope rope = new Rope();
+                    rope.x = obj.X;
+                    rope.y = obj.Y;
+                    rope.rotation = 340;
+                    rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                    _ropes.Add(rope);
+                    AddChild(rope);
+                }
+            }
+            if (objGroup.Name == "Pots") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Pot pot = new Pot();
+                    pot.x = obj.X + obj.Width / 2;
+                    pot.y = obj.Y + obj.Height / 2;
+                    _pots.Add(pot);
+                    AddChildAt(pot, 0);
+                    pot.Canvas.x = pot.x - pot.width / 2;
+                    pot.Canvas.y = pot.y - pot.height * 0.8f;
+                    AddChildAt(pot.Canvas, 101);
+                }
+            }
+            if (objGroup.Name == "ForegroundTree") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
+                    tree.x = obj.X - obj.Width;
+                    tree.y = obj.Y + obj.Height;
+                    AddChildAt(tree, 100);
+                }
+            }
+        }
     }
 
     private void CreateBall()
@@ -269,25 +321,43 @@ public class Level:GameObject
         CheckStones();
         BallBoom();
         CheckTrophyCollision();
+        CheckRopeCollision();
+        CheckPotCollision();
     }
     
         
 
     
 
-private void BallBoom()
-{
-    if (_ball.StartedTimer)
-    {
-        if (_explosionWait == WAITFORBOOM)
-        {
-            ResetBall();
-            _explosionWait = 0;
-            _ball.StartedTimer = false;
+    private void CheckRopeCollision() {
+        foreach (Rope rope in _ropes) {
+            if (_ball.HitTest(rope)) {
+                if (!rope.IsDestroyed()) {
+                    foreach (Bridge bridge in _bridges) {
+                        if (bridge.BridgeName == rope.BridgeToDrop) {
+                            bridge.rotation = 0;
+                        }
+                    }
+                }
+                rope.Destroy();
+            }
         }
-        _explosionWait++;
     }
-}
+
+    private void BallBoom()
+    {
+        if (_ball.StartedTimer)
+        {
+            if (_explosionWait == WAITFORBOOM)
+            {
+                ResetBall();
+                _explosionWait = 0;
+                _ball.StartedTimer = false;
+            }
+            _explosionWait++;
+        }
+    }
+
     private void CreateForegroundTrees() {
         foreach (ObjectGroup objGroup in _map.ObjectGroup) {
             if (objGroup.Name == "ForegroundTree") {
@@ -303,11 +373,27 @@ private void BallBoom()
 
     private void CheckTrophyCollision() {
         foreach (Trophy trophy in _trophies) {
-            if (_player.HitTest(trophy)) {
+            if (_ball.HitTest(trophy)) {
                 if (!trophy.IsDestroyed()) {
                     _player.AmountOfTrophies++;
                 }
                 trophy.Destroy();
+            }
+        }
+    }
+
+    private void CheckPotCollision() {
+        if (!_ball.OnPlayer) {
+            foreach (Pot pot in _pots) {
+                if (_ball.HitTest(pot)) {
+                    if (!pot.IsDestroyed()) {
+                        int score = rnd.Next(50, 750);
+                        _player.Score += score;
+                        pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
+                        new Timer(1000, pot.Canvas.Destroy);
+                    }
+                    pot.Destroy();
+                }
             }
         }
     }
@@ -317,7 +403,6 @@ private void BallBoom()
         for (int i=0;i<_stones.Count;i++)
         {
             Stone stone = _stones[i];
-
            
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {

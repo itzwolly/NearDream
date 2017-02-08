@@ -36,6 +36,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bridge.cs" />
     <Compile Include="Components\Arrow.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Components\DragHandler.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
+    <Compile Include="Pot.cs" />
+    <Compile Include="Rope.cs" />
     <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="Tree.cs" />
@@ -94,8 +97,9 @@
     <Compile Include="TMX\TiledObject.cs" />
     <Compile Include="TMX\TileSet.cs" />
     <Compile Include="Unmovable.cs" />
-    <Compile Include="utilisi\Pausable.cs" />
-    <Compile Include="utilisi\TMXParser.cs" />
+    <Compile Include="Utils\Pausable.cs" />
+    <Compile Include="Utils\Timer.cs" />
+    <Compile Include="Utils\TMXParser.cs" />
     <Compile Include="Vec2.cs" />
   </ItemGroup>
   <ItemGroup />
