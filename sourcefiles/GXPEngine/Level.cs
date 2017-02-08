@@ -9,10 +9,10 @@ using GXPEngine;
 
 public class Level:GameObject
 {
-    const int SPEED = 10;
-    const int GRAVITY = 15;
-    int REPETITIONS=2;
-    const float ELASTICITY = 0.7f;
+    private const int SPEED = 10;
+    private const int GRAVITY = 15;
+    private int REPETITIONS=2;
+    private const float ELASTICITY = 0.7f;
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
@@ -76,7 +76,7 @@ public class Level:GameObject
         AddChild(_player);
         _startingBallVelocity = SPEED / 2;
 
-        _reticle = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
+        _reticle = new Ball(7, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
         AddChild(_reticle);
 
         collision = new CollidedOption();
@@ -84,7 +84,7 @@ public class Level:GameObject
 
     private void CreateBall()
     {
-        _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
+        _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
         AddChild(_ball);
         _ball.velocity = new Vec2();
         _ballToLine = new LineSegment(null, null);
@@ -93,12 +93,12 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(game.width / 2, game.height / 9), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(400,900 ), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        _stone = new Stone(25, new Vec2(game.width / 2 + 100, game.height / 9), null, Color.Blue, false);
+        _stone = new Stone(25, new Vec2(600,1000), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
@@ -150,7 +150,7 @@ public class Level:GameObject
                 }
             }
         }
-
+        //REMOVE HERE TO REMOVE RENDERING OF LINES
         foreach (NLineSegment line in _lines)
         {
             AddChild(line);
@@ -287,9 +287,15 @@ public class Level:GameObject
             _player.position.y--;
             _player.velocity.y = -GRAVITY;
         }
+
+        if (Input.GetKeyDown(Key.E))
+        {
+            _ball.IsExploding = !_ball.IsExploding;
+        }
+
         if (Input.GetMouseButton(0) && _ball.OnPlayer)
         {
-            _startingBallVelocity+=0.3f;
+            _startingBallVelocity+=0.5f;
         }
         else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
         {
@@ -341,33 +347,44 @@ public class Level:GameObject
         for (int i=0;i<_stones.Count;i++)
         {
             Stone stone = _stones[i];
-            
-            if (stone.active)
-            {
-                CheckAllLines(stone);
-                stone.velocity.Add(_gravity);
-                stone.Step();
-            }
+
+           
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
                 stone.velocity = new Vec2(1, 0).Scale(_ball.velocity.Length());
                 //stone.Step();
                 _ball.velocity = Vec2.zero;
                 _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
+
+                
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 stone.active = true;
                 stone.hitPlayer = true;
             }
+            if (stone.active)
+            {
 
-            for(int j=0;j<_stones.Count;j++)
+                stone.velocity.Add(_gravity);
+                CheckAllLines(stone);
+                stone.Step();
+            }
+            for (int j=0;j<_stones.Count;j++)
             {
                 Stone stone2 = _stones[j];
-                if(j!=i && stone.position.DistanceTo(stone2.position) < stone.radius + stone.radius)
+                float _tempDistance = stone.position.DistanceTo(stone2.position);
+                if (j!=i &&  _tempDistance < stone.radius + stone.radius)
                 {
+                    //stone.position.x - ();
+                    //stone.position.y - ();
                     stone2.active = true;
-                    stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
+                    if (!stone2.started)
+                    {
+                        stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
+                        stone2.started = true;
+                    }
                     stone.velocity.Scale(0.0f);
+                    stone.Step();
                     stone2.Step();
                 }
             }
@@ -556,7 +573,7 @@ public class Level:GameObject
     {
         for (int i = 0; i < _lines.Count; i++)
         {
-            ActualBounce(ball, _lines[i]);
+            ActualBounce(ball, _lines[i],ball.IsExploding);
         }
     }
 
@@ -596,7 +613,7 @@ public class Level:GameObject
         }
     }
 
-    void ActualBounce(Ball ball, LineSegment line)
+    void ActualBounce(Ball ball, LineSegment line, bool stick)
     {
         _ballToLineStart = _ball.position.Clone().Subtract(line.start);
         _distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
@@ -607,12 +624,19 @@ public class Level:GameObject
         //Console.WriteLine(_distanceToStart + "||" + _distanceToEnd + "||" + ball.radius+ "||"+ball.velocity.Length());
         if (_intersection.y != 0)
         {
-            ball.position = _intersection;
-            ball.UpdateNextPosition();
-            //ball.velocity = Vec2.zero;
-            ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
-            ball.UptadeInfo();
-            ball.Step();
+            if (stick)
+            {
+                ball.velocity = Vec2.zero;
+                ball.OnPlayer = true;
+            }
+            else {
+                ball.position = _intersection;
+                ball.UpdateNextPosition();
+                //ball.velocity = Vec2.zero;
+                ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
+                ball.UptadeInfo();
+                ball.Step();
+            }
         }
         //else
         //{
@@ -620,15 +644,31 @@ public class Level:GameObject
         //}
         else if (_distanceToStart < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
-            ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
-            ball.Step();
+            if (stick)
+            {
+                ball.velocity = Vec2.zero;
+                ball.OnPlayer = true;
+            }
+            else
+            {
+                ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
+                ball.Step();
+            }
         }
         else if (_distanceToEnd < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
-            ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
-            ball.Step();
+            if (stick)
+            {
+                ball.velocity = Vec2.zero;
+                ball.OnPlayer = true;
+            }
+            else
+            {
+                ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
+                ball.Step();
+            }
         }
 
     }
