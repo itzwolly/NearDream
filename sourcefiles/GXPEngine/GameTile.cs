@@ -7,6 +7,7 @@ public class GameTile : AnimationSprite {
     uint _tileId;
     List<int> test = new List<int>();
     Level _level;
+    public Vec2 position;
 
     public GameTile(Level pLevel, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow)
         : base(fileName, pSpriteSheetCol, pSpriteSheetRow) {

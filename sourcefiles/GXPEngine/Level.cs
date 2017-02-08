@@ -17,7 +17,7 @@ public class Level:GameObject
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
-    private const float BLASTSIZE=30;
+    private const float BLASTSIZE=100;
     private const int WAITFORBOOM = 180;
     private float _yOffset;
     private float _xOffset;
@@ -249,6 +249,8 @@ public class Level:GameObject
             _destroyables.Add(_tile);
             AddChild(_tile);
         }
+        if(_tile!=null)
+        _tile.position = new Vec2(_tile.x, _tile.y);
     }
 
     private void PlayerCamera()
@@ -326,26 +328,25 @@ public class Level:GameObject
 
         HandlePlayer();
         CheckStones();
-
+        BallBoom();
         CheckTrophyCollision();
 
+        
+
+    }
+
+    private void BallBoom()
+    {
         if (_ball.StartedTimer)
         {
-            if(_explosionWait==WAITFORBOOM)
+            if (_explosionWait == WAITFORBOOM)
             {
-                CheckDestructibles();
                 ResetBall();
                 _explosionWait = 0;
                 _ball.StartedTimer = false;
             }
             _explosionWait++;
         }
-
-    }
-
-    private void CheckDestructibles()
-    {
-
     }
 
     private void CheckTrophyCollision()
