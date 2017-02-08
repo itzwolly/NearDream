@@ -10,8 +10,7 @@ public class Player:Sprite
     public Vec2 velocity;
     private int _amountOfTrophies = 0;
 
-    public int AmountOfTrophies
-    {
+    public int AmountOfTrophies {
         get { return _amountOfTrophies; }
         set { _amountOfTrophies = value; }
     }
