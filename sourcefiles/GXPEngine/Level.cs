@@ -11,9 +11,11 @@ public class Level:GameObject
 {
     const int SPEED = 10;
     const int GRAVITY = 15;
-    int REPETITIONS=1;
+    int REPETITIONS=2;
     const float ELASTICITY = 0.7f;
     private Vec2 _gravity = new Vec2(0, 1);
+
+    private Ball _reticle;
 
     private float _yOffset;
     private float _xOffset;
@@ -74,6 +76,8 @@ public class Level:GameObject
         AddChild(_player);
         _startingBallVelocity = SPEED / 2;
 
+        _reticle = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
+        AddChild(_reticle);
 
         collision = new CollidedOption();
     }
@@ -271,6 +275,9 @@ public class Level:GameObject
     {
         _xOffset = game.x - this.x;
         _yOffset = game.y - this.y;
+
+        _reticle.x = Input.mouseX + _xOffset;
+        _reticle.y = Input.mouseY + _yOffset;
         PlayerCamera();
         //Console.WriteLine(_ball.velocity.Length());
         
@@ -290,9 +297,9 @@ public class Level:GameObject
             _ball.position.y = _player.y;
             _ball.velocity.x = (Input.mouseX - _player.x + _xOffset);
             _ball.velocity.y = (Input.mouseY - _player.y + _yOffset);
-            if (_startingBallVelocity > 30)
-                _startingBallVelocity = 30;
-            _ball.velocity.Normalize().Scale(_startingBallVelocity);
+            if (_startingBallVelocity > 30*REPETITIONS)
+                _startingBallVelocity = 30*REPETITIONS;
+            _ball.velocity.Normalize().Scale(_startingBallVelocity/2);
             _ball.OnPlayer = false;
             _startingBallVelocity = SPEED;
         }
@@ -613,13 +620,13 @@ public class Level:GameObject
         //}
         else if (_distanceToStart < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius - _distanceToStart));
+            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
             ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
             ball.Step();
         }
         else if (_distanceToEnd < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius - _distanceToEnd));
+            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
             ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
             ball.Step();
         }
