@@ -200,10 +200,11 @@ public class Level:GameObject
                 for (int col = 0; col < _level.GetLength(1); col++)
                 {
                     uint tile = _level[row, col];
-                    CreateTile(row, col, tile);
+                    CreateTile(layer, row, col, tile);
                 }
             }
         }
+
         foreach (ObjectGroup objGroup in _map.ObjectGroup)
         {
             if (objGroup.Name == "Points")
@@ -238,22 +239,31 @@ public class Level:GameObject
         }
     }
 
-    private void CreateTile(int pRow, int pCol, uint pTile)
+    private void CreateTile(Layer pLayer, int pRow, int pCol, uint pTile)
     {
         // It gets the first tileset in order to create the level.
         // so the designer has to make sure its the first one,
         // because otherwise every tileset will be created.
 
         // Unbreakable Wall
-        if (pTile == 1) { // assets\\sprites\sprites/circle.png cannot be 
-            _tile = new Unmovable(this, ASSET_FILE_PATH + _map.TileSet[0].Image.Source, pTile, 1, 1);
-            _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
-            _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
-            _colidables.Add(_tile);
-            AddChild(_tile);
+        if (pTile != 0) {
+            foreach (TileSet tileSet in _map.TileSet) {
+                if (pLayer.Name.ToLower() == tileSet.Name.ToLower()) {
+                    _tile = new GameTile(this, pLayer, ASSET_FILE_PATH + tileSet.Image.Source, pTile - (uint)tileSet.FirstGId, tileSet.Columns, tileSet.TileCount / tileSet.Columns);
+                    _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
+                    _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
+                    AddChild(_tile);
+                    if (tileSet.Name.ToLower() == "midground") {
+                        _colidables.Add(_tile);
+                    }
+                }
+            }
         }
-        if(_tile!=null)
-        _tile.position = new Vec2(_tile.x, _tile.y);
+        
+
+        if (_tile != null) {
+            _tile.position = new Vec2(_tile.x, _tile.y);
+        }
     }
 
     private void PlayerCamera()

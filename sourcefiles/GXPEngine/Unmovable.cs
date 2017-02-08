@@ -7,7 +7,7 @@ using GXPEngine;
 public class Unmovable : GameTile
 {
     //Level pLevel, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow
-    public Unmovable(Level pLevel, string pFileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow) : base(pLevel, pFileName, pTile, pSpriteSheetCol, pSpriteSheetRow)
+    public Unmovable(Level pLevel, Layer pLayer, string pFileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow) : base(pLevel, pLayer, pFileName, pTile, pSpriteSheetCol, pSpriteSheetRow)
     {
         SetOrigin(width / 2, height / 2);
     }
