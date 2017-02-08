@@ -5,14 +5,20 @@ using System.Text;
 using System.Drawing;
 using GXPEngine;
 
+//673,469 position where ball was on verge
 
-public class Level : GameObject
+public class Level:GameObject
 {
-    private const int SPEED = 10;
-    private const int GRAVITY = 15;
-    private const int REPETITIONS=1;
-    private const float ELASTICITY = 0.9f;
+    const int SPEED = 10;
+    const int GRAVITY = 15;
+    int REPETITIONS=2;
+    const float ELASTICITY = 0.7f;
     private Vec2 _gravity = new Vec2(0, 1);
+
+    private Ball _reticle;
+
+    private float _yOffset;
+    private float _xOffset;
 
     private const string ASSET_FILE_PATH = "assets\\";
 
@@ -28,7 +34,7 @@ public class Level : GameObject
         public Sprite obj;
     }
 
-    private List<GameTile> _collidables;
+    private List<GameTile> _colidables;
     private List<LineSegment> _lines;
     private List<Stone> _stones;
     private List<Trophy> _trophies = new List<Trophy>();
@@ -45,13 +51,14 @@ public class Level : GameObject
     private Vec2 _intersection;
     private LineSegment _ballToLine;
     private LineSegment _line;
-    //private float _distance;
+    private float _distance;
 
     private int _currentLevel;
     private uint[,] _level;
     private GameTile _tile;
 
-    public int CurrentLevel {
+    public int CurrentLevel
+    {
         get { return _currentLevel; }
         set { _currentLevel = value; }
     }
@@ -59,9 +66,9 @@ public class Level : GameObject
     public Level(MyGame pMyGame, int pCurrentLevel)
     {
         _currentLevel = pCurrentLevel;
-        _map = _tmxParser.ParseFile(ASSET_FILE_PATH +"level_" + _currentLevel + ".tmx");
+        _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
 
-        _collidables = new List<GameTile>();
+        _colidables = new List<GameTile>();
         _lines = new List<LineSegment>();
 
         _startingBallVelocity = SPEED / 2;
@@ -71,17 +78,24 @@ public class Level : GameObject
 
         CreateLevel();
         CreateStones();
-        CreateForegroundTrees();
         CreatePlayer();
         CreateBall();
+        CreateForegroundTrees();
     }
 
     private void CreatePlayer() {
         _player = new Player(200, game.height / 2);
         AddChildAt(_player, 30);
+
+        _player = new Player(300,300);
+        AddChild(_player);
+
+        _reticle = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Green);
+        AddChild(_reticle);
     }
 
-    private void CreateBall() {
+    private void CreateBall()
+    {
         _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
         AddChildAt(_ball, 31);
         _ball.velocity = new Vec2();
@@ -89,28 +103,8 @@ public class Level : GameObject
         AddChild(_ballToLine);
     }
 
-    private void PlayerCamera() {
-        x = game.width / 2 - _player.x;
-        y = game.height / 1.25f - _player.y;
-
-        if (x > 0) {
-            x = 0;
-        }
-
-        if (y > 0) {
-            y = 0;
-        }
-
-        if (y < -(game.height)) {
-            y = -(game.height);
-        }
-
-        if (x < -((game.width * 3) - (game.width / 5))) {
-            x = -((game.width * 3) - (game.width / 5));
-        }
-    }
-
-    private void CreateStones() {
+    private void CreateStones()
+    {
         Stone _stone = new Stone(25, new Vec2(game.width / 2, game.height / 9), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
@@ -129,21 +123,27 @@ public class Level : GameObject
     private void CreateLevel()
     {
         /* For when we use tiles */
-        foreach (Layer layer in _map.Layer) {
+        foreach (Layer layer in _map.Layer)
+        {
             layer.Data.SetLevelArray(_map.Height, _map.Width);
             _level = layer.Data.GetLevelArray();
-            for (int row = 0; row < _level.GetLength(0); row++) {
-                for (int col = 0; col < _level.GetLength(1); col++) {
+            for (int row = 0; row < _level.GetLength(0); row++)
+            {
+                for (int col = 0; col < _level.GetLength(1); col++)
+                {
                     uint tile = _level[row, col];
                     CreateTile(row, col, tile);
                 }
             }
         }
-
-        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
-            if (objGroup.Name == "Points") {
-                foreach (TiledObject obj in objGroup.Object) {
-                    foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
+        foreach (ObjectGroup objGroup in _map.ObjectGroup)
+        {
+            if (objGroup.Name == "Points")
+            {
+                foreach (TiledObject obj in objGroup.Object)
+                {
+                    foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList())
+                    {
                         _line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
                         _lines.Add(_line);
                     }
@@ -159,7 +159,8 @@ public class Level : GameObject
             }
         }
 
-        foreach (NLineSegment line in _lines) {
+        foreach (NLineSegment line in _lines)
+        {
             AddChild(line);
         }
 
@@ -168,7 +169,8 @@ public class Level : GameObject
         }
     }
 
-    private void CreateTile(int pRow, int pCol, uint pTile) {
+    private void CreateTile(int pRow, int pCol, uint pTile)
+    {
         // It gets the first tileset in order to create the level.
         // so the designer has to make sure its the first one,
         // because otherwise every tileset will be created.
@@ -178,28 +180,46 @@ public class Level : GameObject
             _tile = new Unmovable(this, ASSET_FILE_PATH + _map.TileSet[0].Image.Source, pTile, 1, 1);
             _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
             _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
-            _collidables.Add(_tile);
+            _colidables.Add(_tile);
             AddChild(_tile);
         }
-        
+    }
+
+    private void PlayerCamera()
+    {
+        x = game.width / 2 - _player.x;
+        y = game.height / 1.25f - _player.y;
+        if (x > 0)
+        {
+            x = 0;
+        }
+
+        if (y > 0)
+        {
+            y = 0;
+        }
+
+        if (y < -(game.height))
+        {
+            y = -(game.height);
+        }
+
+        if (x < -((game.width * 3) - (game.width / 5)))
+        {
+            x = -((game.width * 3) - (game.width / 5));
+        }
     }
 
     public void Update()
     {
-        PlayerCamera();
-        if (Input.GetKey(Key.D))
-            _player.position.x += SPEED/2;
-        if (Input.GetKey(Key.A))
-            _player.position.x -= SPEED/2;
-        if (Input.GetKeyDown(Key.R))
-        {
-            _ball.position.x = _player.x;
-            _ball.position.y = _player.y;
-            _ball.velocity = Vec2.zero;
-            _ball.OnPlayer = true;
-            _ball.Step();
-        }
+        _xOffset = game.x - this.x;
+        _yOffset = game.y - this.y;
 
+        _reticle.x = Input.mouseX + _xOffset;
+        _reticle.y = Input.mouseY + _yOffset;
+        PlayerCamera();
+        //Console.WriteLine(_ball.velocity.Length());
+        
         if (Input.GetKeyDown(Key.SPACE))
         {
             _debug = true;
@@ -214,13 +234,13 @@ public class Level : GameObject
         {
             _ball.position.x = _player.x;
             _ball.position.y = _player.y;
-            _ball.velocity.x = (Input.mouseX - _player.x);
-            _ball.velocity.y = (Input.mouseY - _player.y);
-            if (_startingBallVelocity > 20)
-                _startingBallVelocity = 20;
-            _ball.velocity.Normalize().Scale(_startingBallVelocity);
+            _ball.velocity.x = (Input.mouseX - _player.x + _xOffset);
+            _ball.velocity.y = (Input.mouseY - _player.y + _yOffset);
+            if (_startingBallVelocity > 30*REPETITIONS)
+                _startingBallVelocity = 30*REPETITIONS;
+            _ball.velocity.Normalize().Scale(_startingBallVelocity/2);
             _ball.OnPlayer = false;
-            _startingBallVelocity = SPEED / 2;
+            _startingBallVelocity = SPEED;
         }
         else if(!_ball.OnPlayer)
         {
@@ -273,14 +293,16 @@ public class Level : GameObject
                 stone.velocity.Add(_gravity);
                 stone.Step();
             }
-            if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius)
+            if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
                 stone.velocity = new Vec2(1, 0).Scale(_ball.velocity.Length());
                 //stone.Step();
+                _ball.velocity = Vec2.zero;
                 _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 stone.active = true;
+                stone.hitPlayer = true;
             }
 
             for(int j=0;j<_stones.Count;j++)
@@ -290,7 +312,7 @@ public class Level : GameObject
                 {
                     stone2.active = true;
                     stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
-                    stone.velocity.Scale(0.5f);
+                    stone.velocity.Scale(0.0f);
                     stone2.Step();
                 }
             }
@@ -359,9 +381,9 @@ public class Level : GameObject
 
         float _distanceX,_distanceY;
 
-        for (int obj = 0; obj < _collidables.Count; obj++)//goes through all the walls in the list
+        for (int obj = 0; obj < _colidables.Count; obj++)//goes through all the walls in the list
         {
-            Sprite wall = _collidables[obj];//selects one of the walls
+            Sprite wall = _colidables[obj];//selects one of the walls
             _distanceX = wall.width / 2 + pPlayer.width / 2;//sets the horizontal distance between who and wall
             _distanceY = wall.height / 2 + pPlayer.height / 2;//sets the vertical distance between who and wall
             if (pPlayer.position.x + _distanceX >= wall.x &&
@@ -386,9 +408,9 @@ public class Level : GameObject
                 }
             }
         }
-        for (int obj = 0; obj < _collidables.Count; obj++)
+        for (int obj = 0; obj < _colidables.Count; obj++)
         {
-            Sprite wall = _collidables[obj];
+            Sprite wall = _colidables[obj];
             _distanceX = wall.width / 2 + pPlayer.width / 2;
             _distanceY = wall.height / 2 + pPlayer.height / 2;
             if (pPlayer.position.x + _distanceX >= wall.x &&
@@ -459,7 +481,6 @@ public class Level : GameObject
         return;
     }
 
-    
     private bool Inside(Vec2 v1, Vec2 v2, Vec2 v3)
     {
         if (v1.x <= v3.x && v2.x >= v3.x && v1.y <= v3.y && v2.y >= v3.y)
@@ -493,6 +514,7 @@ public class Level : GameObject
             _debug = false;
         }
     }
+
     public Vec2 CheckIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4, Vec2 addition)
     {
         Vec2 v1Back = v1.Clone();
@@ -506,7 +528,7 @@ public class Level : GameObject
         //Console.WriteLine(ua+"||"+ub);
         Vec2 _tempIntersect = new Vec2(v1.x + ua * (v2.x - v1.x), v1.y + ua * (v2.y - v1.y));
         if (Mathf.Abs(ub) < 1 && Inside(v1, v2, _tempIntersect))
-            return _tempIntersect;
+            return _tempIntersect;//.Add(addition.Normalize());
         else
         {
             ua = ((v4.x - v3.x) * (v1Back.y - v3.y) - (v4.y - v3.y) * (v1Back.x - v3.x)) / ((v4.y - v3.y) * (v2Back.x - v1Back.x) - (v4.x - v3.x) * (v2Back.y - v1Back.y));
@@ -514,7 +536,7 @@ public class Level : GameObject
             //Console.WriteLine(ua+"||"+ub);
             _tempIntersect = new Vec2(v1Back.x + ua * (v2Back.x - v1Back.x), v1Back.y + ua * (v2Back.y - v1Back.y));
             if (Mathf.Abs(ub) < 1 && Inside(v1Back, v2Back, _tempIntersect))
-                return _tempIntersect;
+                return _tempIntersect;//.Subtract(addition.Normalize());
             else return Vec2.zero;
         }
     }
@@ -522,8 +544,8 @@ public class Level : GameObject
     void ActualBounce(Ball ball, LineSegment line)
     {
         _ballToLineStart = _ball.position.Clone().Subtract(line.start);
-        //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
-        _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius));//try on border
+        _distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
+        _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
         float _distanceToStart = line.start.DistanceTo(ball.position);
         float _distanceToEnd = line.end.DistanceTo(ball.position);
 
@@ -531,24 +553,29 @@ public class Level : GameObject
         if (_intersection.y != 0)
         {
             ball.position = _intersection;
+            ball.UpdateNextPosition();
             //ball.velocity = Vec2.zero;
             ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
             ball.UptadeInfo();
             ball.Step();
         }
-        else if (_distanceToStart <= ball.radius)
+        //else
+        //{
+        //    if (line.start.y == 200) Console.WriteLine(ball.position); //here
+        //}
+        else if (_distanceToStart < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius-_distanceToStart));
+            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
             ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
             ball.Step();
         }
-        else if (_distanceToEnd <= ball.radius)
+        else if (_distanceToEnd < ball.radius)
         {
-            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius - _distanceToEnd));
+            ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
             ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
             ball.Step();
         }
-        
+
     }
 }
 

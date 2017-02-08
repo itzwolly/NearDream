@@ -76,25 +76,26 @@
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
+    <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="Tree.cs" />
+    <Compile Include="TMX\Data.cs" />
+    <Compile Include="TMX\Ellipse.cs" />
+    <Compile Include="TMX\Image.cs" />
+    <Compile Include="TMX\Layer.cs" />
+    <Compile Include="TMX\Map.cs" />
+    <Compile Include="TMX\ObjectGroup.cs" />
+    <Compile Include="TMX\Polygon.cs" />
+    <Compile Include="TMX\Polyline.cs" />
+    <Compile Include="TMX\Properties.cs" />
+    <Compile Include="TMX\Property.cs" />
+    <Compile Include="TMX\Tile.cs" />
+    <Compile Include="TMX\TiledObject.cs" />
+    <Compile Include="TMX\TileSet.cs" />
     <Compile Include="Unmovable.cs" />
-    <Compile Include="Utils\Pausable.cs" />
-    <Compile Include="Utils\TMXParser.cs" />
+    <Compile Include="utilisi\Pausable.cs" />
+    <Compile Include="utilisi\TMXParser.cs" />
     <Compile Include="Vec2.cs" />
-    <Compile Include="TMX_XML_Objects\Data.cs" />
-    <Compile Include="TMX_XML_Objects\Ellipse.cs" />
-    <Compile Include="TMX_XML_Objects\Image.cs" />
-    <Compile Include="TMX_XML_Objects\Layer.cs" />
-    <Compile Include="TMX_XML_Objects\Map.cs" />
-    <Compile Include="TMX_XML_Objects\ObjectGroup.cs" />
-    <Compile Include="TMX_XML_Objects\Polygon.cs" />
-    <Compile Include="TMX_XML_Objects\Polyline.cs" />
-    <Compile Include="TMX_XML_Objects\Properties.cs" />
-    <Compile Include="TMX_XML_Objects\Property.cs" />
-    <Compile Include="TMX_XML_Objects\Tile.cs" />
-    <Compile Include="TMX_XML_Objects\TiledObject.cs" />
-    <Compile Include="TMX_XML_Objects\TileSet.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
