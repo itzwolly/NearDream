@@ -40,6 +40,7 @@
     <Compile Include="Components\Arrow.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Components\DragHandler.cs" />
+    <Compile Include="ExplodingBall.cs" />
     <Compile Include="GameTile.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />

@@ -9,6 +9,8 @@ namespace GXPEngine
 		public Vec2 velocity;
 		public Vec2 nextPosition;
 		private bool _OnPlayer;
+		public bool IsExploding;
+		public bool StartedTimer;
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;
@@ -34,7 +36,7 @@ namespace GXPEngine
 			Step ();
 		}
 
-		private void draw() {
+		protected void draw() {
 			graphics.Clear (Color.Empty);
 			graphics.FillEllipse (
 				new SolidBrush (_ballColor),

@@ -5,17 +5,17 @@ using System.Drawing;
 using System.Text;
 using GXPEngine;
 
-    class Stone:Ball
-    {
-    
+class ExplodingBall : Ball
+{
+
     private Color _ballColor;
     public bool active;
     public bool hitPlayer;
     public bool started;
     public bool aboutToHit;
 
-    public Stone(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null,bool? pActive = false):base (pRadius,null,null,null)
-		{
+    public ExplodingBall (int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null, bool? pActive = false) : base(pRadius, null, null, null)
+    {
         aboutToHit = false;
         active = pActive ?? false;
         OnPlayer = true;
@@ -72,4 +72,5 @@ using GXPEngine;
         }
     }
 }
+
 
