@@ -9,11 +9,17 @@ public class Player:Sprite
     public Vec2 position;
     public Vec2 velocity;
     private int _amountOfTrophies = 0;
+    private int _score;
 
-    public int AmountOfTrophies
-    {
+
+    public int AmountOfTrophies {
         get { return _amountOfTrophies; }
         set { _amountOfTrophies = value; }
+    }
+
+    public int Score {
+        get { return _score; }
+        set { _score = value; }
     }
 
     public Player(float pX,float pY) : base("assets\\sprites\\square.png")

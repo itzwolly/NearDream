@@ -36,6 +36,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bridge.cs" />
     <Compile Include="Components\Arrow.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Components\DragHandler.cs" />
@@ -68,17 +69,20 @@
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Items\Trophy.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Components\NLineSegment.cs" />
-    <Compile Include="Interactable.cs" />
+    <Compile Include="Plank.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
+    <Compile Include="Pot.cs" />
+    <Compile Include="Rope.cs" />
     <Compile Include="SimpleRock.cs" />
     <Compile Include="Stone.cs" />
-    <Compile Include="Throphy.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="TMX\Data.cs" />
     <Compile Include="TMX\Ellipse.cs" />
     <Compile Include="TMX\Image.cs" />
@@ -93,8 +97,9 @@
     <Compile Include="TMX\TiledObject.cs" />
     <Compile Include="TMX\TileSet.cs" />
     <Compile Include="Unmovable.cs" />
-    <Compile Include="utilisi\Pausable.cs" />
-    <Compile Include="utilisi\TMXParser.cs" />
+    <Compile Include="Utils\Pausable.cs" />
+    <Compile Include="Utils\Timer.cs" />
+    <Compile Include="Utils\TMXParser.cs" />
     <Compile Include="Vec2.cs" />
   </ItemGroup>
   <ItemGroup />

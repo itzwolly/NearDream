@@ -18,7 +18,7 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	//initialize game here
-	public MyGame () : base(1024, 768, false, false)
+	public MyGame () : base(1600, 960, false, false)
 	{
 		SetState(STATE.LEVEL2);
 		targetFps = 60;
