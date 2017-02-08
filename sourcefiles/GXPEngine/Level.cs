@@ -15,7 +15,7 @@ public class Level:GameObject
     const float ELASTICITY = 0.7f;
     private const string ASSET_FILE_PATH = "assets\\";
 
-    private List<GameTile> _destroyables;
+    private List<Plank> _destroyables;
     private Vec2 _gravity = new Vec2(0, 1);
 
     private Ball _reticle;
@@ -45,6 +45,7 @@ public class Level:GameObject
     private List<Rope> _ropes = new List<Rope>();
     private List<Bridge> _bridges = new List<Bridge>();
     private List<Pot> _pots = new List<Pot>();
+    private List<Plank> _planks = new List<Plank>();
 
     private Random rnd = new Random();
 
@@ -77,7 +78,7 @@ public class Level:GameObject
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
 
-        _destroyables = new List<GameTile>();
+        _destroyables = new List<Plank>();
         _colidables = new List<GameTile>();
         _lines = new List<LineSegment>();
 
@@ -137,6 +138,17 @@ public class Level:GameObject
                     pot.Canvas.x = pot.x - pot.width / 2;
                     pot.Canvas.y = pot.y - pot.height * 0.8f;
                     AddChildAt(pot.Canvas, 101);
+                }
+            }
+            if (objGroup.Name == "Planks") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Plank plank = new Plank();
+                    plank.x = obj.X;
+                    plank.y = obj.Y + obj.Height - obj.Height / 4;
+                    plank.rotation = 270;
+                    _planks.Add(plank);
+                    _destroyables.Add(plank);
+                    AddChild(plank);
                 }
             }
             if (objGroup.Name == "ForegroundTree") {
@@ -214,6 +226,7 @@ public class Level:GameObject
                 }
             }
         }
+
         //REMOVE HERE TO REMOVE RENDERING OF LINES
         foreach (NLineSegment line in _lines)
         {
@@ -237,7 +250,6 @@ public class Level:GameObject
             _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
             _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
             _colidables.Add(_tile);
-            _destroyables.Add(_tile);
             AddChild(_tile);
         }
         if(_tile!=null)
@@ -323,10 +335,21 @@ public class Level:GameObject
         CheckTrophyCollision();
         CheckRopeCollision();
         CheckPotCollision();
+        HandleExplosiveBallInteractionWithPlanks();
     }
-    
-        
 
+
+    private void HandleExplosiveBallInteractionWithPlanks() {
+        if (_ball.IsExploding) {
+            foreach (Plank plank in _planks) {
+                if (_ball.HitTest(plank)) {
+                    _ball.velocity = new Vec2();
+                    _ball.StartedTimer = true;
+                    _ball.OnPlayer = true;
+                }
+            }
+        }
+    }
     
 
     private void CheckRopeCollision() {
@@ -350,6 +373,9 @@ public class Level:GameObject
         {
             if (_explosionWait == WAITFORBOOM)
             {
+                foreach (Plank plank in _destroyables) {
+                    plank.Destroy();
+                }
                 ResetBall();
                 _explosionWait = 0;
                 _ball.StartedTimer = false;
@@ -729,7 +755,6 @@ public class Level:GameObject
                 ball.Step();
             }
         }
-
     }
 }
 
