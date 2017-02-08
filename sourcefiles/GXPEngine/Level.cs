@@ -60,7 +60,6 @@ public class Level:GameObject
         set { _currentLevel = value; }
     }
 
-
     public Level(MyGame pMyGame, int pCurrentLevel)
     {
         _currentLevel = pCurrentLevel;
@@ -243,13 +242,10 @@ public class Level:GameObject
         }
     }
 
-
     private void PlayerCamera()
     {
         x = game.width / 2 - _player.x;
-        _xOffset = x;
         y = game.height / 1.25f - _player.y;
-        _yOffset = y;
         if (x > 0)
         {
             x = 0;
@@ -273,6 +269,8 @@ public class Level:GameObject
 
     public void Update()
     {
+        _xOffset = game.x - this.x;
+        _yOffset = game.y - this.y;
         PlayerCamera();
         //Console.WriteLine(_ball.velocity.Length());
         
@@ -290,8 +288,8 @@ public class Level:GameObject
         {
             _ball.position.x = _player.x;
             _ball.position.y = _player.y;
-            _ball.velocity.x = (Input.mouseX - _player.x - _xOffset);
-            _ball.velocity.y = (Input.mouseY - _player.y - _yOffset);
+            _ball.velocity.x = (Input.mouseX - _player.x + _xOffset);
+            _ball.velocity.y = (Input.mouseY - _player.y + _yOffset);
             if (_startingBallVelocity > 30)
                 _startingBallVelocity = 30;
             _ball.velocity.Normalize().Scale(_startingBallVelocity);
@@ -531,7 +529,6 @@ public class Level:GameObject
         return;
     }
 
-    
     private bool Inside(Vec2 v1, Vec2 v2, Vec2 v3)
     {
         if (v1.x <= v3.x && v2.x >= v3.x && v1.y <= v3.y && v2.y >= v3.y)
@@ -565,6 +562,7 @@ public class Level:GameObject
             _debug = false;
         }
     }
+
     public Vec2 CheckIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4, Vec2 addition)
     {
         Vec2 v1Back = v1.Clone();
