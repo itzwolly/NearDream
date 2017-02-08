@@ -10,6 +10,7 @@ using GXPEngine;
     
     private Color _ballColor;
     public bool active;
+    public bool hitPlayer;
 
     public Stone(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null,bool? pActive = false):base (pRadius,null,null,null)
 		{
