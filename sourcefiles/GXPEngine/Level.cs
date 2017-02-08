@@ -143,9 +143,9 @@ public class Level:GameObject
             if (objGroup.Name == "Planks") {
                 foreach (TiledObject obj in objGroup.Object) {
                     Plank plank = new Plank();
-                    plank.x = obj.X;
-                    plank.y = obj.Y + obj.Height - obj.Height / 4;
-                    plank.rotation = 270;
+                    plank.x = obj.X + obj.Width/2;
+                    plank.y = obj.Y + obj.Height/2;// - obj.Height / 4;
+                    //plank.rotation = 270;
                     _planks.Add(plank);
                     _destroyables.Add(plank);
                     AddChild(plank);
@@ -338,7 +338,6 @@ public class Level:GameObject
         HandleExplosiveBallInteractionWithPlanks();
     }
 
-
     private void HandleExplosiveBallInteractionWithPlanks() {
         if (_ball.IsExploding) {
             foreach (Plank plank in _planks) {
@@ -351,7 +350,6 @@ public class Level:GameObject
         }
     }
     
-
     private void CheckRopeCollision() {
         foreach (Rope rope in _ropes) {
             if (_ball.HitTest(rope)) {
@@ -591,46 +589,62 @@ public class Level:GameObject
 
         }
 
-        //foreach (Unmovable unmovable in _colidables)
-        //{
-        //    _distanceX = unmovable.width / 2 + pSprite.width / 2;
-        //    _distanceY = unmovable.height / 2 + pSprite.height / 2;
+        for (int obj = 0; obj < _destroyables.Count; obj++)//goes through all the walls in the list
+        {
+            Sprite wall = _destroyables[obj];//selects one of the walls
+            _distanceX = wall.width / 2 + pPlayer.width / 2;//sets the horizontal distance between who and wall
+            _distanceY = wall.height / 2 + pPlayer.height / 2;//sets the vertical distance between who and wall
+            if (pPlayer.position.x + _distanceX >= wall.x &&
+                pPlayer.position.x - _distanceX <= wall.x &&
+                pPlayer.position.y + _distanceY - 20 >= wall.y &&
+                pPlayer.position.y - _distanceY + 20 <= wall.y)//selects if who is inside the boundaries of the wall
+            {
+                if (pPlayer.position.x < wall.x - wall.width + 20)//sees if who is on the left of the wall
+                {
+                    co.obj = wall;
+                    co.dir = direction.left;
+                    //Console.WriteLine("left");
+                    return;
+                }
 
-        //    if (pSprite.x + _distanceX >= unmovable.x &&
-        //        pSprite.x - _distanceX <= unmovable.x &&
-        //        pSprite.y + _distanceY >= unmovable.y &&
-        //        pSprite.y - _distanceY <= unmovable.y)
-        //    {
-        //        if (pSprite.y - _distanceY-10 < unmovable.y)
-        //        {
-        //            co.dir = direction.above;
-        //            co.obj = unmovable;
-        //            Console.WriteLine("above");
-        //            return;
-        //        }
-        //        else if (pSprite.y + _distanceY +10 > unmovable.y)
-        //        {
-        //            co.dir = direction.below;
-        //            co.obj = unmovable;
-        //            Console.WriteLine("below");
-        //            return;
-        //        }
-        //        if (pSprite.x - _distanceX - 10 < unmovable.x)
-        //        {
-        //            co.dir = direction.left;
-        //            co.obj = unmovable;
-        //            Console.WriteLine("left");
-        //            return;
-        //        }
-        //        if (pSprite.x + _distanceX + 10 > unmovable.x)
-        //        {
-        //            co.dir = direction.right;
-        //            co.obj = unmovable;
-        //            Console.WriteLine("right");
-        //            return;
-        //        }
-        //    }
-        //}
+                if (pPlayer.position.x > wall.x + wall.width - 20)// sees if who is on the right of enemy5
+                {
+                    co.obj = wall;
+                    co.dir = direction.right;
+                    //Console.WriteLine("right");
+                    return;
+                }
+            }
+        }
+        for (int obj = 0; obj < _destroyables.Count; obj++)
+        {
+            Sprite wall = _destroyables[obj];
+            _distanceX = wall.width / 2 + pPlayer.width / 2;
+            _distanceY = wall.height / 2 + pPlayer.height / 2;
+            if (pPlayer.position.x + _distanceX >= wall.x &&
+                pPlayer.position.x - _distanceX <= wall.x &&
+                pPlayer.position.y + _distanceY >= wall.y &&
+                pPlayer.position.y - _distanceY <= wall.y)
+            {
+                if (pPlayer.position.y < wall.y - wall.height / 2)
+                {
+                    co.obj = wall;
+                    co.dir = direction.above;
+                    //Console.WriteLine("above");
+                    return;
+                }
+
+                if (pPlayer.position.y > wall.y + wall.height / 2)
+                {
+                    co.obj = wall;
+                    co.dir = direction.below;
+                    //Console.WriteLine("below");
+                    return;
+                }
+            }
+
+        }
+    
 
         return;
     }

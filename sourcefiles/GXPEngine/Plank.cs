@@ -7,7 +7,7 @@ using GXPEngine;
 public class Plank : Sprite
 {
     public Plank() : base("assets\\sprites\\plank.png") {
-        SetOrigin(0, 0);
+        SetOrigin(width/2, height/2);
         scale = 2;
     }
 }
