@@ -66,6 +66,8 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="Items\Trophy.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="MyGame.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
     <Compile Include="Stone.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="Unmovable.cs" />
     <Compile Include="Utils\Pausable.cs" />
     <Compile Include="Utils\TMXParser.cs" />

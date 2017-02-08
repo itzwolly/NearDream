@@ -31,6 +31,8 @@ public class Level : GameObject
     private List<GameTile> _collidables;
     private List<LineSegment> _lines;
     private List<Stone> _stones;
+    private List<Trophy> _trophies = new List<Trophy>();
+
     private Player _player;
     private float _startingBallVelocity;
     private TMXParser _tmxParser = new TMXParser();
@@ -62,20 +64,26 @@ public class Level : GameObject
         _collidables = new List<GameTile>();
         _lines = new List<LineSegment>();
 
-        _player = new Player(200, game.height / 2);
-        AddChild(_player);
         _startingBallVelocity = SPEED / 2;
 
-        CreateLevel();
         _stones = new List<Stone>();
         collision = new CollidedOption();
 
+        CreateLevel();
         CreateStones();
+        CreateForegroundTrees();
+        CreatePlayer();
+        CreateBall();
+    }
+
+    private void CreatePlayer() {
+        _player = new Player(200, game.height / 2);
+        AddChildAt(_player, 30);
     }
 
     private void CreateBall() {
         _ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Red);
-        AddChild(_ball);
+        AddChildAt(_ball, 31);
         _ball.velocity = new Vec2();
         _ballToLine = new LineSegment(null, null);
         AddChild(_ballToLine);
@@ -120,8 +128,6 @@ public class Level : GameObject
 
     private void CreateLevel()
     {
-        CreateBall();
-
         /* For when we use tiles */
         foreach (Layer layer in _map.Layer) {
             layer.Data.SetLevelArray(_map.Height, _map.Width);
@@ -143,10 +149,22 @@ public class Level : GameObject
                     }
                 }
             }
+            if (objGroup.Name == "Trophies") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Trophy trophy = new Trophy(ASSET_FILE_PATH + "sprites\\trophy_animation_test.png", 7, 7);
+                    trophy.x = obj.X + obj.Width / 4;
+                    trophy.y = obj.Y + obj.Height / 4;
+                    _trophies.Add(trophy);
+                }
+            }
         }
 
         foreach (NLineSegment line in _lines) {
             AddChild(line);
+        }
+
+        foreach (Trophy trophy in _trophies) {
+            AddChild(trophy);
         }
     }
 
@@ -156,8 +174,8 @@ public class Level : GameObject
         // because otherwise every tileset will be created.
 
         // Unbreakable Wall
-        if (pTile == 1) {
-            _tile = new Unmovable(this, ASSET_FILE_PATH + "\\sprites\\" + _map.TileSet[0].Image.Source, pTile, 1, 1);
+        if (pTile == 1) { // assets\\sprites\sprites/circle.png cannot be 
+            _tile = new Unmovable(this, ASSET_FILE_PATH + _map.TileSet[0].Image.Source, pTile, 1, 1);
             _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
             _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
             _collidables.Add(_tile);
@@ -216,7 +234,31 @@ public class Level : GameObject
 
         HandlePlayer();
         CheckStones();
-       
+        CheckTrophyCollision();
+    }
+
+    private void CreateForegroundTrees() {
+        foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            if (objGroup.Name == "ForegroundTree") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
+                    tree.x = obj.X - obj.Width;
+                    tree.y = obj.Y + obj.Height;
+                    AddChildAt(tree, 100);
+                }
+            }
+        }
+    }
+
+    private void CheckTrophyCollision() {
+        foreach (Trophy trophy in _trophies) {
+            if (_player.HitTest(trophy)) {
+                if (!trophy.IsDestroyed()) {
+                    _player.AmountOfTrophies++;
+                }
+                trophy.Destroy();
+            }
+        }
     }
 
     private void CheckStones()
