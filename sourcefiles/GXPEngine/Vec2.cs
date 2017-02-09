@@ -168,7 +168,8 @@ namespace GXPEngine
 		public void ReflectOnPoint(Vec2 other,Vec2 other1, float elasticity)
 		{
 			Vec2 _tempVec = other.Clone().Subtract(other1).Normal();
-			this.Subtract(_tempVec.Clone().Scale(2 * this.Dot(_tempVec) * elasticity));
+			this.Subtract(_tempVec.Clone().Scale(2 * this.Dot(_tempVec)));
+            this.Scale(elasticity);
 		}
 
 		public Vec2 Normal()

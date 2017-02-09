@@ -11,6 +11,7 @@ namespace GXPEngine
 		private bool _OnPlayer;
 		public bool IsExploding;
 		public bool StartedTimer;
+        public bool AddGravity;
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;
