@@ -12,17 +12,20 @@ public class Level:GameObject
     const int GRAVITY = 15;
     const int REPETITIONS=2;
     const float ELASTICITY = 0.7f;
+    const int MAXPOWER = 30;
     private const string ASSET_FILE_PATH = "assets\\";
 
     private List<Plank> _destroyables;
     private Vec2 _gravity = new Vec2(0, 1);
 
+    private bool _goingUp;
     private Ball _reticle;
     private const float BLASTSIZE=100;
     private const int WAITFORBOOM = 180;
     private float _yOffset;
     private float _xOffset;
     private int _explosionWait;
+    private Indicator _indicator;
 
     private bool _debug;
 
@@ -94,6 +97,25 @@ public class Level:GameObject
         CreateReticle();
     }
 
+    public void Update()
+    {
+        _xOffset = game.x - this.x;
+        _yOffset = game.y - this.y;
+
+        _reticle.x = Input.mouseX + _xOffset;
+        _reticle.y = Input.mouseY + _yOffset;
+        PlayerCamera();
+
+        HandleBall();
+        HandlePlayer();
+        CheckStones();
+        BallBoom();
+        CheckTrophyCollision();
+        CheckRopeCollision();
+        CheckPotCollision();
+        HandleExplosiveBallInteractionWithPlanks();
+    }
+
     private void CreatePlayer() {
         _player = new Player(200, game.height / 2);
         AddChildAt(_player, 30);
@@ -144,7 +166,8 @@ public class Level:GameObject
                     Plank plank = new Plank();
                     plank.x = obj.X + obj.Width/2;
                     plank.y = obj.Y + obj.Height/2;// - obj.Height / 4;
-                    //plank.rotation = 270;
+                    plank.position.x = plank.x;
+                    plank.position.y = plank.y;
                     _planks.Add(plank);
                     _destroyables.Add(plank);
                     AddChild(plank);
@@ -172,15 +195,15 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(400,800 ), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(500,800 ), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        _stone = new Stone(25, new Vec2(300,800), null, Color.Blue, false);
-        AddChild(_stone);
-        _stones.Add(_stone);
-        _stone.velocity = Vec2.zero;
+        //_stone = new Stone(25, new Vec2(450,800), null, Color.Blue, false);
+        //AddChild(_stone);
+        //_stones.Add(_stone);
+        //_stone.velocity = Vec2.zero;
 
         _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
         AddChild(_line);
@@ -280,24 +303,24 @@ public class Level:GameObject
         }
     }
 
-    public void Update()
+    private void CreateIndicator()
     {
-        _xOffset = game.x - this.x;
-        _yOffset = game.y - this.y;
+        _indicator = new Indicator();
+        AddChild(_indicator);
+    }
 
-        _reticle.x = Input.mouseX + _xOffset;
-        _reticle.y = Input.mouseY + _yOffset;
-        PlayerCamera();
-        //Console.WriteLine(_ball.velocity.Length());
+    private void HandleIndicator(int pPower)
+    {
+        _indicator.x = _player.x;
+        _indicator.y = _player.y;
+        _indicator.SetPower(pPower);
+    }
 
-        HandleBall();
-        HandlePlayer();
-        CheckStones();
-        BallBoom();
-        CheckTrophyCollision();
-        CheckRopeCollision();
-        CheckPotCollision();
-        HandleExplosiveBallInteractionWithPlanks();
+    private void RemoveIndicator()
+    {
+        _goingUp = true;
+        _indicator.Destroy();
+        _indicator = null;
     }
 
     private void HandleBall()
@@ -307,9 +330,22 @@ public class Level:GameObject
         {
             _ball.IsExploding = !_ball.IsExploding;
         }
+        
         if (Input.GetMouseButton(0) && _ball.OnPlayer)
         {
-            _startingBallVelocity += 0.5f;
+            if (_indicator == null)
+                CreateIndicator();
+
+            if (_startingBallVelocity > MAXPOWER || _startingBallVelocity < 0)
+                _goingUp=!_goingUp;
+
+            if (_goingUp)
+                _startingBallVelocity += 0.3f;
+            else
+                _startingBallVelocity -= 0.3f;
+
+
+            HandleIndicator((int)_startingBallVelocity/4);
         }
         else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
         {
@@ -317,15 +353,13 @@ public class Level:GameObject
             _ball.position.y = _player.y;
             _ball.velocity.x = (Input.mouseX - _player.x + _xOffset);
             _ball.velocity.y = (Input.mouseY - _player.y + _yOffset);
-            if (_startingBallVelocity > 30 * REPETITIONS)
-                _startingBallVelocity = 30 * REPETITIONS;
-            _ball.velocity.Normalize().Scale(_startingBallVelocity / 2);
+            _ball.velocity.Normalize().Scale(_startingBallVelocity);
             _ball.OnPlayer = false;
             _startingBallVelocity = SPEED;
+            RemoveIndicator();
         }
         else if (!_ball.OnPlayer)
         {
-
             _ball.velocity.Add(_gravity);
             for (int i = 0; i <= REPETITIONS; i++)
             {
@@ -369,6 +403,7 @@ public class Level:GameObject
             if (_explosionWait == WAITFORBOOM)
             {
                 foreach (Plank plank in _destroyables) {
+                    if(_ball.position.DistanceTo(plank.position)<BLASTSIZE)
                     plank.Destroy();
                 }
                 ResetBall();
@@ -427,7 +462,7 @@ public class Level:GameObject
            
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
-                stone.velocity = new Vec2(1, 0).Scale(_ball.velocity.Length());
+                stone.velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
                 stone.Step();
                 _ball.velocity = Vec2.zero;
                 _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
@@ -442,8 +477,11 @@ public class Level:GameObject
             {
 
                 stone.velocity.Add(_gravity);
-                CheckAllLines(stone);
-                stone.Step();
+                for (int j = 0; j < REPETITIONS; j++)
+                {
+                    CheckAllLines(stone);
+                    stone.Step();
+                }
             }
             for (int j=0;j<_stones.Count;j++)
             {
@@ -670,6 +708,7 @@ public class Level:GameObject
 
     void CheckAllLines(Ball ball)
     {
+        ball.UpdateNextPosition();
         for (int i = 0; i < _lines.Count; i++)
         {
             ActualBounce(ball, _lines[i],ball.IsExploding);
@@ -686,27 +725,29 @@ public class Level:GameObject
         }
     }
 
-    public Vec2 CheckIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4, Vec2 addition)
+    const float epsilon = 0.8f;
+
+    public Vec2 CheckIntersection(Vec2 lineStart, Vec2 lineEnd, Vec2 ballPosition, Vec2 ballNextPosition, Vec2 difference)
     {
-        Vec2 v1Back = v1.Clone();
-        Vec2 v2Back = v2.Clone();
-        v1.Add(addition);
-        v2.Add(addition);
-        v1Back.Subtract(addition);
-        v2Back.Subtract(addition);
-        float ua = ((v4.x - v3.x) * (v1.y - v3.y) - (v4.y - v3.y) * (v1.x - v3.x)) / ((v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y));
-        float ub = ((v2.x - v1.x) * (v1.y - v3.y) - (v2.y - v1.y) * (v1.x - v3.x)) / ((v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y));
+        Vec2 lineStartUnderneath = lineStart.Clone();
+        Vec2 lineEndUnderneath = lineEnd.Clone();
+        lineStart.Add(difference);
+        lineEnd.Add(difference);
+        lineStartUnderneath.Subtract(difference);
+        lineEndUnderneath.Subtract(difference);
+        float ua = ((ballNextPosition.x - ballPosition.x) * (lineStart.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
+        float ub = ((lineEnd.x - lineStart.x) * (lineStart.y - ballPosition.y) - (lineEnd.y - lineStart.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
         //Console.WriteLine(ua+"||"+ub);
-        Vec2 _tempIntersect = new Vec2(v1.x + ua * (v2.x - v1.x), v1.y + ua * (v2.y - v1.y));
-        if (ub < 1 && ub >= 0 && ua < 1 && ua >= 0)
+        Vec2 _tempIntersect = new Vec2(lineStart.x + ua * (lineEnd.x - lineStart.x), lineStart.y + ua * (lineEnd.y - lineStart.y));
+        if (ub <= 1 && ub >= -epsilon && ua < 1 && ua >= 0)
             return _tempIntersect;//.Add(addition.Normalize());
         else
         {
-            ua = ((v4.x - v3.x) * (v1Back.y - v3.y) - (v4.y - v3.y) * (v1Back.x - v3.x)) / ((v4.y - v3.y) * (v2Back.x - v1Back.x) - (v4.x - v3.x) * (v2Back.y - v1Back.y));
-            ub = ((v2Back.x - v1Back.x) * (v1Back.y - v3.y) - (v2Back.y - v1Back.y) * (v1Back.x - v3.x)) / ((v4.y - v3.y) * (v2Back.x - v1Back.x) - (v4.x - v3.x) * (v2Back.y - v1Back.y));
+            ua = ((ballNextPosition.x - ballPosition.x) * (lineStartUnderneath.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
+            ub = ((lineEndUnderneath.x - lineStartUnderneath.x) * (lineStartUnderneath.y - ballPosition.y) - (lineEndUnderneath.y - lineStartUnderneath.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
             //Console.WriteLine(ua+"||"+ub);
-            _tempIntersect = new Vec2(v1Back.x + ua * (v2Back.x - v1Back.x), v1Back.y + ua * (v2Back.y - v1Back.y));
-            if (ub < 1 && ub >= 0 && ua < 1 && ua >= 0)
+            _tempIntersect = new Vec2(lineStartUnderneath.x + ua * (lineEndUnderneath.x - lineStartUnderneath.x), lineStartUnderneath.y + ua * (lineEndUnderneath.y - lineStartUnderneath.y));
+            if (ub <= 1 && ub >= -epsilon && ua < 1 && ua >= 0)
                 return _tempIntersect;//.Subtract(addition.Normalize());
             else return Vec2.zero;
         }
@@ -733,7 +774,7 @@ public class Level:GameObject
                 ball.UpdateNextPosition();
                 //ball.velocity = Vec2.zero;
                 ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
-                ball.UptadeInfo();
+                ball.UpdateInfo();
                 ball.Step();
             }
         }
@@ -752,6 +793,7 @@ public class Level:GameObject
             else
             {
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                ball.Step();
                 ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
                 ball.Step();
             }
@@ -767,6 +809,7 @@ public class Level:GameObject
             else
             {
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                ball.Step();
                 ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
                 ball.Step();
             }

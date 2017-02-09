@@ -38,6 +38,7 @@ namespace GXPEngine
 		}
 
 		protected void draw() {
+            Console.WriteLine("lol");
 			graphics.Clear (Color.Empty);
 			graphics.FillEllipse (
 				new SolidBrush (_ballColor),
@@ -62,12 +63,12 @@ namespace GXPEngine
 			x = position.x;
 			y = position.y;
 
-			UptadeInfo();
+			UpdateInfo();
 		}
-		public void UptadeInfo()
+		public void UpdateInfo()
 		{
 			nextPosition = position.Clone().Add(velocity);
-			nextPositionBorder = position.Clone().Add(velocity.Clone().Normalize().Scale(velocity.Length() + radius));
+			//nextPositionBorder = position.Clone().Add(velocity.Clone().Normalize().Scale(velocity.Length() + radius));
 		}
 
 		public Color ballColor {

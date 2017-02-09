@@ -68,6 +68,7 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Indicator.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Items\Trophy.cs" />
     <Compile Include="Level.cs" />
