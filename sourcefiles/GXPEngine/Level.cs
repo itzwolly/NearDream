@@ -196,10 +196,10 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        //Stone _stone = new Stone(25, new Vec2(500,800 ), null, Color.Blue, false);
-        //AddChild(_stone);
-        //_stones.Add(_stone);
-        //_stone.velocity = Vec2.zero;
+        Stone _stone = new Stone(25, new Vec2(2400,600 ), null, Color.Blue, false);
+        AddChild(_stone);
+        _stones.Add(_stone);
+        _stone.velocity = Vec2.zero;
 
         //_stone = new Stone(25, new Vec2(450,800), null, Color.Blue, false);
         //AddChild(_stone);
@@ -411,12 +411,14 @@ public class Level:GameObject
             if (_explosionWait == WAITFORBOOM)
             {
                 _sounds.PlayExplosion();
-                foreach (Plank plank in _destroyables) {
+                for (int i=0; i < _destroyables.Count;i++) {
+                    Plank plank = _destroyables[i];
                     if (_ball.position.DistanceTo(plank.position) < BLASTSIZE)
                     {
                         _sounds.PlayPlankBlow();
                         _destroyables.Remove(plank);
                         plank.Destroy();
+                        i--;
                     }
                 }
                 ResetBall();
@@ -829,7 +831,7 @@ public class Level:GameObject
             }
             else
             {
-                _sounds.PlayBallBounce();
+               // _sounds.PlayBallBounce();
                 ball.position = _intersection;
                 ball.UpdateNextPosition();
                 //ball.velocity = Vec2.zero;
@@ -852,7 +854,7 @@ public class Level:GameObject
             }
             else
             {
-                _sounds.PlayBallBounce();
+                //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
@@ -869,7 +871,7 @@ public class Level:GameObject
             }
             else
             {
-                _sounds.PlayBallBounce();
+                //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
