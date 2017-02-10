@@ -82,6 +82,7 @@
     <Compile Include="Pot.cs" />
     <Compile Include="Rope.cs" />
     <Compile Include="SimpleRock.cs" />
+    <Compile Include="Sounds.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TMX\Data.cs" />

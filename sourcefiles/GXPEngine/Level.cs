@@ -8,6 +8,7 @@ using GXPEngine;
 
 public class Level:GameObject
 {
+    private Sounds _sounds;
     const int SPEED = 10;
     const int GRAVITY = 15;
     const int REPETITIONS=2;
@@ -79,11 +80,11 @@ public class Level:GameObject
     {
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
-
+        _sounds = new Sounds();
         _destroyables = new List<Plank>();
         _colidables = new List<GameTile>();
         _lines = new List<LineSegment>();
-
+        _sounds.PlayMusic();
         _startingBallVelocity = SPEED / 2;
 
         _stones = new List<Stone>();
@@ -132,7 +133,7 @@ public class Level:GameObject
                 foreach (TiledObject obj in objGroup.Object) {
                     Bridge bridge = new Bridge(315);
                     bridge.x = obj.X;
-                    bridge.y = obj.Y;
+                    bridge.y = obj.Y-bridge.height/2;
                     bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
                     _bridges.Add(bridge);
                     AddChild(bridge);
@@ -195,10 +196,10 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(500,800 ), null, Color.Blue, false);
-        AddChild(_stone);
-        _stones.Add(_stone);
-        _stone.velocity = Vec2.zero;
+        //Stone _stone = new Stone(25, new Vec2(500,800 ), null, Color.Blue, false);
+        //AddChild(_stone);
+        //_stones.Add(_stone);
+        //_stone.velocity = Vec2.zero;
 
         //_stone = new Stone(25, new Vec2(450,800), null, Color.Blue, false);
         //AddChild(_stone);
@@ -305,6 +306,7 @@ public class Level:GameObject
 
     private void CreateIndicator()
     {
+        _sounds.PlayCharge();
         _indicator = new Indicator();
         AddChild(_indicator);
     }
@@ -328,6 +330,7 @@ public class Level:GameObject
 
         if (Input.GetKeyDown(Key.E))
         {
+            _sounds.PlaySwitch();
             _ball.IsExploding = !_ball.IsExploding;
         }
         
@@ -344,7 +347,7 @@ public class Level:GameObject
             else
                 _startingBallVelocity -= 0.3f;
 
-
+            
             HandleIndicator((int)_startingBallVelocity/4);
         }
         else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
@@ -357,6 +360,8 @@ public class Level:GameObject
             _ball.OnPlayer = false;
             _startingBallVelocity = SPEED;
             RemoveIndicator();
+            _sounds.StopCharge();
+            _sounds.PlayShoot();
         }
         else if (!_ball.OnPlayer)
         {
@@ -388,9 +393,12 @@ public class Level:GameObject
                     foreach (Bridge bridge in _bridges) {
                         if (bridge.BridgeName == rope.BridgeToDrop) {
                             bridge.rotation = 0;
+                            bridge.Down = true;
+                            _sounds.PlayBridgeFall();
                         }
                     }
                 }
+                _sounds.PlayCutRope();
                 rope.Destroy();
             }
         }
@@ -402,9 +410,14 @@ public class Level:GameObject
         {
             if (_explosionWait == WAITFORBOOM)
             {
+                _sounds.PlayExplosion();
                 foreach (Plank plank in _destroyables) {
-                    if(_ball.position.DistanceTo(plank.position)<BLASTSIZE)
-                    plank.Destroy();
+                    if (_ball.position.DistanceTo(plank.position) < BLASTSIZE)
+                    {
+                        _sounds.PlayPlankBlow();
+                        _destroyables.Remove(plank);
+                        plank.Destroy();
+                    }
                 }
                 ResetBall();
                 _explosionWait = 0;
@@ -434,6 +447,7 @@ public class Level:GameObject
                     _player.AmountOfTrophies++;
                 }
                 trophy.Destroy();
+                _sounds.PlayPickUp();
             }
         }
     }
@@ -448,6 +462,7 @@ public class Level:GameObject
                         pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
                         new Timer(1000, pot.Canvas.Destroy);
                     }
+                    _sounds.PlayBreakPot();
                     pot.Destroy();
                 }
             }
@@ -462,6 +477,7 @@ public class Level:GameObject
            
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
+                _sounds.PlayBallRockCollision();
                 stone.velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
                 stone.Step();
                 _ball.velocity = Vec2.zero;
@@ -481,19 +497,21 @@ public class Level:GameObject
                 {
                     CheckAllLines(stone);
                     stone.Step();
+                    //_sounds.PlayRockBounce();
                 }
             }
             for (int j=0;j<_stones.Count;j++)
             {
                 Stone stone2 = _stones[j];
                 float _tempDistance = stone.position.DistanceTo(stone2.position);
-                if (j!=i &&  _tempDistance < stone.radius + stone.radius)
+                if (j!=i &&  _tempDistance < stone.radius + stone2.radius)
                 {
                     //stone.position.x - ();
                     //stone.position.y - ();
                     stone2.active = true;
                     if (!stone2.started)
                     {
+                        _sounds.PlayRockBounce();
                         stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
                         stone2.started = true;
                     }
@@ -521,14 +539,19 @@ public class Level:GameObject
     {
         if (Input.GetKeyDown(Key.SPACE))
         {
+            _sounds.PlayJump();
             _debug = true;
             _player.position.y--;
             _player.velocity.y = -GRAVITY;
         }
         if (Input.GetKey(Key.D))
+        {
             _player.position.x += SPEED / 2;
+        }
         if (Input.GetKey(Key.A))
+        {
             _player.position.x -= SPEED / 2;
+        }
         if (Input.GetKeyDown(Key.R))
         {
             ResetBall();   
@@ -540,8 +563,18 @@ public class Level:GameObject
         {
             if (collision.dir == direction.above)
             {
-                _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
-                _player.velocity = Vec2.zero;
+                //_sounds.PlayWalk();
+                if (collision.obj is Bridge)
+                {
+                    _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
+                    _player.velocity = Vec2.zero;
+                }
+                else
+                {
+                    //Console.WriteLine(collision.obj);
+                    _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
+                    _player.velocity = Vec2.zero;
+                }
             }
             if (collision.dir == direction.below)
             {
@@ -685,7 +718,32 @@ public class Level:GameObject
             }
 
         }
-    
+
+
+        
+        for (int obj = 0; obj < _bridges.Count; obj++)
+        {
+            if (_bridges[obj].Down)
+            {
+                Sprite wall = _bridges[obj];
+                _distanceX = wall.width + pPlayer.width / 2;
+                _distanceY = wall.height / 2 + pPlayer.height / 2;
+                if (pPlayer.position.x + _distanceX >= wall.x &&
+                    pPlayer.position.x - _distanceX <= wall.x &&
+                    pPlayer.position.y + _distanceY >= wall.y &&
+                    pPlayer.position.y - _distanceY <= wall.y)
+                {
+                    if (pPlayer.position.y < wall.y)
+                    {
+                        co.obj = wall;
+                        co.dir = direction.above;
+                        //Console.WriteLine("above");
+                        return;
+                    }
+                }
+            }
+
+        }
 
         return;
     }
@@ -760,7 +818,7 @@ public class Level:GameObject
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
         float _distanceToStart = line.start.DistanceTo(ball.position);
         float _distanceToEnd = line.end.DistanceTo(ball.position);
-        Console.WriteLine(_intersection);
+        //Console.WriteLine(_intersection);
         if (_intersection.y != 0)
         {
             if (stick)
@@ -769,7 +827,9 @@ public class Level:GameObject
                 ball.StartedTimer = true;
                 ball.OnPlayer = true;
             }
-            else {
+            else
+            {
+                _sounds.PlayBallBounce();
                 ball.position = _intersection;
                 ball.UpdateNextPosition();
                 //ball.velocity = Vec2.zero;
@@ -792,6 +852,7 @@ public class Level:GameObject
             }
             else
             {
+                _sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
@@ -808,6 +869,7 @@ public class Level:GameObject
             }
             else
             {
+                _sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
