@@ -7,6 +7,7 @@ using GXPEngine;
 public class Bridge : Sprite
 {
     string _bridgeName;
+    public bool Down;
 
     public string BridgeName {
         get { return _bridgeName; }
@@ -14,7 +15,7 @@ public class Bridge : Sprite
     }
 
     public Bridge(int pRotation) : base("assets\\sprites\\bridge_concept.png") {
-        SetOrigin(0, height);
+        SetOrigin(width/2, 3*height/2);
         scale = 2f;
         rotation = pRotation;
     }

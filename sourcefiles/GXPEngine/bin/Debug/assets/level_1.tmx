@@ -88,8 +88,23 @@
   <object id="160" x="192" y="960">
    <polyline points="0,0 0,384"/>
   </object>
+  <object id="161" x="2304" y="832">
+   <polyline points="0,0 0,-64"/>
+  </object>
   <object id="162" x="320" y="1152">
-   <polyline points="0,0 128,-320"/>
+    <polyline points="0,0 128,-320"/>
+  </object>
+  <object id="163" x="2496" y="640">
+   <polyline points="0,0 128,0"/>
+  </object>
+  <object id="164" x="2624" y="640">
+   <polyline points="0,0 256,128"/>
+  </object>
+  <object id="165" x="2880" y="768">
+   <polyline points="0,0 128,0"/>
+  </object>
+  <object id="166" x="3008" y="768">
+   <polyline points="0,0 0,-192"/>
   </object>
  </objectgroup>
  <objectgroup name="Trophies">
