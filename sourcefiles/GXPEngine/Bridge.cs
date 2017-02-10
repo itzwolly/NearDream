@@ -15,7 +15,7 @@ public class Bridge : Sprite
     }
 
     public Bridge(int pRotation) : base("assets\\sprites\\bridge_concept.png") {
-        SetOrigin(0, height/2);
+        SetOrigin(width/2, 3*height/2);
         scale = 2f;
         rotation = pRotation;
     }

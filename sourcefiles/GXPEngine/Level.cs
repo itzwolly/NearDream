@@ -132,8 +132,8 @@ public class Level:GameObject
             if (objGroup.Name == "Bridge") {
                 foreach (TiledObject obj in objGroup.Object) {
                     Bridge bridge = new Bridge(315);
-                    bridge.x = obj.X;
-                    bridge.y = obj.Y-bridge.height/2;
+                    bridge.x = obj.X+bridge.width/2;
+                    bridge.y = obj.Y;
                     bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
                     _bridges.Add(bridge);
                     AddChild(bridge);
@@ -392,6 +392,7 @@ public class Level:GameObject
                 if (!rope.IsDestroyed()) {
                     foreach (Bridge bridge in _bridges) {
                         if (bridge.BridgeName == rope.BridgeToDrop) {
+                            bridge.y += bridge.height / 2-64;
                             bridge.rotation = 0;
                             bridge.Down = true;
                             _sounds.PlayBridgeFall();
@@ -728,7 +729,7 @@ public class Level:GameObject
             if (_bridges[obj].Down)
             {
                 Sprite wall = _bridges[obj];
-                _distanceX = wall.width + pPlayer.width / 2;
+                _distanceX = wall.width / 2 + pPlayer.width / 2;
                 _distanceY = wall.height / 2 + pPlayer.height / 2;
                 if (pPlayer.position.x + _distanceX >= wall.x &&
                     pPlayer.position.x - _distanceX <= wall.x &&
