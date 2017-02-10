@@ -14,12 +14,12 @@ public class Trophy : Item {
     private void Update() {
         index++;
 
-        if (index == 2) {
+        if (index == 3) {
             NextFrame();
             index = 0;
         }
 
-        if (currentFrame > 44) {
+        if (currentFrame > 58) {
             currentFrame = 0;
         }
     }

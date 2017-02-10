@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using GXPEngine;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 
 public class Level:GameObject
 {
-    const int SPEED = 10;
+    const int SPEED = 8;
     const int GRAVITY = 15;
     const int REPETITIONS=2;
     const float ELASTICITY = 0.7f;
@@ -24,7 +26,21 @@ public class Level:GameObject
     private float _xOffset;
     private int _explosionWait;
 
+    private bool _moveTile = true;
+    private float _playerXOffset;
     private bool _debug;
+
+    private float _playerTotalXOffset;
+    private float _levelXOffset;
+
+    private TileDirection _midGroundTileDirection = TileDirection.NONE;
+    private TileDirection _foreGroundTileDirection = TileDirection.NONE;
+
+    private enum TileDirection {
+        NONE,
+        LEFT,
+        RIGHT
+    }
 
     public enum direction
     {
@@ -37,7 +53,7 @@ public class Level:GameObject
         public Sprite obj;
     }
 
-    private List<GameTile> _colidables;
+    private List<GameTile> _collidables;
     private List<LineSegment> _lines;
     private List<Stone> _stones;
     private List<Trophy> _trophies = new List<Trophy>();
@@ -45,6 +61,11 @@ public class Level:GameObject
     private List<Bridge> _bridges = new List<Bridge>();
     private List<Pot> _pots = new List<Pot>();
     private List<Plank> _planks = new List<Plank>();
+
+    private ObservableCollection<GameTile> _foreGroundTiles = new ObservableCollection<GameTile>();
+    private ObservableCollection<GameTile> _midGroundTiles = new ObservableCollection<GameTile>();
+    private ObservableCollection<GameTile> _backGroundTiles = new ObservableCollection<GameTile>();
+    
 
     private Random rnd = new Random();
 
@@ -65,6 +86,7 @@ public class Level:GameObject
     private int _currentLevel;
     private uint[,] _level;
     private GameTile _tile;
+    private List<Canvas> _canvases = new List<Canvas>();
 
     public int CurrentLevel
     {
@@ -78,7 +100,7 @@ public class Level:GameObject
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
 
         _destroyables = new List<Plank>();
-        _colidables = new List<GameTile>();
+        _collidables = new List<GameTile>();
         _lines = new List<LineSegment>();
 
         _startingBallVelocity = SPEED / 2;
@@ -92,6 +114,42 @@ public class Level:GameObject
         CreateBall();
         CreateTiledObjects();
         CreateReticle();
+
+        for (int i = 0; i < _foreGroundTiles.Count; i++) {
+            _foreGroundTiles[i].TileIndex = i;
+            Canvas canvas = new Canvas(64, 64);
+            canvas.x = _foreGroundTiles[i].x;
+            canvas.y = _foreGroundTiles[i].y;
+            AddChild(canvas);
+            _canvases.Add(canvas);
+        }
+
+        _midGroundTiles.CollectionChanged += _midGroundTiles_CollectionChanged;
+        _foreGroundTiles.CollectionChanged += _foreGroundTiles_CollectionChanged;
+    }
+
+    void _foreGroundTiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+        if (e.Action == NotifyCollectionChangedAction.Move) {
+            GameTile newestTile = (e.NewItems[0] as GameTile);
+            HandleTileMovement(newestTile, _foreGroundTiles, _foreGroundTileDirection);
+        }
+    }
+
+    private void _midGroundTiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+        if (e.Action == NotifyCollectionChangedAction.Move) {
+            GameTile newestTile = (e.NewItems[0] as GameTile);
+            HandleTileMovement(newestTile, _midGroundTiles, _midGroundTileDirection);
+        }
+    }
+
+    private void HandleTileMovement(GameTile pGameTile, ObservableCollection<GameTile> pGameTileList, TileDirection pTileDirection) {
+        if (pTileDirection == TileDirection.RIGHT) {
+            pGameTile.x = pGameTileList.ElementAt(pGameTileList.IndexOf(pGameTile) - 1).x + pGameTile.width;
+            pGameTile.y = pGameTileList.ElementAt(pGameTileList.IndexOf(pGameTile) - 1).y;
+        } else if (pTileDirection == TileDirection.LEFT) {
+            pGameTile.x = pGameTileList.ElementAt(pGameTileList.IndexOf(pGameTile) + 1).x - pGameTile.width;
+            pGameTile.y = pGameTileList.ElementAt(pGameTileList.IndexOf(pGameTile) + 1).y;
+        }
     }
 
     private void CreatePlayer() {
@@ -152,7 +210,7 @@ public class Level:GameObject
             }
             if (objGroup.Name == "ForegroundTree") {
                 foreach (TiledObject obj in objGroup.Object) {
-                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png");
+                    Tree tree = new Tree(ASSET_FILE_PATH + "sprites\\tree_try.png"); // tree_1
                     tree.x = obj.X - obj.Width;
                     tree.y = obj.Y + obj.Height;
                     AddChildAt(tree, 100);
@@ -219,7 +277,7 @@ public class Level:GameObject
             }
             if (objGroup.Name == "Trophies") {
                 foreach (TiledObject obj in objGroup.Object) {
-                    Trophy trophy = new Trophy(ASSET_FILE_PATH + "sprites\\trophy_animation_test.png", 7, 7);
+                    Trophy trophy = new Trophy(ASSET_FILE_PATH + "sprites\\PumpSprite.png", 8, 8);
                     trophy.x = obj.X + obj.Width / 4;
                     trophy.y = obj.Y + obj.Height / 4;
                     _trophies.Add(trophy);
@@ -251,14 +309,22 @@ public class Level:GameObject
                     _tile = new GameTile(this, pLayer, ASSET_FILE_PATH + tileSet.Image.Source, pTile - (uint)tileSet.FirstGId, tileSet.Columns, tileSet.TileCount / tileSet.Columns);
                     _tile.x = (pCol * _map.TileWidth) + (_tile.width / 2);
                     _tile.y = (pRow * _map.TileHeight) + (_tile.height / 2);
+
                     AddChild(_tile);
+
+                    if (tileSet.Name.ToLower() == "background") {
+                        _backGroundTiles.Add(_tile);
+                    }
                     if (tileSet.Name.ToLower() == "midground") {
-                        _colidables.Add(_tile);
+                        _collidables.Add(_tile);
+                        _midGroundTiles.Add(_tile);
+                    }
+                    if (tileSet.Name.ToLower() == "foreground") {
+                        _foreGroundTiles.Add(_tile);
                     }
                 }
             }
         }
-        
 
         if (_tile != null) {
             _tile.position = new Vec2(_tile.x, _tile.y);
@@ -267,8 +333,12 @@ public class Level:GameObject
 
     private void PlayerCamera()
     {
-        x = game.width / 2 - _player.x;
         y = game.height / 1.25f - _player.y;
+
+        if (_player.IsMoving) {
+            x = game.width / 2 - _player.x;
+        }
+
         if (x > 0)
         {
             x = 0;
@@ -288,10 +358,63 @@ public class Level:GameObject
         {
             x = -((game.width * 3) - (game.width / 5));
         }
+
+        if (x < 0) {
+            SceneryCamera(-_playerXOffset * 2f);
+            if (x % 64 == 0) {
+                if (!_moveTile) {
+                    return;
+                }
+                if (_moveTile) {
+                    if (_playerXOffset < 0) {
+                        if (_midGroundTileDirection == TileDirection.LEFT) {
+                            _midGroundTiles.Move(25, 0); //25,0
+                            _midGroundTiles.Move(51, 26);
+                        }
+
+                        if (_foreGroundTileDirection == TileDirection.LEFT) {
+                            _foreGroundTiles.Move(25, 0);
+                            _foreGroundTiles.Move(51, 26);
+                            _foreGroundTiles.Move(77, 52);
+                            _foreGroundTiles.Move(103, 78);
+                        }
+                    } else if (_playerXOffset > 0) {
+                        if (_midGroundTileDirection == TileDirection.RIGHT) {
+                            _midGroundTiles.Move(0, 25); // 0,25
+                            _midGroundTiles.Move(26, 51);
+                        }
+
+                        if (_foreGroundTileDirection == TileDirection.RIGHT) {
+                            _foreGroundTiles.Move(0, 25);
+                            _foreGroundTiles.Move(26, 51);
+                            _foreGroundTiles.Move(52, 77);
+                            _foreGroundTiles.Move(78, 103);
+                        }
+                    }
+                }
+                _moveTile = false;
+            } else {
+                _moveTile = true;
+            }
+            
+        }
+    }
+
+    private void SceneryCamera(float pXOffset) {
+        foreach (GameTile tile in _foreGroundTiles) {
+            tile.x += pXOffset;
+        }
     }
 
     public void Update()
     {
+        //Console.WriteLine("CurrentFPS = " + game.currentFps);
+        //Console.WriteLine(_midGroundTileDirection);
+        for (int i = 0; i < _canvases.Count; i++) {
+            _canvases[i].graphics.Clear(Color.Transparent);
+            _canvases[i].graphics.DrawString("" + _foreGroundTiles[i].TileIndex, new Font(FontFamily.GenericMonospace, 8), Brushes.White, 0, 0);
+        }
+
         _xOffset = game.x - this.x;
         _yOffset = game.y - this.y;
 
@@ -337,7 +460,7 @@ public class Level:GameObject
                 CheckAllLines(_ball);
             }
         }
-
+       
         HandlePlayer();
         CheckStones();
         BallBoom();
@@ -423,7 +546,7 @@ public class Level:GameObject
                         int score = rnd.Next(50, 750);
                         _player.Score += score;
                         pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
-                        new Timer(1000, pot.Canvas.Destroy);
+                        new Timer(10000, pot.Canvas.Destroy);
                     }
                     pot.Destroy();
                 }
@@ -452,7 +575,6 @@ public class Level:GameObject
             }
             if (stone.active)
             {
-
                 stone.velocity.Add(_gravity);
                 CheckAllLines(stone);
                 stone.Step();
@@ -493,10 +615,20 @@ public class Level:GameObject
 
     private void HandlePlayer()
     {
-        if (Input.GetKey(Key.D))
+        if (Input.GetKey(Key.D)) {
+            _midGroundTileDirection = TileDirection.RIGHT;
+            _foreGroundTileDirection = TileDirection.RIGHT;
+            _player.IsMoving = true;
             _player.position.x += SPEED / 2;
-        if (Input.GetKey(Key.A))
+        } else if (Input.GetKey(Key.A)) {
+            _midGroundTileDirection = TileDirection.LEFT;
+            _foreGroundTileDirection = TileDirection.LEFT;
+            _player.IsMoving = true;
             _player.position.x -= SPEED / 2;
+        } else {
+            _player.IsMoving = false;
+        }
+
         if (Input.GetKeyDown(Key.R))
         {
             ResetBall();   
@@ -532,6 +664,12 @@ public class Level:GameObject
             _player.velocity.y += _gravity.y;
         }
 
+        if (_player.IsMoving) {
+            _playerXOffset = _player.position.x - _player.x;
+        } else {
+            _playerXOffset = 0;
+        }
+
         _player.Step();
     }
 
@@ -542,9 +680,9 @@ public class Level:GameObject
 
         float _distanceX,_distanceY;
 
-        for (int obj = 0; obj < _colidables.Count; obj++)//goes through all the walls in the list
+        for (int obj = 0; obj < _collidables.Count; obj++)//goes through all the walls in the list
         {
-            Sprite wall = _colidables[obj];//selects one of the walls
+            Sprite wall = _collidables[obj];//selects one of the walls
             _distanceX = wall.width / 2 + pPlayer.width / 2;//sets the horizontal distance between who and wall
             _distanceY = wall.height / 2 + pPlayer.height / 2;//sets the vertical distance between who and wall
             if (pPlayer.position.x + _distanceX >= wall.x &&
@@ -569,9 +707,9 @@ public class Level:GameObject
                 }
             }
         }
-        for (int obj = 0; obj < _colidables.Count; obj++)
+        for (int obj = 0; obj < _collidables.Count; obj++)
         {
-            Sprite wall = _colidables[obj];
+            Sprite wall = _collidables[obj];
             _distanceX = wall.width / 2 + pPlayer.width / 2;
             _distanceY = wall.height / 2 + pPlayer.height / 2;
             if (pPlayer.position.x + _distanceX >= wall.x &&
@@ -725,7 +863,7 @@ public class Level:GameObject
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
         float _distanceToStart = line.start.DistanceTo(ball.position);
         float _distanceToEnd = line.end.DistanceTo(ball.position);
-        Console.WriteLine(_intersection);
+        //Console.WriteLine(_intersection);
         if (_intersection.y != 0)
         {
             if (stick)

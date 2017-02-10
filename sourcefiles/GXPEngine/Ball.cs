@@ -14,12 +14,15 @@ namespace GXPEngine
 		public Vec2 nextPositionBorder;
 		public readonly int radius;
 		private Color _ballColor;
+
 		//public bool stationary=false;
 
 		public bool OnPlayer {
 			get { return _OnPlayer; }
 			set { _OnPlayer = value; }
 		}
+
+		
 
 		public Ball (int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null):base (pRadius*2, pRadius*2)
 		{

@@ -9,6 +9,13 @@ public class GameTile : AnimationSprite {
     private Level _level;
     public Vec2 position;
 
+    private int _index = 0;
+
+    public int TileIndex {
+        get { return _index; }
+        set { _index = value; }
+    }
+
     public GameTile(Level pLevel, Layer pLayer, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow)
         : base(fileName, pSpriteSheetCol, pSpriteSheetRow) {
         _level = pLevel;
