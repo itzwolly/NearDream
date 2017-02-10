@@ -196,15 +196,20 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(2400,600 ), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(2550,500 ), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        //_stone = new Stone(25, new Vec2(450,800), null, Color.Blue, false);
-        //AddChild(_stone);
-        //_stones.Add(_stone);
-        //_stone.velocity = Vec2.zero;
+        _stone = new Stone(25, new Vec2(2500, 600), null, Color.Blue, false);
+        AddChild(_stone);
+        _stones.Add(_stone);
+        _stone.velocity = Vec2.zero;
+
+        _stone = new Stone(25, new Vec2(2600, 600), null, Color.Blue, false);
+        AddChild(_stone);
+        _stones.Add(_stone);
+        _stone.velocity = Vec2.zero;
 
         _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
         AddChild(_line);
@@ -480,7 +485,7 @@ public class Level:GameObject
            
             if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
             {
-                _sounds.PlayBallRockCollision();
+                //_sounds.PlayBallRockCollision();
                 stone.velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
                 stone.Step();
                 _ball.velocity = Vec2.zero;
@@ -514,8 +519,8 @@ public class Level:GameObject
                     stone2.active = true;
                     if (!stone2.started)
                     {
-                        _sounds.PlayRockBounce();
-                        stone2.velocity = new Vec2(1, 0).Scale(stone.velocity.Length());
+                        //_sounds.PlayRockBounce();
+                        stone2.velocity = stone.velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
                         stone2.started = true;
                     }
                     stone.hitPlayer = false;
