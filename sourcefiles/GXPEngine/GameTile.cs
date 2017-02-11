@@ -3,13 +3,20 @@ using GXPEngine;
 using System.Collections.Generic;
 
 public class GameTile : AnimationSprite {
-    Map _map;
-    uint _tileId;
-    List<int> test = new List<int>();
-    Level _level;
+    private Map _map;
+    private uint _tileId;
+    private List<int> test = new List<int>();
+    private Level _level;
     public Vec2 position;
 
-    public GameTile(Level pLevel, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow)
+    private int _index = 0;
+
+    public int TileIndex {
+        get { return _index; }
+        set { _index = value; }
+    }
+
+    public GameTile(Level pLevel, Layer pLayer, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow)
         : base(fileName, pSpriteSheetCol, pSpriteSheetRow) {
         _level = pLevel;
         SetOrigin(width / 2, height / 2);
@@ -18,8 +25,8 @@ public class GameTile : AnimationSprite {
         
         _tileId = pTile;
 
-        currentFrame = (int)_map.Layer[0].Data.GetGId((uint)_tileId) - 1;
-        rotation = _map.Layer[0].Data.GetRotation((uint)_tileId);
+        currentFrame = (int)pLayer.Data.GetGId((uint)_tileId);
+        rotation = pLayer.Data.GetRotation((uint)_tileId);
     }
 
     public uint GetTileId() {

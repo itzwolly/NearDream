@@ -10,7 +10,12 @@ public class Player:Sprite
     public Vec2 velocity;
     private int _amountOfTrophies = 0;
     private int _score;
+    private bool _isMoving = false;
 
+    public bool IsMoving {
+        get { return _isMoving; }
+        set { _isMoving = value; }
+    }
 
     public int AmountOfTrophies {
         get { return _amountOfTrophies; }
