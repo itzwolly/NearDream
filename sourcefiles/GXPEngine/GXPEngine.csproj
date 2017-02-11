@@ -80,6 +80,7 @@
     <Compile Include="Components\test.cs" />
     <Compile Include="Components\TextField.cs" />
     <Compile Include="Pot.cs" />
+    <Compile Include="PressurePlate.cs" />
     <Compile Include="Rope.cs" />
     <Compile Include="SimpleRock.cs" />
     <Compile Include="Sounds.cs" />

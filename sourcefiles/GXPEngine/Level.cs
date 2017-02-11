@@ -92,6 +92,8 @@ public class Level:GameObject
     private GameTile _tile;
     private List<Canvas> _canvases = new List<Canvas>();
 
+    private List<PressurePlate> _pressurePlates;
+
     public int CurrentLevel
     {
         get { return _currentLevel; }
@@ -100,6 +102,7 @@ public class Level:GameObject
 
     public Level(MyGame pMyGame, int pCurrentLevel)
     {
+        _pressurePlates = new List<PressurePlate>();
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
         _sounds = new Sounds();
@@ -118,6 +121,7 @@ public class Level:GameObject
         CreateBall();
         CreateTiledObjects();
         CreateReticle();
+        CreatePressurePlates();
 
         for (int i = 0; i < _foreGroundTiles.Count; i++) {
             _foreGroundTiles[i].TileIndex = i;
@@ -130,9 +134,29 @@ public class Level:GameObject
 
         _midGroundTiles.CollectionChanged += _midGroundTiles_CollectionChanged;
         _foreGroundTiles.CollectionChanged += _foreGroundTiles_CollectionChanged;
+
+
+    }
+    
+    private void CreatePressurePlates()
+    {
+        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate");
+        AddChild(_pressurePlate);
+        _pressurePlates.Add(_pressurePlate);
     }
 
-    void _foreGroundTiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+    private void CheckPressurePlatesCollision(Ball ball)
+    {
+        foreach(PressurePlate presspl in _pressurePlates)
+        {
+            if (ball.position.x < presspl.x + presspl.width / 2 &&
+                ball.position.x > presspl.x - presspl.width / 2 &&
+                ball.position.y < presspl.y && ball.position.y > presspl.y-ball.width)
+                presspl.OpenCoresponding();
+        }
+    }
+
+    private void _foreGroundTiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
         if (e.Action == NotifyCollectionChangedAction.Move) {
             GameTile newestTile = (e.NewItems[0] as GameTile);
             HandleTileMovement(newestTile, _foreGroundTiles, _foreGroundTileDirection);
@@ -160,13 +184,11 @@ public class Level:GameObject
     {
         _xOffset = game.x - this.x;
         _yOffset = game.y - this.y;
-
         _reticle.x = Input.mouseX + _xOffset;
         _reticle.y = Input.mouseY + _yOffset;
         PlayerCamera();
-
         HandleBall();
-        HandlePlayer();
+        //HandlePlayer();
         CheckStones();
         BallBoom();
         CheckTrophyCollision();
@@ -511,6 +533,7 @@ public class Level:GameObject
             {
                 _ball.Step();
                 CheckAllLines(_ball);
+                CheckPressurePlatesCollision(_ball);
             }
         }
         HandlePlayer();
