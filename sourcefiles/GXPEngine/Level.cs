@@ -140,7 +140,7 @@ public class Level:GameObject
     
     private void CreatePressurePlates()
     {
-        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate");
+        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate",true,128);
         AddChild(_pressurePlate);
         _pressurePlates.Add(_pressurePlate);
     }
@@ -151,8 +151,15 @@ public class Level:GameObject
         {
             if (ball.position.x < presspl.x + presspl.width / 2 &&
                 ball.position.x > presspl.x - presspl.width / 2 &&
-                ball.position.y < presspl.y && ball.position.y > presspl.y-ball.width)
+                ball.position.y < presspl.y && ball.position.y > presspl.y - ball.width)
+            {
                 presspl.OpenCoresponding();
+                if (presspl.cover)
+                {
+                    _lines.Add(presspl.coverLine);
+                    AddChild(presspl.coverLine);
+                }
+            }
         }
     }
 
@@ -276,20 +283,20 @@ public class Level:GameObject
 
     private void CreateStones()
     {
-        Stone _stone = new Stone(25, new Vec2(2550,500 ), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(600,1450 ), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        _stone = new Stone(25, new Vec2(2500, 600), null, Color.Blue, false);
+        _stone = new Stone(25, new Vec2(750, 1500), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        _stone = new Stone(25, new Vec2(2600, 600), null, Color.Blue, false);
-        AddChild(_stone);
-        _stones.Add(_stone);
-        _stone.velocity = Vec2.zero;
+        //_stone = new Stone(25, new Vec2(2600, 600), null, Color.Blue, false);
+        //AddChild(_stone);
+        //_stones.Add(_stone);
+        //_stone.velocity = Vec2.zero;
 
         _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
         AddChild(_line);
@@ -668,6 +675,7 @@ public class Level:GameObject
                 stone.velocity.Add(_gravity);
                 for (int j = 0; j < REPETITIONS; j++)
                 {
+                    CheckPressurePlatesCollision(stone);
                     CheckAllLines(stone);
                     stone.Step();
                     //_sounds.PlayRockBounce();
