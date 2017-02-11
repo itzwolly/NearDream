@@ -65,6 +65,7 @@ public class Level:GameObject
     private List<Bridge> _bridges = new List<Bridge>();
     private List<Pot> _pots = new List<Pot>();
     private List<Plank> _planks = new List<Plank>();
+    private List<GravityChanger> _gravityChangers = new List<GravityChanger>();
 
     private ObservableCollection<GameTile> _foreGroundTiles = new ObservableCollection<GameTile>();
     private ObservableCollection<GameTile> _midGroundTiles = new ObservableCollection<GameTile>();
@@ -114,6 +115,7 @@ public class Level:GameObject
 
         _stones = new List<Stone>();
         collision = new CollidedOption();
+        CreateGravityChangers();
 
         CreateLevel();
         CreateStones();
@@ -136,6 +138,27 @@ public class Level:GameObject
         _foreGroundTiles.CollectionChanged += _foreGroundTiles_CollectionChanged;
 
 
+    }
+
+    private void CreateGravityChangers()
+    {
+        GravityChanger gravs = new GravityChanger(300, 1400, 128, 1000, "up");
+        AddChild(gravs);
+        _gravityChangers.Add(gravs);
+    }
+
+    private void CheckInGravityChangers(Ball ball)
+    {
+        foreach(GravityChanger gravchangers in _gravityChangers)
+        {
+            if(ball.position.x < gravchangers.x + gravchangers.width / 2 &&
+               ball.position.x > gravchangers.x - gravchangers.width / 2 &&
+               ball.position.y > gravchangers.y - gravchangers.height / 2 &&
+               ball.position.y < gravchangers.y + gravchangers.height / 2)
+            {
+                ball.velocity.Add(gravchangers.changedGravity);
+            }
+        }
     }
     
     private void CreatePressurePlates()
@@ -535,6 +558,7 @@ public class Level:GameObject
         }
         else if (!_ball.OnPlayer)
         {
+            CheckInGravityChangers(_ball);
             _ball.velocity.Add(_gravity);
             for (int i = 0; i <= REPETITIONS; i++)
             {
@@ -672,6 +696,7 @@ public class Level:GameObject
             }
             if (stone.active)
             {
+                CheckInGravityChangers(stone);
                 stone.velocity.Add(_gravity);
                 for (int j = 0; j < REPETITIONS; j++)
                 {
