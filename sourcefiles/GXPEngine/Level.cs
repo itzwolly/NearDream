@@ -179,6 +179,11 @@ public class Level:GameObject
                 presspl.OpenCoresponding();
                 if (presspl.cover)
                 {
+                    if (ball is Stone)
+                    {
+                        (ball as Stone).active = false;
+                        ball.y = presspl.y - ball.height/2;
+                    }
                     _lines.Add(presspl.coverLine);
                     AddChild(presspl.coverLine);
                 }
@@ -316,10 +321,15 @@ public class Level:GameObject
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
 
-        //_stone = new Stone(25, new Vec2(2600, 600), null, Color.Blue, false);
-        //AddChild(_stone);
-        //_stones.Add(_stone);
-        //_stone.velocity = Vec2.zero;
+        _stone = new Stone(25, new Vec2(1400, 1340), null, Color.Blue, false);
+        AddChild(_stone);
+        _stones.Add(_stone);
+        _stone.velocity = Vec2.zero;
+
+        _stone = new Stone(25, new Vec2(1500, 1340), null, Color.Blue, false);
+        AddChild(_stone);
+        _stones.Add(_stone);
+        _stone.velocity = Vec2.zero;
 
         _line = new NLineSegment(new Vec2(300, 100), new Vec2(700, 100), 0xffffff00, 4);
         AddChild(_line);
@@ -678,53 +688,51 @@ public class Level:GameObject
     {
         for (int i=0;i<_stones.Count;i++)
         {
-            Stone stone = _stones[i];
-           
-            if (stone.position.DistanceTo(_ball.position) < stone.radius + _ball.radius && !stone.hitPlayer)
+            
+            if (_stones[i].position.DistanceTo(_ball.position) < _stones[i].radius + _ball.radius && !_stones[i].hitPlayer)
             {
                 //_sounds.PlayBallRockCollision();
-                stone.velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
-                stone.Step();
+                _stones[i].velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                _stones[i].Step();
                 _ball.velocity = Vec2.zero;
-                _ball.velocity.ReflectOnPoint(stone.position,_ball.position,1);
+                _ball.velocity.ReflectOnPoint(_stones[i].position,_ball.position,1);
 
                 
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
-                stone.active = true;
+                _stones[i].active = true;
                 //stone.hitPlayer = true;
             }
-            if (stone.active)
+            if (_stones[i].active)
             {
-                CheckInGravityChangers(stone);
-                stone.velocity.Add(_gravity);
+                CheckInGravityChangers(_stones[i]);
+                _stones[i].velocity.Add(_gravity);
                 for (int j = 0; j < REPETITIONS; j++)
                 {
-                    CheckPressurePlatesCollision(stone);
-                    CheckAllLines(stone);
-                    stone.Step();
+                    CheckPressurePlatesCollision(_stones[i]);
+                    CheckAllLines(_stones[i]);
+                    _stones[i].Step();
                     //_sounds.PlayRockBounce();
                 }
             }
             for (int j=0;j<_stones.Count;j++)
             {
-                Stone stone2 = _stones[j];
-                float _tempDistance = stone.position.DistanceTo(stone2.position);
-                if (j!=i &&  _tempDistance < stone.radius + stone2.radius)
+                float _tempDistance = _stones[i].position.DistanceTo(_stones[j].position);
+                if (j!=i &&  _tempDistance < _stones[i].radius + _stones[j].radius)
                 {
                     //stone.position.x - ();
                     //stone.position.y - ();
-                    stone2.active = true;
-                    if (!stone2.started)
+                    _stones[j].active = true;
+                    //if (!stone2.started)
                     {
                         //_sounds.PlayRockBounce();
-                        stone2.velocity = stone.velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
-                        stone2.started = true;
+                        _stones[j].velocity = _stones[i].velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
+                       // stone2.started = true;
                     }
-                    stone.hitPlayer = false;
-                    stone.velocity.Scale(0.0f);
-                    stone.Step();
-                    stone2.Step();
+                    _stones[i].hitPlayer = false;
+                    _stones[i].velocity.Scale(0.0f);
+                    _stones[i].Step();
+                    _stones[j].Step();
                 }
             }
             

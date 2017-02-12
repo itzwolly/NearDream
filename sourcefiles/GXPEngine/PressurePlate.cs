@@ -36,7 +36,7 @@ class PressurePlate:Sprite
 
     public void OpenCoresponding()
     {
-        Console.WriteLine(_opensThis);
+        //Console.WriteLine(_opensThis);
     }
 }
 

@@ -52,7 +52,7 @@ namespace GXPEngine
 		public void Step(bool skipVelocity = false) {
 			if (position == null || velocity == null)
 				return;
-			//Console.WriteLine(velocity.Length());
+			Console.WriteLine(velocity.Length());
 			//if (velocity.x < 0.01f)
 			//    velocity.x = 0;
 			//if (velocity.y < 0.01f)
