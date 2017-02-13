@@ -64,6 +64,7 @@ public class Level:GameObject
     private List<Trophy> _trophies = new List<Trophy>();
     private List<Rope> _ropes = new List<Rope>();
     private List<Bridge> _bridges = new List<Bridge>();
+    private List<BridgeCollider> _bridgeColliders = new List<BridgeCollider>();
     private List<Pot> _pots = new List<Pot>();
     private List<Plank> _planks = new List<Plank>();
     private List<GravityChanger> _gravityChangers = new List<GravityChanger>();
@@ -247,12 +248,17 @@ public class Level:GameObject
         foreach (ObjectGroup objGroup in _map.ObjectGroup) {
             if (objGroup.Name == "Bridge") {
                 foreach (TiledObject obj in objGroup.Object) {
+                    
                     Bridge bridge = new Bridge(315);
                     bridge.x = obj.X+bridge.width/2;
                     bridge.y = obj.Y;
                     bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
                     _bridges.Add(bridge);
                     AddChild(bridge);
+
+                    bridge.bridgeCollider = new BridgeCollider(obj.X+90, obj.Y-190, 400, 400);
+                    _bridgeColliders.Add(bridge.bridgeCollider);
+                    AddChild(bridge.bridgeCollider);
                 }
             }
             if (objGroup.Name == "Rope") {
@@ -613,6 +619,8 @@ public class Level:GameObject
                             bridge.y += bridge.height / 2-64;
                             bridge.rotation = 0;
                             bridge.Down = true;
+                            bridge.bridgeCollider.y += 300;
+                            bridge.bridgeCollider.x += 100;
                             _sounds.PlayBridgeFall();
                         }
                     }
@@ -808,17 +816,11 @@ public class Level:GameObject
             if (collision.dir == direction.above)
             {
                 //_sounds.PlayWalk();
-                if (collision.obj is Bridge)
-                {
-                    _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
-                    _player.velocity = Vec2.zero;
-                }
-                else
-                {
-                    //Console.WriteLine(collision.obj);
-                    _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
-                    _player.velocity = Vec2.zero;
-                }
+                
+                //Console.WriteLine(collision.obj);
+                _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
+                _player.velocity = Vec2.zero;
+                
                 _player.jumped = false;
             }
             if (collision.dir == direction.below)
@@ -857,6 +859,46 @@ public class Level:GameObject
         co.obj = null;
 
         float _distanceX,_distanceY;
+
+        for (int obj = 0; obj < _bridgeColliders.Count; obj++)
+        {
+
+            Sprite wall = _bridgeColliders[obj];
+            _distanceX = wall.width / 2 + pPlayer.width / 2;
+            _distanceY = wall.height / 2 + pPlayer.height / 2;
+            if (pPlayer.position.x + _distanceX >= wall.x &&
+                pPlayer.position.x - _distanceX <= wall.x &&
+                pPlayer.position.y + _distanceY >= wall.y &&
+                pPlayer.position.y - _distanceY <= wall.y)
+            {
+
+                if (pPlayer.position.x < wall.x)//sees if who is on the left of the wall
+                {
+                    co.obj = wall;
+                    co.dir = direction.left;
+                    //Console.WriteLine("left");
+                    return;
+                }
+
+                if (pPlayer.position.x > wall.x)// sees if who is on the right of enemy5
+                {
+                    co.obj = wall;
+                    co.dir = direction.right;
+                    //Console.WriteLine("right");
+                    return;
+                }
+                if (pPlayer.position.y < wall.y)
+                {
+                    co.obj = wall;
+                    co.dir = direction.above;
+                    //Console.WriteLine("above");
+                    return;
+                }
+
+            }
+
+
+        }
 
         for (int obj = 0; obj < _collidables.Count; obj++)//goes through all the walls in the list
         {
@@ -972,29 +1014,7 @@ public class Level:GameObject
 
 
         
-        for (int obj = 0; obj < _bridges.Count; obj++)
-        {
-            if (_bridges[obj].Down)
-            {
-                Sprite wall = _bridges[obj];
-                _distanceX = wall.width / 2 + pPlayer.width / 2;
-                _distanceY = wall.height / 2 + pPlayer.height / 2;
-                if (pPlayer.position.x + _distanceX >= wall.x &&
-                    pPlayer.position.x - _distanceX <= wall.x &&
-                    pPlayer.position.y + _distanceY >= wall.y &&
-                    pPlayer.position.y - _distanceY <= wall.y)
-                {
-                    if (pPlayer.position.y < wall.y)
-                    {
-                        co.obj = wall;
-                        co.dir = direction.above;
-                        //Console.WriteLine("above");
-                        return;
-                    }
-                }
-            }
-
-        }
+       
 
         return;
     }

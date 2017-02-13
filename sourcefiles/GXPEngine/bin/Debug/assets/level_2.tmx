@@ -79,7 +79,7 @@
   <object id="139" x="2688" y="1024" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Rope">
-  <object id="130" x="1152" y="320">
+  <object id="130" x="1070.18" y="953.333">
    <properties>
     <property name="bridge_to_drop" value="bridge_1"/>
    </properties>
@@ -87,7 +87,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Bridge">
-  <object id="138" x="1152" y="1024">
+  <object id="138" x="1070.18" y="1657.33">
    <properties>
     <property name="bridge_name" value="bridge_1"/>
    </properties>
