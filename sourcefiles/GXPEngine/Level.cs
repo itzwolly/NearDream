@@ -14,7 +14,7 @@ public class Level:GameObject
     private Sounds _sounds;
     const int GRAVITY = 15;
     const int REPETITIONS=2;
-    const float ELASTICITY = 0.7f;
+    const float ELASTICITY = 0.8f;
     const int MAXPOWER = 30;
     private const string ASSET_FILE_PATH = "assets\\";
 
@@ -170,7 +170,7 @@ public class Level:GameObject
         _pressurePlates.Add(_pressurePlate);
     }
 
-    private void CheckPressurePlatesCollision(Ball ball)
+    private void CheckPressurePlatesCollision(Stone ball)
     {
         foreach(PressurePlate presspl in _pressurePlates)
         {
@@ -181,11 +181,8 @@ public class Level:GameObject
                 presspl.OpenCoresponding();
                 if (presspl.cover)
                 {
-                    if (ball is Stone)
-                    {
-                        (ball as Stone).active = false;
-                        ball.y = presspl.y - ball.height/2;
-                    }
+                    ball.active = false;
+                    ball.y = presspl.y - ball.height/2;
                     _lines.Add(presspl.coverLine);
                     AddChild(presspl.coverLine);
                 }
@@ -586,7 +583,6 @@ public class Level:GameObject
             {
                 _ball.Step();
                 CheckAllLines(_ball);
-                CheckPressurePlatesCollision(_ball);
             }
         }
         HandlePlayer();
@@ -813,6 +809,7 @@ public class Level:GameObject
 
         if (collision.dir != direction.none)
         {
+            Console.WriteLine(collision.dir);
             if (collision.dir == direction.above)
             {
                 //_sounds.PlayWalk();
@@ -870,14 +867,14 @@ public class Level:GameObject
                 pPlayer.position.y + _distanceY >= wall.y &&
                 pPlayer.position.y - _distanceY <= wall.y)
             {
-                if (pPlayer.position.x < wall.x - wall.width + 20)//sees if who is on the left of the wall
+                if (pPlayer.position.x < wall.x - wall.width/2 + 20)//sees if who is on the left of the wall
                 {
                     co.obj = wall;
                     co.dir = direction.left;
                     //Console.WriteLine("left");
                     return;
                 }
-                if (pPlayer.position.x > wall.x + wall.width - 20)// sees if who is on the right of enemy5
+                if (pPlayer.position.x > wall.x + wall.width/2 - 20)// sees if who is on the right of enemy5
                 {
                     co.obj = wall;
                     co.dir = direction.right;
