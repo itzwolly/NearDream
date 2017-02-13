@@ -715,7 +715,7 @@ public class Level:GameObject
                 _stones[i].Step(); 
                 _ball.velocity = Vec2.zero;
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
-                _ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
+                //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
                 CheckAllLines(_ball);
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
