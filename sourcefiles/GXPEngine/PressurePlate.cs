@@ -24,12 +24,12 @@ class PressurePlate:Sprite
         set { _pressurePlateName = value; }
     }
 
-    public PressurePlate(float pX, float pY,string pOpensThis, bool pCover,int coverHight):base("assets\\sprites\\pressureplate.png")
+    public PressurePlate(float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth):base("assets\\sprites\\pressureplate.png")
     {
         SetOrigin(width / 2, height / 2);
         x = pX;
         y = pY;
-        coverLine = new NLineSegment(new Vec2(x-width/2,y-coverHight), new Vec2(x + width / 2, y - coverHight), 0xffffff00, 4);
+        coverLine = new NLineSegment(new Vec2(x-coverWidth/2,y-coverHight+height-1), new Vec2(x + coverWidth / 2, y - coverHight+height-1), 0xffffff00, 4);
         cover = pCover;
         _opensThis = pOpensThis;
     }

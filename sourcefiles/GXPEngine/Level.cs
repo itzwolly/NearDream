@@ -164,7 +164,7 @@ public class Level:GameObject
     
     private void CreatePressurePlates()
     {
-        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate",true,128);
+        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate",true,64,128);
         AddChild(_pressurePlate);
         _pressurePlates.Add(_pressurePlate);
     }
@@ -175,7 +175,7 @@ public class Level:GameObject
         {
             if (ball.position.x < presspl.x + presspl.width / 2 &&
                 ball.position.x > presspl.x - presspl.width / 2 &&
-                ball.position.y < presspl.y && ball.position.y > presspl.y - ball.width)
+                ball.position.y < presspl.y && ball.position.y > presspl.y - ball.height/2)
             {
                 presspl.OpenCoresponding();
                 if (presspl.cover)
@@ -526,6 +526,7 @@ public class Level:GameObject
     private void RemoveIndicator()
     {
         _goingUp = true;
+        if(_indicator!=null)
         _indicator.Destroy();
         _indicator = null;
     }
@@ -538,7 +539,11 @@ public class Level:GameObject
             _sounds.PlaySwitch();
             _ball.IsExploding = !_ball.IsExploding;
         }
-        
+        if (_ball.OnPlayer)
+        {
+            _ball.x = _player.x-64;
+            _ball.y = _player.y-64;
+        }
         if (Input.GetMouseButton(0) && _ball.OnPlayer)
         {
             if (_indicator == null)
@@ -1060,7 +1065,7 @@ public class Level:GameObject
     void ActualBounce(Ball ball, LineSegment line, bool stick)
     {
         _ballToLineStart = _ball.position.Clone().Subtract(line.start);
-        _distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
+        //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
         float _distanceToStart = line.start.DistanceTo(ball.position);
         float _distanceToEnd = line.end.DistanceTo(ball.position);
@@ -1088,7 +1093,7 @@ public class Level:GameObject
         //{
         //    if (line.start.y == 200) Console.WriteLine(ball.position); //here
         //}
-        else if (_distanceToStart < ball.radius-1)
+        else if (_distanceToStart < ball.radius)
         {
             if (stick)
             {
@@ -1098,6 +1103,10 @@ public class Level:GameObject
             }
             else
             {
+                //float _tempdistance = line.start.DistanceTo(_ball.position); ;
+                //Vec2 _stoneToStone = line.start.Clone().Subtract(_ball.position).Normalize();
+                ////_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                //ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
                 //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
@@ -1105,7 +1114,7 @@ public class Level:GameObject
                 ball.Step();
             }
         }
-        else if (_distanceToEnd < ball.radius- 1)
+        else if (_distanceToEnd < ball.radius)
         {
             if (stick)
             {
@@ -1115,6 +1124,10 @@ public class Level:GameObject
             }
             else
             {
+                //float _tempdistance = line.end.DistanceTo(_ball.position); ;
+                //Vec2 _stoneToStone = line.end.Clone().Subtract(_ball.position).Normalize();
+                ////_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                //ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
                 //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
@@ -1122,6 +1135,7 @@ public class Level:GameObject
                 ball.Step();
             }
         }
+        
     }
 }
 

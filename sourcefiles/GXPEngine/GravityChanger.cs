@@ -17,19 +17,19 @@ class GravityChanger:Canvas
         graphics.Clear(Color.Gray);
         if (direction.ToLower() == "down")
         {
-            changedGravity = new Vec2(0,1);
+            changedGravity = new Vec2(0,0.5f);
         }
         if (direction.ToLower() == "up")
         {
-            changedGravity = new Vec2(0, -2);//to counteract the actual gravity
+            changedGravity = new Vec2(0, -1.5f);//to counteract the actual gravity
         }
         if (direction.ToLower() == "left")
         {
-            changedGravity = new Vec2(-1, 0);
+            changedGravity = new Vec2(-0.5f, 0);
         }
         if (direction.ToLower() == "right")
         {
-            changedGravity = new Vec2(1, 0);
+            changedGravity = new Vec2(0.5f, 0);
         }
     }
 
