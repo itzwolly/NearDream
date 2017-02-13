@@ -8,6 +8,7 @@ public class Player:Sprite
 {
     public Vec2 position;
     public Vec2 velocity;
+    public bool jumped;
     private int _amountOfTrophies = 0;
     private int _score;
     private bool _isMoving = false;

@@ -29,13 +29,14 @@ public class Level:GameObject
     private float _xOffset;
     private int _explosionWait;
     private Indicator _indicator;
+    private Vec2 _indicatorVec;
 
     private bool _moveTile = true;
     private float _playerXOffset;
     private bool _debug;
 
-    private float _playerTotalXOffset;
-    private float _levelXOffset;
+    //private float _playerTotalXOffset;
+    //private float _levelXOffset;
 
     private TileDirection _midGroundTileDirection = TileDirection.NONE;
     private TileDirection _foreGroundTileDirection = TileDirection.NONE;
@@ -518,6 +519,7 @@ public class Level:GameObject
     {
         _indicator.x = _player.x;
         _indicator.y = _player.y;
+        _indicator.rotation = _indicatorVec.GetAngleDegrees()+90;
         _indicator.SetPower(pPower);
     }
 
@@ -550,15 +552,14 @@ public class Level:GameObject
             else
                 _startingBallVelocity -= 0.3f;
 
-            
+            _indicatorVec = new Vec2(Input.mouseX - _player.x + _xOffset, Input.mouseY - _player.y + _yOffset);
             HandleIndicator((int)_startingBallVelocity/4);
         }
         else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
         {
             _ball.position.x = _player.x;
             _ball.position.y = _player.y;
-            _ball.velocity.x = (Input.mouseX - _player.x + _xOffset);
-            _ball.velocity.y = (Input.mouseY - _player.y + _yOffset);
+            _ball.velocity = _indicatorVec.Clone();
             _ball.velocity.Normalize().Scale(_startingBallVelocity);
             _ball.OnPlayer = false;
             _startingBallVelocity = SPEED;
@@ -706,7 +707,7 @@ public class Level:GameObject
                 _ball.velocity = Vec2.zero;
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
                 _ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
-                
+                CheckAllLines(_ball);
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 _stones[i].active = true;
@@ -743,8 +744,8 @@ public class Level:GameObject
                     }
                     _stones[i].hitPlayer = false;
                     _stones[i].velocity.Scale(0.0f);
-                    CheckAllLines(_stones[i]);
-                    CheckAllLines(_stones[j]);
+                    //CheckAllLines(_stones[i]);
+                    //CheckAllLines(_stones[j]);
                     _stones[i].Step();
                     _stones[j].Step();
                 }
@@ -781,10 +782,14 @@ public class Level:GameObject
 
         if (Input.GetKeyDown(Key.SPACE))
         {
-            _sounds.PlayJump();
-            _debug = true;
-            _player.position.y--;
-            _player.velocity.y = -GRAVITY;
+            if (!_player.jumped)
+            {
+                _sounds.PlayJump();
+                _debug = true;
+                _player.position.y--;
+                _player.velocity.y = -GRAVITY;
+                _player.jumped = true;
+            }
         }
         if (Input.GetKeyDown(Key.R))
         {
@@ -809,6 +814,7 @@ public class Level:GameObject
                     _player.position.y = collision.obj.y - collision.obj.height / 2 - _player.height / 2;
                     _player.velocity = Vec2.zero;
                 }
+                _player.jumped = false;
             }
             if (collision.dir == direction.below)
             {
@@ -1082,7 +1088,7 @@ public class Level:GameObject
         //{
         //    if (line.start.y == 200) Console.WriteLine(ball.position); //here
         //}
-        else if (_distanceToStart < ball.radius)
+        else if (_distanceToStart < ball.radius-1)
         {
             if (stick)
             {
@@ -1099,7 +1105,7 @@ public class Level:GameObject
                 ball.Step();
             }
         }
-        else if (_distanceToEnd < ball.radius)
+        else if (_distanceToEnd < ball.radius- 1)
         {
             if (stick)
             {

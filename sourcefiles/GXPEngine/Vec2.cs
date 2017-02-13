@@ -114,7 +114,7 @@ namespace GXPEngine
 
 		public float GetAngleRadians()
 		{
-			return Mathf.Atan(y / x);
+			return Mathf.Atan2(y , x);
 		}
 
 		public float GetAngleDegrees()
