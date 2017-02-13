@@ -696,16 +696,16 @@ public class Level:GameObject
             if (_stones[i].position.DistanceTo(_ball.position) < _stones[i].radius + _ball.radius && !_stones[i].hitPlayer)
             {
                 //_sounds.PlayBallRockCollision();
-                Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_ball.position);
-                _stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                _ball.position.Subtract(_stoneToStone.Scale(0.5f));
+                float _tempdistance = _stones[i].position.DistanceTo(_ball.position); ;
+                Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_ball.position).Normalize();
+                //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                _ball.position.Subtract(_stoneToStone.Scale(_ball.radius-_tempdistance/2));
                 _stones[i].velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
                 CheckAllLines(_stones[i]);
                 _stones[i].Step(); 
                 _ball.velocity = Vec2.zero;
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
                 _ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
-
                 
                 _ball.Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
@@ -731,9 +731,9 @@ public class Level:GameObject
                 {
                     //stone.position.x - ();
                     //stone.position.y - ();
-                    Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_stones[j].position);
-                    _stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                    _stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
+                    Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_stones[j].position).Normalize();
+                    _stones[i].position.Add(_stoneToStone.Scale( _stones[i].radius-_tempDistance/2));
+                    //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
                     _stones[j].active = true;
                     //if (!stone2.started)
                     {
