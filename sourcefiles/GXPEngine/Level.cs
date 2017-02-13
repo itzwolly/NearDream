@@ -862,7 +862,6 @@ public class Level:GameObject
 
         for (int obj = 0; obj < _bridgeColliders.Count; obj++)
         {
-
             Sprite wall = _bridgeColliders[obj];
             _distanceX = wall.width / 2 + pPlayer.width / 2;
             _distanceY = wall.height / 2 + pPlayer.height / 2;
@@ -871,33 +870,47 @@ public class Level:GameObject
                 pPlayer.position.y + _distanceY >= wall.y &&
                 pPlayer.position.y - _distanceY <= wall.y)
             {
-
-                if (pPlayer.position.x < wall.x)//sees if who is on the left of the wall
+                if (pPlayer.position.x < wall.x - wall.width + 20)//sees if who is on the left of the wall
                 {
                     co.obj = wall;
                     co.dir = direction.left;
                     //Console.WriteLine("left");
                     return;
                 }
-
-                if (pPlayer.position.x > wall.x)// sees if who is on the right of enemy5
+                if (pPlayer.position.x > wall.x + wall.width - 20)// sees if who is on the right of enemy5
                 {
                     co.obj = wall;
                     co.dir = direction.right;
                     //Console.WriteLine("right");
                     return;
                 }
-                if (pPlayer.position.y < wall.y)
+            }
+        }
+        for (int obj = 0; obj < _bridgeColliders.Count; obj++)
+        {
+            Sprite wall = _bridgeColliders[obj];
+            _distanceX = wall.width / 2 + pPlayer.width / 2;
+            _distanceY = wall.height / 2 + pPlayer.height / 2;
+            if (pPlayer.position.x + _distanceX >= wall.x &&
+                pPlayer.position.x - _distanceX <= wall.x &&
+                pPlayer.position.y + _distanceY >= wall.y &&
+                pPlayer.position.y - _distanceY <= wall.y)
+            {
+                if (pPlayer.position.y < wall.y - wall.height / 2)
                 {
                     co.obj = wall;
                     co.dir = direction.above;
                     //Console.WriteLine("above");
                     return;
                 }
-
+                if (pPlayer.position.y > wall.y + wall.height / 2)
+                {
+                    co.obj = wall;
+                    co.dir = direction.below;
+                    //Console.WriteLine("below");
+                    return;
+                }
             }
-
-
         }
 
         for (int obj = 0; obj < _collidables.Count; obj++)//goes through all the walls in the list
@@ -1123,12 +1136,12 @@ public class Level:GameObject
             }
             else
             {
-                //float _tempdistance = line.start.DistanceTo(_ball.position); ;
-                //Vec2 _stoneToStone = line.start.Clone().Subtract(_ball.position).Normalize();
-                ////_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                //ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
+                float _tempdistance = line.start.DistanceTo(_ball.position); ;
+                Vec2 _stoneToStone = line.start.Clone().Subtract(_ball.position).Normalize();
+                //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
                 //_sounds.PlayBallBounce();
-                ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                //ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
                 ball.Step();
@@ -1144,12 +1157,12 @@ public class Level:GameObject
             }
             else
             {
-                //float _tempdistance = line.end.DistanceTo(_ball.position); ;
-                //Vec2 _stoneToStone = line.end.Clone().Subtract(_ball.position).Normalize();
-                ////_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                //ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
+                float _tempdistance = line.end.DistanceTo(_ball.position); ;
+                Vec2 _stoneToStone = line.end.Clone().Subtract(_ball.position).Normalize();
+                //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
                 //_sounds.PlayBallBounce();
-                ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+               // ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
                 ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.end).Normalize(), ELASTICITY);
                 ball.Step();
