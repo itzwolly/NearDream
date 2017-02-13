@@ -688,14 +688,23 @@ public class Level:GameObject
     {
         for (int i=0;i<_stones.Count;i++)
         {
-            
+            /// <summary>
+            /// Fix stone distance it is now half of the distance it should be radius minus distance/2
+            /// Add a check to see if after reset ball is still between lines
+            /// </summary>
+
             if (_stones[i].position.DistanceTo(_ball.position) < _stones[i].radius + _ball.radius && !_stones[i].hitPlayer)
             {
                 //_sounds.PlayBallRockCollision();
+                Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_ball.position);
+                _stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                _ball.position.Subtract(_stoneToStone.Scale(0.5f));
                 _stones[i].velocity = _ball.velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
-                _stones[i].Step();
+                CheckAllLines(_stones[i]);
+                _stones[i].Step(); 
                 _ball.velocity = Vec2.zero;
-                _ball.velocity.ReflectOnPoint(_stones[i].position,_ball.position,1);
+                //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
+                _ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
 
                 
                 _ball.Step();
@@ -722,6 +731,9 @@ public class Level:GameObject
                 {
                     //stone.position.x - ();
                     //stone.position.y - ();
+                    Vec2 _stoneToStone = _stones[i].position.Clone().Subtract(_stones[j].position);
+                    _stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                    _stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
                     _stones[j].active = true;
                     //if (!stone2.started)
                     {
@@ -731,6 +743,8 @@ public class Level:GameObject
                     }
                     _stones[i].hitPlayer = false;
                     _stones[i].velocity.Scale(0.0f);
+                    CheckAllLines(_stones[i]);
+                    CheckAllLines(_stones[j]);
                     _stones[i].Step();
                     _stones[j].Step();
                 }
@@ -1081,7 +1095,7 @@ public class Level:GameObject
                 //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
-                ball.velocity.ReflectOnPoint(line.start, ball.position, ELASTICITY);
+                ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
                 ball.Step();
             }
         }
@@ -1098,7 +1112,7 @@ public class Level:GameObject
                 //_sounds.PlayBallBounce();
                 ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                 ball.Step();
-                ball.velocity.ReflectOnPoint(line.end, ball.position, ELASTICITY);
+                ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.end).Normalize(), ELASTICITY);
                 ball.Step();
             }
         }

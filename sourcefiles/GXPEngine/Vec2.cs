@@ -165,10 +165,10 @@ namespace GXPEngine
 			y = newy + Y;
 		}
 
-		public void ReflectOnPoint(Vec2 other,Vec2 other1, float elasticity)
+		public void ReflectOnPoint(Vec2 normal, float elasticity)
 		{
-			Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
-			this.Subtract(_tempVec.Scale(this.Dot(_tempVec)*2));
+			//Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
+			this.Subtract(normal.Scale(this.Dot(normal)*2));
             this.Scale(elasticity);
 		}
 
