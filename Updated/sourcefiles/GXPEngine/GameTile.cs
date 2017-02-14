@@ -1,0 +1,35 @@
+﻿using System;
+using GXPEngine;
+using System.Collections.Generic;
+
+public class GameTile : AnimationSprite {
+    private Map _map;
+    private uint _tileId;
+    private List<int> test = new List<int>();
+    private Level _level;
+    public Vec2 position;
+
+    private int _index = 0;
+
+    public int TileIndex {
+        get { return _index; }
+        set { _index = value; }
+    }
+
+    public GameTile(Level pLevel, TiledLayer pLayer, string fileName, uint pTile, int pSpriteSheetCol, int pSpriteSheetRow)
+        : base(fileName, pSpriteSheetCol, pSpriteSheetRow) {
+        _level = pLevel;
+        SetOrigin(width / 2, height / 2);
+        TMXParser tmxParser = new TMXParser();
+        _map = tmxParser.ParseFile("assets\\level_" + _level.CurrentLevel + ".tmx");
+        
+        _tileId = pTile;
+
+        currentFrame = (int)pLayer.Data.GetGId((uint)_tileId);
+        rotation = pLayer.Data.GetRotation((uint)_tileId);
+    }
+
+    public uint GetTileId() {
+        return _tileId;
+    }
+}

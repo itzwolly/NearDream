@@ -169,7 +169,7 @@ namespace GXPEngine
 		{
 			//Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
 			this.Subtract(normal.Clone().Scale((1 + elasticity) * this.Dot(normal)));
-            //this.Scale(elasticity);
+			//this.Scale(elasticity);
 		}
 
 
@@ -179,12 +179,12 @@ namespace GXPEngine
 			return new Vec2(-y, x).Normalize();
 		}
 
-        public Vec2 NormalNotNormalized()
-        {
-            return new Vec2(-y, x);
-        }
+		public Vec2 NormalNotNormalized()
+		{
+			return new Vec2(-y, x);
+		}
 
-        public void Reflect(Vec2 other,float elasticity)
+		public void Reflect(Vec2 other,float elasticity)
 		{
 			this.Subtract(other.Normal().Clone().Scale((1 + elasticity) * this.Dot(other.Normal().Clone())));
 		}
