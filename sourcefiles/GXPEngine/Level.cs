@@ -547,11 +547,11 @@ public class Level:GameObject
             _sounds.PlaySwitch();
             _ball.IsExploding = !_ball.IsExploding;
         }
-        if (_ball.OnPlayer)
-        {
-            _ball.x = _player.x-64;
-            _ball.y = _player.y-64;
-        }
+        //if (_ball.OnPlayer)
+        //{
+        //    _ball.x = _player.x-64;
+        //    _ball.y = _player.y-64;
+        //}
         if (Input.GetMouseButton(0) && _ball.OnPlayer)
         {
             if (_indicator == null)
@@ -646,6 +646,8 @@ public class Level:GameObject
                         _sounds.PlayPlankBlow();
                         _destroyables.Remove(plank);
                         plank.Destroy();
+                        plank.collider.Destroy();
+                        _lines.Remove(plank.collider);
                         i--;
                     }
                 }
@@ -771,8 +773,8 @@ public class Level:GameObject
 
     private void ResetBall()
     {
-        _ball.position.x = _player.x;
-        _ball.position.y = _player.y;
+        _ball.position.x = _player.x-64;
+        _ball.position.y = _player.y-64;
         _ball.velocity = Vec2.zero;
         _ball.OnPlayer = true;
         _ball.Step();
@@ -1208,7 +1210,7 @@ public class Level:GameObject
                                                                                                                    //ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                         ball.UpdateNextPosition();
                         ball.velocity.ReflectOnPoint(collisionNormal, ELASTICITY);
-                        Console.WriteLine(ball.velocity.Length()+"||"+collisionNormal.Length());
+                        //Console.WriteLine(ball.velocity.Length()+"||"+collisionNormal.Length());
                         //ball.velocity = Vec2.zero;
                         //ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
                         //ball.Step();
