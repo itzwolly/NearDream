@@ -863,6 +863,8 @@ public class Level:GameObject
         co.obj = null;
 
         float _distanceX,_distanceY;
+        if (_player.x < +32) _player.position.x = 32;
+        if (_player.x > _map.Width * _map.TileWidth-32) _player.position.x = _map.Width * _map.TileWidth - 32;
 
         for (int obj = 0; obj < _bridgeColliders.Count; obj++)
         {
