@@ -28,6 +28,8 @@ public class Level : GameObject {
     private List<Tree> _trees = new List<Tree>();
     private List<GravityChanger> _gravityChangers = new List<GravityChanger>();
     private List<PressurePlate> _pressurePlates = new List<PressurePlate>();
+    private List<GameObject> _pressurePlateObjects = new List<GameObject>();
+
     private TMXParser _tmxParser = new TMXParser();
 
     private int _currentLevel;
@@ -46,6 +48,7 @@ public class Level : GameObject {
         BuildLevel();
         CreatePlayer();
         CreateBall();
+        //CreatePressurePlates();
         CreateTiledObjects();
         _engine = new PhysicsEngine(this);
         RenderLines();
@@ -182,15 +185,19 @@ public class Level : GameObject {
 
     private void CreateTiledObjects() {
         foreach (ObjectGroup objGroup in _map.ObjectGroup) {
+            Console.WriteLine(objGroup.Name);
+            // so that we don't dont have to give all the object groups an property
+            
             if (objGroup.Name == "Bridge") {
                 foreach (TiledObject obj in objGroup.Object) {
                     Bridge bridge = new Bridge();
                     bridge.x = obj.X + bridge.width / 2;
                     bridge.y = obj.Y + bridge.height;
                     bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
+                    bridge.SpriteName = obj.Name;
                     _bridges.Add(bridge);
                     AddChildAt(bridge, 7);
-
+                    _pressurePlateObjects.Add(bridge);
                     bridge.BridgeCollider = new BridgeCollider(obj.X + bridge.width / 2 , obj.Y - 180, 450, 400);
                     _bridgeColliders.Add(bridge.BridgeCollider);
                 }
@@ -202,7 +209,9 @@ public class Level : GameObject {
                     rope.y = obj.Y;
                     rope.rotation = 340;
                     rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                    rope.SpriteName = obj.Name;
                     _ropes.Add(rope);
+                    _pressurePlateObjects.Add(rope);
                     AddChildAt(rope, 4);
                 }
             }
@@ -211,8 +220,10 @@ public class Level : GameObject {
                     Pot pot = new Pot();
                     pot.x = obj.X + obj.Width / 2;
                     pot.y = obj.Y + obj.Height / 2;
+                    pot.SpriteName = obj.Name;
                     _pots.Add(pot);
                     AddChildAt(pot, 0);
+                    _pressurePlateObjects.Add(pot);
                     pot.Canvas.x = pot.x - pot.width / 2;
                     pot.Canvas.y = pot.y - pot.height * 0.8f;
                     AddChildAt(pot.Canvas, 50);
@@ -225,9 +236,29 @@ public class Level : GameObject {
                     plank.y = obj.Y + obj.Height / 2;
                     plank.position.x = plank.x;
                     plank.position.y = plank.y;
+                    plank.SpriteName = obj.Name;
+                    _pressurePlateObjects.Add(plank);
                     _planks.Add(plank);
                     _destroyables.Add(plank);
                     AddChildAt(plank, 2);
+                }
+            }
+            if (objGroup.Name == "Stones") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    //25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
+                    Stone stone = new Stone(25, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, false);
+                    AddChild(stone);
+                    _stones.Add(stone);
+                    stone.Velocity = Vec2.zero;
+                }
+            }
+            if (objGroup.Name == "Pressureplates") {
+                //Console.WriteLine("test");
+                foreach (TiledObject obj in objGroup.Object) {
+                    PressurePlate _pressurePlate = new PressurePlate(obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
+                    Console.WriteLine(_pressurePlate.x);
+                    AddChild(_pressurePlate);
+                    _pressurePlates.Add(_pressurePlate);
                 }
             }
             if (objGroup.Name == "Trophies") {
@@ -237,6 +268,8 @@ public class Level : GameObject {
                     trophy.y = obj.Y + obj.Height / 4;
                     AddChildAt(trophy, 0);
                     _trophies.Add(trophy);
+                    trophy.SpriteName = obj.Name;
+                    _pressurePlateObjects.Add(trophy);
                 }
             }
             if (objGroup.Name == "Points") {
@@ -368,5 +401,9 @@ public class Level : GameObject {
 
     public HUD GetHUD() {
         return _hud;
+    }
+
+    public List<GameObject> GetPressurePlateObjects() {
+        return _pressurePlateObjects;
     }
 }

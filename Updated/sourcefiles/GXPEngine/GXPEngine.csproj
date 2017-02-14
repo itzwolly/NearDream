@@ -77,6 +77,8 @@
     <Compile Include="Item.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="Menu\AnimationButton.cs" />
+    <Compile Include="Menu\MainMenu.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="CustomRenderer.cs" />
     <Compile Include="PhysicsEngine.cs" />

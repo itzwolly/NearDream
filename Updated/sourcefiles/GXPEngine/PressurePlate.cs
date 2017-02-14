@@ -24,7 +24,7 @@ public class PressurePlate : Sprite
         set { _pressurePlateName = value; }
     }
 
-    public PressurePlate(float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth):base("assets\\sprites\\pressureplate.png")
+    public PressurePlate(float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\pressureplate.png")
     {
         SetOrigin(width / 2, height / 2);
         x = pX;
@@ -34,9 +34,14 @@ public class PressurePlate : Sprite
         _opensThis = pOpensThis;
     }
 
-    public void OpenCoresponding()
-    {
-        //Console.WriteLine(_opensThis);
+    public void OpenCorresponding(Sprite pSprite) {
+        if (pSprite.SpriteName == _opensThis) {
+            pSprite.Destroy();
+        }
+    }
+
+    public string GetOpensThis() {
+        return _opensThis;
     }
 }
 

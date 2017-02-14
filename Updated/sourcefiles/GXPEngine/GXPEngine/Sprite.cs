@@ -20,6 +20,13 @@ namespace GXPEngine
 
 		public BlendMode blendMode = null;
 
+		private string _spriteName = "";
+
+		public string SpriteName {
+			get { return _spriteName; }
+			set { _spriteName = value; }
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GXPEngine.Sprite"/> class.
 		/// Specify a System.Drawing.Bitmap to use. Bitmaps will not be cached.
@@ -180,9 +187,9 @@ namespace GXPEngine
 					if (blendMode != null) blendMode.enable ();
 					_texture.Bind();
 					glContext.SetColor((byte)((_color >> 16) & 0xFF), 
-					                   (byte)((_color >> 8) & 0xFF), 
-					                   (byte)(_color & 0xFF), 
-					                   (byte)(_alpha * 0xFF));
+									   (byte)((_color >> 8) & 0xFF), 
+									   (byte)(_color & 0xFF), 
+									   (byte)(_alpha * 0xFF));
 					glContext.DrawQuad(GetArea(), _uvs);
 					glContext.SetColor(1, 1, 1, 1);
 					_texture.Unbind();

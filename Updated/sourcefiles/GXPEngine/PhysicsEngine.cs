@@ -599,7 +599,9 @@ public class PhysicsEngine {
             if (ball.Position.x < presspl.x + presspl.width / 2 &&
                 ball.Position.x > presspl.x - presspl.width / 2 &&
                 ball.Position.y < presspl.y && ball.Position.y > presspl.y - ball.height / 2) {
-                presspl.OpenCoresponding();
+                    foreach (Sprite sprite in _level.GetPressurePlateObjects()) {
+                        presspl.OpenCorresponding(sprite);
+                    }
                 if (presspl.cover) {
                     ball.active = false;
                     ball.y = presspl.y - ball.height / 2;

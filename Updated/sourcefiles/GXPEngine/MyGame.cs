@@ -10,6 +10,7 @@ public class MyGame : Game //MyGame is a Game
 
 	private GameState _state;
 	private Level _level;
+	private MainMenu _menu;
 
 	public enum Asset {
 		NONE,
@@ -20,6 +21,7 @@ public class MyGame : Game //MyGame is a Game
 		MUSIC,
 		HUD,
 		FONT,
+		UI
 	}
 
 	public enum GameState {
@@ -35,7 +37,7 @@ public class MyGame : Game //MyGame is a Game
 	//initialize game here
 	public MyGame () : base(1600, 960, false, false) {
 		targetFps = 60;
-		SetState(GameState.LEVEL1);
+		SetState(GameState.MAINMENU);
 
 	}
 	
@@ -53,8 +55,12 @@ public class MyGame : Game //MyGame is a Game
 		StartState(_state);
 	}
 
-	void StartState(GameState pGameState) {
+	private void StartState(GameState pGameState) {
 		switch (pGameState) {
+			case GameState.MAINMENU:
+				_menu = new MainMenu(this);
+				AddChild(_menu);
+				break;
 			case GameState.LEVEL1:
 				_level = new Level(1);
 				AddChild(_level);
@@ -74,6 +80,8 @@ public class MyGame : Game //MyGame is a Game
 	public void StopState(GameState pGameState) {
 		
 		switch (pGameState) {
+			case GameState.MAINMENU:
+				break;
 			case GameState.LEVEL1:
 			case GameState.LEVEL2:
 			case GameState.LEVEL3:
