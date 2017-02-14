@@ -61,17 +61,37 @@ public class PhysicsEngine {
 
     public void HandlePlayer() {
         if (Input.GetKey(Key.D)) {
+            if (_collision.dir == CollidedOption.Direction.UP)
+                _level.GetPlayer().horizontalDirection = Player.Direction.RIGHT;
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
+            if (_collision.dir == CollidedOption.Direction.UP)
+                _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x -= Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.LEFT);
         } else {
             _level.GetPlayer().IsMoving = false;
         }
-
+        if(_level.GetPlayer().Position.x - _level.GetPlayer().x==0)
+        {
+            _level.GetPlayer().horizontalDirection = Player.Direction.NONE;
+        }
+        if (_level.GetPlayer().Velocity.y < 0)
+        {
+            _level.GetPlayer().verticalDirection = Player.Direction.UP;
+        }
+        else if (_level.GetPlayer().Velocity.y > 0)
+        {
+            _level.GetPlayer().verticalDirection = Player.Direction.DOWN;
+        }
+        else
+        {
+            _level.GetPlayer().verticalDirection = Player.Direction.NONE;
+        }
+        //Console.WriteLine(_level.GetPlayer().horizontalDirection+" || "+ _level.GetPlayer().verticalDirection);
         if (Input.GetKeyDown(Key.SPACE)) {
             //_sounds.PlayJump();
             if (!_level.GetPlayer().Jumped) {
@@ -298,6 +318,9 @@ public class PhysicsEngine {
         }
 
         if (Input.GetMouseButton(0) && _level.GetBall().OnPlayer) {
+
+            _level.GetBall().chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = true;
+
             if (_level.GetPlayer().GetIndicator() == null) {
                 _level.CreateIndicator();
             }
@@ -323,6 +346,7 @@ public class PhysicsEngine {
             _level.GetBall().OnPlayer = false;
             _level.GetBall().StartingBallVelocity = Ball.SPEED;
             RemoveIndicator();
+            _level.GetBall().chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = false;
             //_sounds.StopCharge();
             //_sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {

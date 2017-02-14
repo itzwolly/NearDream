@@ -12,6 +12,7 @@ public class PlayerAnim:AnimationSprite
     91 to 111 frames = Throwing
     */
     private Player _player;
+
     private int _wait;
 
     public PlayerAnim(Player pPlayer) : base("assets\\sprites\\playeranim.png", 13, 8)
@@ -23,6 +24,17 @@ public class PlayerAnim:AnimationSprite
     public void Update()
     {
         NextFrame();
+        if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE)
+            SetFrame(0);
+        else if (_player.horizontalDirection == Player.Direction.RIGHT)
+        {
+            if(_player.verticalDirection==Player.Direction.NONE && (currentFrame < 2 || currentFrame > 49))
+            SetFrame(1);
+        }
+        if (_player.verticalDirection == Player.Direction.UP)
+            SetFrame(50);
+        else if (_player.verticalDirection == Player.Direction.DOWN)
+            SetFrame(69);
     }
 }
 
