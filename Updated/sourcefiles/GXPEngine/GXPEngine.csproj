@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="BallAnim.cs" />
     <Compile Include="Bridge.cs" />
     <Compile Include="BridgeCollider.cs" />
     <Compile Include="BridgePlank.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="PhysicsEngine.cs" />
     <Compile Include="Plank.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerAnim.cs" />
     <Compile Include="Pot.cs" />
     <Compile Include="PressurePlate.cs" />
     <Compile Include="Reticle.cs" />

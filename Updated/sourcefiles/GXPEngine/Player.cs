@@ -48,9 +48,11 @@ public class Player : Sprite
     }
 
     public enum Direction {
-        NONE, LEFT,
-        RIGHT
+        NONE, LEFT, RIGHT, UP, DOWN
     }
+
+    public Direction horizontalDirection;
+    public Direction verticalDirection;
 
     public Player(float pX,float pY) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\square.png")
     {
@@ -61,7 +63,8 @@ public class Player : Sprite
         _velocity = Vec2.zero;
 
         SetOrigin(width/2,height/2);
-
+        PlayerAnim animation = new PlayerAnim(this);
+        AddChild(animation);
         _reticle = new Reticle();
     }
 
