@@ -141,14 +141,14 @@ public class PhysicsEngine {
                 pPlayer.Position.x - _distanceX <= wall.x &&
                 pPlayer.Position.y + _distanceY >= wall.y &&
                 pPlayer.Position.y - _distanceY <= wall.y) {
-                    if (pPlayer.Position.x < wall.x - wall.width / 2 + 20) //sees if who is on the left of the wall
+                    if (pPlayer.Position.x < wall.x - wall.width / 2 - 20) //sees if who is on the left of the wall
                     {
                     co.obj = wall;
                     co.dir = CollidedOption.Direction.LEFT;
                     //Console.WriteLine("left");
                     return;
                     }
-                    if (pPlayer.Position.x > wall.x + wall.width / 2 - 20)// sees if who is on the right of enemy5
+                    if (pPlayer.Position.x > wall.x + wall.width / 2 + 20)// sees if who is on the right of enemy5
                     {
                     co.obj = wall;
                     co.dir = CollidedOption.Direction.RIGHT;
@@ -289,6 +289,12 @@ public class PhysicsEngine {
             //_sounds.PlaySwitch();
             _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
             _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding);
+        }
+        
+
+        if(_level.GetBall().OnPlayer)
+        {
+            ResetBall();
         }
 
         if (Input.GetMouseButton(0) && _level.GetBall().OnPlayer) {

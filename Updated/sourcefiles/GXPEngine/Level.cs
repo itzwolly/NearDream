@@ -100,7 +100,7 @@ public class Level : GameObject {
     }
 
     private void PlayerCamera() {
-        y = game.height / 1.25f - _player.y;
+        //y = game.height / 1.25f - _player.y;
 
         if (_player.IsMoving) {
             x = game.width / 2 - _player.x;
@@ -110,13 +110,13 @@ public class Level : GameObject {
             x = 0;
         }
 
-        if (y > 0) {
-            y = 0;
-        }
+        //if (y > 0) {
+        //    y = 0;
+        //}
 
-        if (y < -(game.height)) {
-            y = -(game.height);
-        }
+        //if (y < -(game.height)) {
+        //    y = -(game.height);
+        //}
 
         //Console.WriteLine(x + " | " + -(_map.GetLevelWidth() - game.width)); // should be 2240 - 60 * 30 - game.width, (game.width being 1600)
 

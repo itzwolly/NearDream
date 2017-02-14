@@ -22,7 +22,7 @@ public class BridgePlank : AnimationSprite
         if (_startAnim == true) {
             NextFrame();
             if (currentFrame == 40) {
-                _bridge.GetBridgeCollider().y += 190;
+                _bridge.GetBridgeCollider().y += 193;
                 _bridge.GetBridgeCollider().height = 20;
                 _startAnim = false;
             }
