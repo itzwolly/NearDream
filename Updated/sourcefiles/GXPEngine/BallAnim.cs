@@ -7,8 +7,9 @@ using GXPEngine;
 public class BallAnim:AnimationSprite
 {
     private Ball _ball;
-    private int _wait;
+    private float _wait;
     private float _velocityLenght;
+    private float _waitTime;
 
     public BallAnim(Ball pBall):base("assets\\sprites\\dragonanim.png", 8,12)
     {
@@ -18,36 +19,53 @@ public class BallAnim:AnimationSprite
 
     public void Update()
     {
-        _velocityLenght = _ball.Velocity.Length();
-        if(_ball.IsExploding&&(currentFrame<47||currentFrame>67))
-        {
-            SetFrame(49);
-            if(_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+       
+        //_waitTime = 10 -_ball.Velocity.Length();
+        //if (_wait > _waitTime)
+        //{
+            _velocityLenght = _ball.Velocity.Length();
+            if (_ball.IsExploding)
             {
-                if (currentFrame >= 87)
-                    currentFrame = 87;
+                if (_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+                {
+                    if (currentFrame >= 86)
+                        currentFrame = 86;
+                }
+                else if (_velocityLenght > 0 && (currentFrame > 94 || currentFrame < 86))
+                {
+                    currentFrame = 86;
+                }
+                else if (_ball.StartedTimer)
+                {
+                    currentFrame = 86;
+                }
+                else if ((currentFrame > 66 || currentFrame < 49) && _velocityLenght == 0)
+                {
+                    currentFrame = 48;
+                }
+
             }
+            else if (!_ball.IsExploding)
+            {
+
+                if (_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+                {
+                    if (currentFrame >= 38)
+                        currentFrame = 38;
+                }
+                else if (_velocityLenght > 0 && (currentFrame > 46 || currentFrame < 38))
+                {
+                    currentFrame = 38;
+                }
+                else if ((currentFrame > 18 || currentFrame < 0) && _velocityLenght == 0)
+                {
+                    currentFrame = 0;
+                }
+            }
+            NextFrame();
+            //_wait = 0;
         }
-        else if(!_ball.IsExploding)
-        {
-            //Console.WriteLine(_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee +" || "+_ball.Velocity.Length());
-            //SetFrame(0);
-            if (_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
-            {
-                // if (currentFrame >= 38)
-                currentFrame = 38;
-            }
-            else if (_velocityLenght > 0 && (currentFrame > 46 ||currentFrame <38))
-            {
-                currentFrame = 38;
-            }
-            else if ((currentFrame > 18 || currentFrame < 0)&&_velocityLenght==0)
-            {
-                currentFrame = 0;
-            }
-            Console.WriteLine(currentFrame);
-        }
-        NextFrame();
-    }
+    //    _wait++;
+    //}
 }
 
