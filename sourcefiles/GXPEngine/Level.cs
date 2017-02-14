@@ -1056,6 +1056,7 @@ public class Level:GameObject
 
     void CheckAllLines(Ball ball)
     {
+        //Vec2 oldPos = new Vec2(ball.x, ball.y);
         ball.UpdateNextPosition();
         for (int i = 0; i < _lines.Count; i++)
         {
@@ -1063,7 +1064,7 @@ public class Level:GameObject
         }
         bool noOverlap = false;
         int iterations = 0;
-        int maxIterations = 20;
+        int maxIterations = 3;
         do
         {
             noOverlap = true;
@@ -1073,8 +1074,13 @@ public class Level:GameObject
             }
             iterations++;
         } while (!noOverlap && iterations < maxIterations);
-        //if (iterations > 1)
-        //    Console.WriteLine("Corrected {0} errors", iterations - 1);
+        if (iterations > 1)
+            Console.WriteLine("Corrected {0} errors", iterations - 1);
+        //if (iterations == maxIterations)
+        //{
+        //    ball.position = oldPos;
+        //    Console.WriteLine("HARD RESET");
+        //}
     }
 
     // Return true if overlap was detected
