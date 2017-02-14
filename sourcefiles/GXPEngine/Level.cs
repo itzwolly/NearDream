@@ -15,6 +15,7 @@ public class Level:GameObject
     const int GRAVITY = 15;
     const int REPETITIONS=2;
     const float ELASTICITY = 0.8f;
+    const float COLLISION_FRICTION = 0.8f;
     const int MAXPOWER = 30;
     private const string ASSET_FILE_PATH = "assets\\";
 
@@ -165,7 +166,7 @@ public class Level:GameObject
     
     private void CreatePressurePlates()
     {
-        PressurePlate _pressurePlate = new PressurePlate(832,1598,"first pressure plate",true,64,128);
+        PressurePlate _pressurePlate = new PressurePlate(832,1598+64,"first pressure plate",true,64,128);
         AddChild(_pressurePlate);
         _pressurePlates.Add(_pressurePlate);
     }
@@ -291,6 +292,10 @@ public class Level:GameObject
                     _planks.Add(plank);
                     _destroyables.Add(plank);
                     AddChild(plank);
+                    plank.collider.start = new Vec2(plank.x - plank.width / 2, plank.y);
+                    plank.collider.end = new Vec2(plank.x + plank.width / 2, plank.y);
+                    _lines.Add(plank.collider);
+                    AddChild(plank.collider);
                 }
             }
             if (objGroup.Name == "ForegroundTree") {
@@ -809,7 +814,7 @@ public class Level:GameObject
 
         if (collision.dir != direction.none)
         {
-            Console.WriteLine(collision.dir);
+            //Console.WriteLine(collision.dir);
             if (collision.dir == direction.above)
             {
                 //_sounds.PlayWalk();
@@ -1052,6 +1057,40 @@ public class Level:GameObject
         {
             ActualBounce(ball, _lines[i],ball.IsExploding);
         }
+        bool noOverlap = false;
+        int iterations = 0;
+        int maxIterations = 20;
+        do
+        {
+            noOverlap = true;
+            for (int i = 0; i < _lines.Count; i++)
+            {
+                noOverlap = noOverlap & !CorrectOverlap(ball, _lines[i]); // ActualBounce(ball, _lines[i], ball.IsExploding);
+            }
+            iterations++;
+        } while (!noOverlap && iterations < maxIterations);
+        //if (iterations > 1)
+        //    Console.WriteLine("Corrected {0} errors", iterations - 1);
+    }
+
+    // Return true if overlap was detected
+    bool CorrectOverlap(Ball ball,LineSegment line)
+    {
+        Vec2 differenceVec = ball.position.Clone().Subtract(line.start);
+        Vec2 normalizedLineVec = line.end.Clone().Subtract(line.start).Normalize();
+        Vec2 lineNormal = normalizedLineVec.Normal();
+        
+        float distanceToLine = differenceVec.Dot(lineNormal);
+        float distanceOnLine = differenceVec.Dot(normalizedLineVec);
+        if(distanceOnLine<=line.lineLenght && distanceOnLine >= 0 && distanceToLine >= -ball.radius && distanceToLine <= ball.radius)
+        {
+            if (distanceToLine>0)
+                ball.position.Add(lineNormal.Clone().Scale(ball.radius-distanceToLine+epsilon));
+            else
+                 ball.position.Add(lineNormal.Clone().Scale(-ball.radius-distanceToLine-epsilon));
+            return true;
+        }
+        return false;
     }
 
     private void Debug()
@@ -1064,41 +1103,63 @@ public class Level:GameObject
         }
     }
 
-    const float epsilon = 0.8f;
+    const float epsilon = 0.1f;
 
+
+    // Returns the point of impact, with parameters as named, where difference is the line normal scaled according to ball radius.
     public Vec2 CheckIntersection(Vec2 lineStart, Vec2 lineEnd, Vec2 ballPosition, Vec2 ballNextPosition, Vec2 difference)
     {
-        Vec2 lineStartUnderneath = lineStart.Clone();
-        Vec2 lineEndUnderneath = lineEnd.Clone();
-        lineStart.Add(difference);
-        lineEnd.Add(difference);
-        lineStartUnderneath.Subtract(difference);
-        lineEndUnderneath.Subtract(difference);
-        float ua = ((ballNextPosition.x - ballPosition.x) * (lineStart.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
-        float ub = ((lineEnd.x - lineStart.x) * (lineStart.y - ballPosition.y) - (lineEnd.y - lineStart.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
-        //Console.WriteLine(ua+"||"+ub);
-        Vec2 _tempIntersect = new Vec2(lineStart.x + ua * (lineEnd.x - lineStart.x), lineStart.y + ua * (lineEnd.y - lineStart.y));
-        if (ub <= 1 && ub >= -epsilon && ua < 1 && ua >= 0)
-            return _tempIntersect;//.Add(addition.Normalize());
+
+
+ 
+        // check which side of the line we collide with:
+        Vec2 velocity = ballNextPosition.Clone().Subtract(ballPosition);
+        float direction = velocity.Dot(difference); // if positive, we collide with the back of the line
+
+        if (direction < 0)
+        {
+            lineStart.Add(difference);
+            lineEnd.Add(difference);
+            // ua is the percentage of the line where the intersection is:
+            float ua = ((ballNextPosition.x - ballPosition.x) * (lineStart.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
+            // ub is the percentage of the "velocity" until point of impact:
+            float ub = ((lineEnd.x - lineStart.x) * (lineStart.y - ballPosition.y) - (lineEnd.y - lineStart.y) * (lineStart.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEnd.x - lineStart.x) - (ballNextPosition.x - ballPosition.x) * (lineEnd.y - lineStart.y));
+            //Console.WriteLine(ua+"||"+ub);
+            Vec2 _tempIntersect = new Vec2(lineStart.x + ua * (lineEnd.x - lineStart.x), lineStart.y + ua * (lineEnd.y - lineStart.y));
+
+
+            if (ub <= 1 && ub >= -epsilon && ua < 1 && ua >= 0)
+            {
+                //if (ub < 0)
+                //    Console.WriteLine("WARNING: negative time of impact! : " + ub);
+                return _tempIntersect;//.Add(addition.Normalize());
+            }
+        }
         else
         {
-            ua = ((ballNextPosition.x - ballPosition.x) * (lineStartUnderneath.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
-            ub = ((lineEndUnderneath.x - lineStartUnderneath.x) * (lineStartUnderneath.y - ballPosition.y) - (lineEndUnderneath.y - lineStartUnderneath.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
+            Vec2 lineStartUnderneath = lineStart.Clone();
+            Vec2 lineEndUnderneath = lineEnd.Clone();
+            lineStartUnderneath.Subtract(difference);
+            lineEndUnderneath.Subtract(difference);
+
+            float ua = ((ballNextPosition.x - ballPosition.x) * (lineStartUnderneath.y - ballPosition.y) - (ballNextPosition.y - ballPosition.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
+            float ub = ((lineEndUnderneath.x - lineStartUnderneath.x) * (lineStartUnderneath.y - ballPosition.y) - (lineEndUnderneath.y - lineStartUnderneath.y) * (lineStartUnderneath.x - ballPosition.x)) / ((ballNextPosition.y - ballPosition.y) * (lineEndUnderneath.x - lineStartUnderneath.x) - (ballNextPosition.x - ballPosition.x) * (lineEndUnderneath.y - lineStartUnderneath.y));
             //Console.WriteLine(ua+"||"+ub);
-            _tempIntersect = new Vec2(lineStartUnderneath.x + ua * (lineEndUnderneath.x - lineStartUnderneath.x), lineStartUnderneath.y + ua * (lineEndUnderneath.y - lineStartUnderneath.y));
+            Vec2 _tempIntersect = new Vec2(lineStartUnderneath.x + ua * (lineEndUnderneath.x - lineStartUnderneath.x), lineStartUnderneath.y + ua * (lineEndUnderneath.y - lineStartUnderneath.y));
             if (ub <= 1 && ub >= -epsilon && ua < 1 && ua >= 0)
                 return _tempIntersect;//.Subtract(addition.Normalize());
-            else return Vec2.zero;
+            //else return Vec2.zero;
         }
+        return Vec2.zero;
     }
 
     void ActualBounce(Ball ball, LineSegment line, bool stick)
     {
-        _ballToLineStart = _ball.position.Clone().Subtract(line.start);
+        //_ballToLineStart = _ball.position.Clone().Subtract(line.start);
         //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.position, ball.nextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius-2));//try on border
-        float _distanceToStart = line.start.DistanceTo(ball.position);
-        float _distanceToEnd = line.end.DistanceTo(ball.position);
+        float _distanceToStart = line.start.DistanceTo(ball.nextPosition);
+        float _distanceToEnd = line.end.DistanceTo(ball.nextPosition);
         //Console.WriteLine(_intersection);
         if (_intersection.y != 0)
         {
@@ -1110,11 +1171,12 @@ public class Level:GameObject
             }
             else
             {
-               // _sounds.PlayBallBounce();
+                // _sounds.PlayBallBounce();
                 ball.position = _intersection;
                 ball.UpdateNextPosition();
                 //ball.velocity = Vec2.zero;
                 ball.velocity.Reflect(line.lineOnOriginNormalized, ELASTICITY);
+                ball.velocity.Scale(COLLISION_FRICTION);
                 ball.UpdateInfo();
                 ball.Step();
             }
@@ -1123,27 +1185,38 @@ public class Level:GameObject
         //{
         //    if (line.start.y == 200) Console.WriteLine(ball.position); //here
         //}
-        else if (_distanceToStart < ball.radius)
-        {
-            if (stick)
+        else {
+            Vec2[] caps = new Vec2[] { line.start, line.end };
+            foreach (Vec2 cap in caps)
             {
-                ball.velocity = Vec2.zero;
-                ball.StartedTimer = true;
-                ball.OnPlayer = true;
+                _distanceToStart = cap.DistanceTo(ball.nextPosition);
+                if (_distanceToStart < ball.radius)
+                {
+                    if (stick)
+                    {
+                        ball.velocity = Vec2.zero;
+                        ball.StartedTimer = true;
+                        ball.OnPlayer = true;
+                    }
+                    else
+                    {
+                        float tempDistance = cap.DistanceTo(ball.nextPosition); ;
+                        Vec2 collisionNormal = ball.nextPosition.Clone().Subtract(cap).Normalize();
+                        //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
+                        ball.position = ball.nextPosition.Clone().Add(collisionNormal.Clone().Scale(ball.radius - tempDistance)); //.Subtract(collisionNormal.Scale(_ball.radius - tempDistance / 2));
+                                                                                                                   //_sounds.PlayBallBounce();
+                                                                                                                   //ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
+                        ball.UpdateNextPosition();
+                        ball.velocity.ReflectOnPoint(collisionNormal, ELASTICITY);
+                        Console.WriteLine(ball.velocity.Length()+"||"+collisionNormal.Length());
+                        //ball.velocity = Vec2.zero;
+                        //ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
+                        //ball.Step();
+                    }
+                    break;
+                }
             }
-            else
-            {
-                float _tempdistance = line.start.DistanceTo(_ball.position); ;
-                Vec2 _stoneToStone = line.start.Clone().Subtract(_ball.position).Normalize();
-                //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
-                //_sounds.PlayBallBounce();
-                //ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
-                ball.Step();
-                ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
-                ball.Step();
-            }
-        }
+        }/*
         else if (_distanceToEnd < ball.radius)
         {
             if (stick)
@@ -1154,8 +1227,8 @@ public class Level:GameObject
             }
             else
             {
-                float _tempdistance = line.end.DistanceTo(_ball.position); ;
-                Vec2 _stoneToStone = line.end.Clone().Subtract(_ball.position).Normalize();
+                float _tempdistance = line.end.DistanceTo(_ball.nextPosition); ;
+                Vec2 _stoneToStone = line.end.Clone().Subtract(_ball.nextPosition).Normalize();
                 //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
                 ball.position.Subtract(_stoneToStone.Scale(_ball.radius - _tempdistance / 2));
                 //_sounds.PlayBallBounce();
@@ -1164,7 +1237,7 @@ public class Level:GameObject
                 ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.end).Normalize(), ELASTICITY);
                 ball.Step();
             }
-        }
+        }*/
         
     }
 }
