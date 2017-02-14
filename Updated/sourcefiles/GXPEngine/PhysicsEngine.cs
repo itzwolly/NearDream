@@ -412,6 +412,7 @@ public class PhysicsEngine {
 
     private void RemoveIndicator() {
         _goingUp = true;
+        if(_level.GetPlayer().GetIndicator()!=null)
         _level.GetPlayer().GetIndicator().Destroy();
         _level.GetPlayer().SetIndicator(null);
     }
@@ -612,7 +613,7 @@ public class PhysicsEngine {
 
     private void ResetBall() {
         _level.GetBall().Position.x = _level.GetPlayer().x - _level.GetBall().width;
-        _level.GetBall().Position.y = _level.GetPlayer().y - _level.GetBall().height;
+        _level.GetBall().Position.y = _level.GetPlayer().y - _level.GetBall().height-20;
         _level.GetBall().Velocity = Vec2.zero;
         _level.GetBall().OnPlayer = true;
         _level.GetBall().Step();

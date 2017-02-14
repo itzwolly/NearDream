@@ -78,7 +78,8 @@ namespace GXPEngine
 			_nextPositionBorder = _position.Clone().Add(_velocity.Clone().Normalize().Scale(_velocity.Length() + radius));
 			_ballColor = pColor ?? Color.Blue;
 			_startingBallVelocity = SPEED / 2;
-
+            BallAnim animation = new BallAnim(this);
+            AddChild(animation);
 			draw ();
 			Step ();
 		}

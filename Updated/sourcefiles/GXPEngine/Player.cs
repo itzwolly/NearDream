@@ -61,7 +61,8 @@ public class Player : Sprite
         _velocity = Vec2.zero;
 
         SetOrigin(width/2,height/2);
-
+        PlayerAnim animation = new PlayerAnim(this);
+        AddChild(animation);
         _reticle = new Reticle();
     }
 
