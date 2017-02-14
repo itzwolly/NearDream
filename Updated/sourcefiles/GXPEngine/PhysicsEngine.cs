@@ -292,7 +292,7 @@ public class PhysicsEngine {
         }
         
 
-        if(_level.GetBall().OnPlayer)
+        if(_level.GetBall().OnPlayer && !_level.GetBall().StartedTimer)
         {
             ResetBall();
         }
