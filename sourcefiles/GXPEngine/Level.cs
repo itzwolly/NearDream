@@ -1059,11 +1059,12 @@ public class Level:GameObject
         ball.UpdateNextPosition();
         for (int i = 0; i < _lines.Count; i++)
         {
-            ActualBounce(ball, _lines[i],ball.IsExploding);
+            ActualBounce(ball, _lines[i], ball.IsExploding);
         }
         bool noOverlap = false;
         int iterations = 0;
         int maxIterations = 20;
+
         do
         {
             noOverlap = true;
