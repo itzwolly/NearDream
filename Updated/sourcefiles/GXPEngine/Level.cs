@@ -88,6 +88,17 @@ public class Level : GameObject {
 		_engine.CheckTrophyCollision();
 		_engine.CheckRopeCollision();
 		_engine.HandleDestructablePlanks();
+
+		if (_playerDirection == Player.Direction.LEFT) {
+		   // _player.Mirror(true, false);
+			_player.scaleX = -1.0f;
+		} else if (_playerDirection == Player.Direction.RIGHT) {
+			//_player.Mirror(true, false);
+			_player.scaleX = 1.0f;
+		}
+
+
+		Console.WriteLine(_playerDirection);
 	}
 
 	private void RenderLines() {

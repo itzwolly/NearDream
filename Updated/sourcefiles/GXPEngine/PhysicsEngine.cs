@@ -68,6 +68,7 @@ public class PhysicsEngine {
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
+            _level.GetPlayer().scaleX = -1;
             if (_collision.dir == CollidedOption.Direction.UP)
                 _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
             _level.GetPlayer().IsMoving = true;

@@ -24,9 +24,10 @@ public class PlayerAnim:AnimationSprite
     public void Update()
     {
         NextFrame();
+
         if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE)
             SetFrame(0);
-        else if (_player.horizontalDirection == Player.Direction.RIGHT)
+        else if (_player.horizontalDirection == Player.Direction.RIGHT || _player.horizontalDirection == Player.Direction.LEFT)
         {
             if(_player.verticalDirection==Player.Direction.NONE && (currentFrame < 2 || currentFrame > 49))
             SetFrame(1);
