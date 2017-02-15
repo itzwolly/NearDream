@@ -30,8 +30,10 @@ namespace GXPEngine
 		private bool _OnPlayer;
 		private Color _ballColor;
 		private float _startingBallVelocity;
+        protected BallAnim _animation;
 
-		public Vec2 Velocity {
+
+        public Vec2 Velocity {
 			get { return _velocity; }
 			set { _velocity = value; }
 		}
@@ -68,19 +70,20 @@ namespace GXPEngine
 			set { _startingBallVelocity = value; }
 		}
 
-		public Ball (int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null):base (pRadius*2, pRadius*2)
-		{
-			_OnPlayer = true;
-			radius = pRadius;
-			SetOrigin (radius, radius);
-			_position = pPosition ?? Vec2.zero;
-			_velocity = pVelocity ?? Vec2.zero;
-			_nextPosition = _position.Clone().Add(_velocity);
-			_nextPositionBorder = _position.Clone().Add(_velocity.Clone().Normalize().Scale(_velocity.Length() + radius));
-			_ballColor = pColor ?? Color.Blue;
-			_startingBallVelocity = SPEED / 2;
-            BallAnim animation = new BallAnim(this);
-            AddChild(animation);
+        public Ball(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null) : base(pRadius * 2, pRadius * 2)
+        {
+            _OnPlayer = true;
+            radius = pRadius;
+            SetOrigin(radius, radius);
+            _position = pPosition ?? Vec2.zero;
+            _velocity = pVelocity ?? Vec2.zero;
+            _nextPosition = _position.Clone().Add(_velocity);
+            _nextPositionBorder = _position.Clone().Add(_velocity.Clone().Normalize().Scale(_velocity.Length() + radius));
+            _ballColor = pColor ?? Color.Blue;
+            _startingBallVelocity = SPEED / 2;
+            _animation = new BallAnim(this);
+            AddChild(_animation);
+            
 			draw ();
 			Step ();
 		}

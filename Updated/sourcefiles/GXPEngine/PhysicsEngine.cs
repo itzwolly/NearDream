@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GXPEngine;
 using System.Drawing;
+using System.Linq;
 
 public class PhysicsEngine {
     public const int GRAVITY = 15;
@@ -353,6 +354,7 @@ public class PhysicsEngine {
             //_sounds.StopCharge();
             //_sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {
+            CheckInGravityChangers(_level.GetBall());
             _level.GetBall().Velocity.Add(_gravity);
             for (int i = 0; i <= Ball.REPETITIONS; i++) {
                 _level.GetBall().Step();
@@ -661,7 +663,10 @@ public class PhysicsEngine {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.position) < Ball.BLASTSIZE) {
                         //_sounds.PlayPlankBlow();
+                        _level.GetLines().Remove(plank.plankLine);
+                        plank.plankLine.Destroy();
                         _level.GetDestroyables().Remove(plank);
+                        _level.GetPlanks().Remove(plank);
                         plank.Destroy();
                         i--;
                     }

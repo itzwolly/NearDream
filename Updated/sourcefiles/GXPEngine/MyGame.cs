@@ -50,7 +50,6 @@ public class MyGame : Game //MyGame is a Game
 	//update game here
 	private void Update () {
 		//empty
-
 	}
 
 	public void SetState(GameState pGameState) {
