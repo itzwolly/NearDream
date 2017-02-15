@@ -9,7 +9,7 @@ public class GravityChanger : Canvas
 {
    public Vec2 changedGravity;
 
-    public GravityChanger(int pX, int pY, int pWidth, int pHeight,string direction):base(pWidth,pHeight)
+    public GravityChanger(float pX, float pY, int pWidth, int pHeight, int pDirection):base(pWidth,pHeight)
     {
         SetOrigin(width / 2, height / 2);
         x = pX;
@@ -17,23 +17,23 @@ public class GravityChanger : Canvas
 
         graphics.Clear(Color.Gray);
 
-        if (direction.ToLower() == "down")
+        if (pDirection == 3)
         {
             changedGravity = new Vec2(0,0.5f);
         }
-        if (direction.ToLower() == "up")
+        if (pDirection == 1)
         {
             changedGravity = new Vec2(0, -1.5f);//to counteract the actual gravity
         }
-        if (direction.ToLower() == "left")
+        if (pDirection == 4)
         {
             changedGravity = new Vec2(-0.5f, 0);
         }
-        if (direction.ToLower() == "right")
+        if (pDirection == 2)
         {
             changedGravity = new Vec2(0.5f, 0);
         }
-        if (direction.ToLower() == "none") {
+        if (pDirection == 0) {
             changedGravity = new Vec2(0, 0);
         }
     }
