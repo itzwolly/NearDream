@@ -11,6 +11,7 @@ public class PressurePlate : Sprite
     private bool _open;
     public NLineSegment coverLine;
     public bool cover;
+    private Level _level;
 
     public bool Open
     {
@@ -24,8 +25,9 @@ public class PressurePlate : Sprite
         set { _pressurePlateName = value; }
     }
 
-    public PressurePlate(float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\pressureplate.png")
+    public PressurePlate(Level pLevel, float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\pressureplate.png")
     {
+        _level = pLevel;
         SetOrigin(width / 2, height / 2);
         x = pX;
         y = pY;
@@ -37,6 +39,10 @@ public class PressurePlate : Sprite
     public void OpenCorresponding(Sprite pSprite) {
         if (pSprite.SpriteName == _opensThis) {
             pSprite.Destroy();
+            if (pSprite is Plank) {
+                Plank plank = (pSprite as Plank);
+                _level.GetDestroyables().Remove(plank);
+            }
         }
     }
 

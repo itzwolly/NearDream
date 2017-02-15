@@ -13,7 +13,7 @@ public class Level : GameObject {
     private PhysicsEngine _engine;
     private Player.Direction _playerDirection;
     private HUD _hud;
-    
+    private bool _loaded = false;
     private Dictionary<string, Layer> _layers = new Dictionary<string, Layer>();
     private List<LineSegment> _lines = new List<LineSegment>();
     private List<Bridge> _bridges = new List<Bridge>();
@@ -40,7 +40,12 @@ public class Level : GameObject {
         get { return _currentLevel; }
         set { _currentLevel = value; }
     }
-    
+
+    public bool Loaded {
+        get { return _loaded; }
+        set { _loaded = value; }
+    }
+
     public Level(int pCurrentLevel) {
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + _currentLevel + ".tmx");
@@ -88,12 +93,6 @@ public class Level : GameObject {
         GravityChanger gravs = new GravityChanger(300, 1400, 128, 1000, "up");
         AddChild(gravs);
         _gravityChangers.Add(gravs);
-    }
-
-    private void CreatePressurePlates() {
-        PressurePlate _pressurePlate = new PressurePlate(832, 1598 + 64, "first pressure plate", true, 64, 128);
-        AddChild(_pressurePlate);
-        _pressurePlates.Add(_pressurePlate);
     }
 
     private void RenderLines() {
@@ -255,7 +254,7 @@ public class Level : GameObject {
             if (objGroup.Name == "Pressureplates") {
                 //Console.WriteLine("test");
                 foreach (TiledObject obj in objGroup.Object) {
-                    PressurePlate _pressurePlate = new PressurePlate(obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
+                    PressurePlate _pressurePlate = new PressurePlate(this, obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
                     Console.WriteLine(_pressurePlate.x);
                     AddChild(_pressurePlate);
                     _pressurePlates.Add(_pressurePlate);

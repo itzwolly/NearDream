@@ -130,7 +130,7 @@ namespace GXPEngine
 		/// This function is called by the renderer. You can override it to change this object's rendering behaviour.
 		/// When not inside the GXPEngine package, specify the parameter as GXPEngine.Core.GLContext.
 		/// This function was made public to accomoadate split screen rendering. Use SetViewPort for that.
- 		/// </summary>
+		/// </summary>
 		/// <param name='glContext'>
 		/// Gl context, will be supplied by internal caller.
 		/// </param>
