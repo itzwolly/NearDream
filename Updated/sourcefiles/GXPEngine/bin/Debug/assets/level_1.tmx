@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="30" tilewidth="64" tileheight="64" nextobjectid="216">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="30" tilewidth="64" tileheight="64" nextobjectid="262">
  <tileset firstgid="1" name="foreground" tilewidth="64" tileheight="64" tilecount="112" columns="28">
   <image source="sprites/foreground.png" trans="ff00ff" width="1792" height="256"/>
  </tileset>
@@ -18,38 +18,11 @@
   </object>
  </objectgroup>
  <objectgroup name="Stones">
-  <object id="199" name="Stone_1" x="1152" y="640" width="64" height="64"/>
   <object id="200" name="Stone_2" x="1664" y="640" width="64" height="64"/>
-  <object id="201" name="Stone_3" x="0" y="640" width="64" height="64"/>
-  <object id="204" name="Stone_4" x="2752" y="640" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Points">
-  <object id="56" x="192" y="256">
-   <polyline points="0,0 448,0"/>
-  </object>
-  <object id="57" x="0" y="256">
-   <polyline points="0,0 0,-256"/>
-  </object>
-  <object id="58" x="0" y="0">
+  <object id="58" x="0" y="256">
    <polyline points="0,0 640,0"/>
-  </object>
-  <object id="60" x="640" y="0">
-   <polyline points="0,0 0,256"/>
-  </object>
-  <object id="201" x="896" y="320">
-   <polyline points="0,0 128,128"/>
-  </object>
-  <object id="202" x="1024" y="448">
-   <polyline points="0,0 128,64"/>
-  </object>
-  <object id="203" x="1152" y="512">
-   <polyline points="0,0 128,0"/>
-  </object>
-  <object id="206" x="1280" y="512">
-   <polyline points="0,0 192,64"/>
-  </object>
-  <object id="208" x="1472" y="576">
-   <polyline points="0,0 704,-256"/>
   </object>
   <object id="213" x="2752" y="704">
    <polyline points="0,0 128,128"/>
@@ -60,19 +33,67 @@
   <object id="215" x="2944" y="832">
    <polyline points="0,0 0,-320"/>
   </object>
+  <object id="216" x="0" y="384">
+   <polyline points="0,0 448,0"/>
+  </object>
+  <object id="217" x="768" y="384">
+   <polyline points="0,0 640,0"/>
+  </object>
+  <object id="219" x="640" y="256">
+   <polyline points="0,0 768,0"/>
+  </object>
+  <object id="220" x="1408" y="384">
+   <polyline points="0,0 512,0"/>
+  </object>
+  <object id="221" x="1408" y="256">
+   <polyline points="0,0 512,0"/>
+  </object>
+  <object id="235" x="0" y="256">
+   <polyline points="0,0 0,128"/>
+  </object>
+  <object id="236" x="640" y="256">
+   <polyline points="0,0 0,256"/>
+  </object>
+  <object id="237" x="1408" y="256">
+   <polyline points="0,0 0,128"/>
+  </object>
+  <object id="242" x="2048" y="256">
+   <polyline points="0,0 192,0"/>
+  </object>
+  <object id="243" x="2240" y="256">
+   <polyline points="0,0 0,-256"/>
+  </object>
+  <object id="245" x="2240" y="256">
+   <polyline points="0,0 128,192"/>
+  </object>
+  <object id="246" x="2240" y="128">
+   <polyline points="0,0 192,-128"/>
+  </object>
+  <object id="254" x="2432" y="256">
+   <polyline points="0,0 448,0"/>
+  </object>
+  <object id="255" x="2880" y="0">
+   <polyline points="0,0 0,256"/>
+  </object>
+  <object id="257" x="3264" y="256">
+   <polyline points="0,0 0,-128"/>
+  </object>
+  <object id="258" x="2496" y="128">
+   <polyline points="0,0 768,0"/>
+  </object>
  </objectgroup>
  <objectgroup name="Trophies">
-  <object id="115" name="Trophy_1" x="249.212" y="115.394" width="64" height="128">
+  <object id="115" name="Trophy_1" x="19.212" y="251.394" width="64" height="128">
    <properties>
     <property name="number" value="1"/>
    </properties>
   </object>
-  <object id="157" name="Trophy_2" x="1280" y="640" width="64" height="128">
+  <object id="157" name="Trophy_2" x="3178" y="126" width="64" height="128">
    <properties>
     <property name="number" value="2"/>
    </properties>
   </object>
-  <object id="193" name="Trophy_3" x="3200" y="832" width="64" height="128">
+  <object id="193" name="Trophy_3" x="2790" y="0" width="64" height="128">
    <properties>
     <property name="number" value="3"/>
    </properties>
@@ -83,7 +104,7 @@
   <object id="139" name="Tree_2" x="2432" y="960" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Rope">
-  <object id="185" name="Rope_1" x="437.333" y="0">
+  <object id="185" name="Rope_1" x="1216" y="128">
    <properties>
     <property name="bridge_to_drop" value="bridge_1"/>
    </properties>
@@ -91,7 +112,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Bridge">
-  <object id="138" name="Bridge_1" x="384" y="768">
+  <object id="138" name="Bridge_1" x="1216" y="832">
    <properties>
     <property name="bridge_name" value="bridge_1"/>
    </properties>
@@ -99,11 +120,11 @@
   </object>
  </objectgroup>
  <objectgroup name="Pots">
-  <object id="140" name="Pot_1" x="15.2727" y="676.727" width="64" height="64"/>
-  <object id="143" name="Pot_2" x="278.061" y="670.667" width="64" height="64"/>
-  <object id="169" name="Pot_3" x="353.333" y="173.697" width="64" height="64"/>
-  <object id="171" name="Pot_4" x="2240" y="704" width="64" height="64"/>
-  <object id="172" name="Pot_5" x="2688" y="704" width="64" height="64"/>
+  <object id="140" name="Pot_1" x="539.273" y="636.727" width="64" height="64"/>
+  <object id="143" name="Pot_2" x="802.061" y="630.667" width="64" height="64"/>
+  <object id="169" name="Pot_3" x="115.333" y="313.697" width="64" height="64"/>
+  <object id="171" name="Pot_4" x="1472" y="320" width="64" height="64"/>
+  <object id="172" name="Pot_5" x="1600" y="320" width="64" height="64"/>
   <object id="173" name="Pot_6" x="3456" y="704" width="64" height="64"/>
   <object id="191" name="Pot_7" x="3008" y="832" width="64" height="64"/>
  </objectgroup>
@@ -111,9 +132,10 @@
   <properties>
    <property name="PressurePlateInteraction" type="bool" value="true"/>
   </properties>
-  <object id="182" name="Plank_1" x="3008" y="768" width="256" height="64"/>
+  <object id="182" name="Plank_1" x="2944" y="218" width="256" height="64"/>
+  <object id="261" name="Plank_1" x="1030" y="506" width="256" height="64"/>
  </objectgroup>
- <layer name="Background" width="60" height="30">
+ <layer name="Background" width="60" height="30" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -161,8 +183,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-115,116,117,118,119,120,141,142,0,0,0,0,0,114,115,130,131,132,133,134,135,136,137,138,139,140,141,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,0,134,0,0,0,0,139,140,141,115,116,117,118,119,120,
-146,147,148,149,150,151,172,173,174,0,0,0,144,145,146,161,162,163,164,165,166,167,168,169,170,171,172,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,0,0,0,0,170,171,172,146,147,148,149,150,151,
+115,116,117,118,119,120,141,115,116,117,118,119,120,121,115,130,131,132,133,134,135,136,137,138,139,140,141,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,0,134,0,0,0,0,139,140,141,115,116,117,118,119,120,
+146,147,148,149,150,151,172,146,147,148,149,150,151,152,146,161,162,163,164,165,166,167,168,169,170,171,172,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,0,0,0,0,170,171,172,146,147,148,149,150,151,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,134,0,0,0,0,139,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,165,166,167,168,169,170,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

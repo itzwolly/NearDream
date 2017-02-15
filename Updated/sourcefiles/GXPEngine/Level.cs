@@ -242,6 +242,8 @@ public class Level : GameObject {
                     _planks.Add(plank);
                     _destroyables.Add(plank);
                     AddChildAt(plank, 2);
+                    _lines.Add(plank.GetLine());
+                    AddChild(plank.GetLine());
                 }
             }
             if (objGroup.Name == "Stones") {

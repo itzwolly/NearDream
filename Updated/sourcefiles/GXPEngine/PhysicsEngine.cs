@@ -662,7 +662,12 @@ public class PhysicsEngine {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.position) < Ball.BLASTSIZE) {
                         //_sounds.PlayPlankBlow();
+                        Console.WriteLine(_level.GetLines().Count);
+                        _level.GetLines().Remove(plank.plankLine);
+                        Console.WriteLine(_level.GetLines().Count);
+                        plank.plankLine.Destroy();
                         _level.GetDestroyables().Remove(plank);
+                        _level.GetPlanks().Remove(plank);
                         plank.Destroy();
                         i--;
                     }
