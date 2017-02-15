@@ -17,12 +17,14 @@ public class MainMenu : GameObject {
         _backgroundImage = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\main_menu_background.png");
         _backgroundCanvas.graphics.DrawImage(_backgroundImage, 0, 0);
 
-        btnPlay = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\play_button00.png", 2, 1);
+        btnPlay = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\play_buttons.png", 2, 1);
+        btnPlay.scale = 0.1f;
         AddChild(btnPlay);
         btnPlay.x = (game.width / 4f) - btnPlay.width * 0.8195f;
         btnPlay.y = (game.height - btnPlay.height) * 0.5f;
 
-        btnQuit = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\quit_button00.png", 2, 1);
+        btnQuit = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\quit_buttons.png", 2, 1);
+        btnQuit.scale = 0.1f;
         AddChild(btnQuit);
         btnQuit.x = (game.width / 4f) - btnQuit.width;
         btnQuit.y = (game.height + (btnQuit.height * 2)) * 0.50f;

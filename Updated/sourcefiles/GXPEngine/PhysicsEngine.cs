@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GXPEngine;
 using System.Drawing;
+using System.Linq;
 
 public class PhysicsEngine {
     public const int GRAVITY = 15;
@@ -67,6 +68,7 @@ public class PhysicsEngine {
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
+            _level.GetPlayer().scaleX = -1;
             if (_collision.dir == CollidedOption.Direction.UP)
                 _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
             _level.GetPlayer().IsMoving = true;
@@ -660,12 +662,9 @@ public class PhysicsEngine {
                 //_sounds.PlayExplosion();
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
-                    if (_level.GetBall().Position.DistanceTo(plank.position) < Ball.BLASTSIZE) {
-                        //_sounds.PlayPlankBlow();
-                        Console.WriteLine(_level.GetLines().Count);
-                        _level.GetLines().Remove(plank.plankLine);
-                        Console.WriteLine(_level.GetLines().Count);
-                        plank.plankLine.Destroy();
+                    if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
+                        _level.GetLines().Remove(plank.PlankLine);
+                        plank.PlankLine.Destroy();
                         _level.GetDestroyables().Remove(plank);
                         _level.GetPlanks().Remove(plank);
                         plank.Destroy();

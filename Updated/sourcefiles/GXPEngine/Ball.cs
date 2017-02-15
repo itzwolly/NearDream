@@ -12,7 +12,7 @@ namespace GXPEngine
 		public const float COLLISION_FRICTION = 0.8f;
 
 		/* Boom ball */
-		public const float BLASTSIZE = 100;
+		public const float BLASTSIZE = 500;
 		public const int WAITFORBOOM = 180;
 		/* */
 
@@ -25,15 +25,15 @@ namespace GXPEngine
 		private bool _isExploding;
 		private bool _startedTimer;
 		public bool _addGravity;
-        public bool charge;
+		public bool charge;
 
 		private bool _OnPlayer;
 		private Color _ballColor;
 		private float _startingBallVelocity;
-        protected BallAnim _animation;
+		protected BallAnim _animation;
 
 
-        public Vec2 Velocity {
+		public Vec2 Velocity {
 			get { return _velocity; }
 			set { _velocity = value; }
 		}
@@ -70,20 +70,20 @@ namespace GXPEngine
 			set { _startingBallVelocity = value; }
 		}
 
-        public Ball(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null) : base(pRadius * 2, pRadius * 2)
-        {
-            _OnPlayer = true;
-            radius = pRadius;
-            SetOrigin(radius, radius);
-            _position = pPosition ?? Vec2.zero;
-            _velocity = pVelocity ?? Vec2.zero;
-            _nextPosition = _position.Clone().Add(_velocity);
-            _nextPositionBorder = _position.Clone().Add(_velocity.Clone().Normalize().Scale(_velocity.Length() + radius));
-            _ballColor = pColor ?? Color.Blue;
-            _startingBallVelocity = SPEED / 2;
-            _animation = new BallAnim(this);
-            AddChild(_animation);
-            
+		public Ball(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null) : base(pRadius * 2, pRadius * 2)
+		{
+			_OnPlayer = true;
+			radius = pRadius;
+			SetOrigin(radius, radius);
+			_position = pPosition ?? Vec2.zero;
+			_velocity = pVelocity ?? Vec2.zero;
+			_nextPosition = _position.Clone().Add(_velocity);
+			_nextPositionBorder = _position.Clone().Add(_velocity.Clone().Normalize().Scale(_velocity.Length() + radius));
+			_ballColor = pColor ?? Color.Blue;
+			_startingBallVelocity = SPEED / 2;
+			_animation = new BallAnim(this);
+			AddChild(_animation);
+			
 			draw ();
 			Step ();
 		}
