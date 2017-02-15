@@ -31,19 +31,23 @@ public class Level : GameObject {
     private List<GameObject> _pressurePlateObjects = new List<GameObject>();
 
     private TMXParser _tmxParser = new TMXParser();
+    
 
     private int _currentLevel;
     private float _xOffset, _yOffset;
     private int[] _trophyArray = { 0, 0, 0};
-    
+    private bool _hasLoaded = false;
+
+
     public int CurrentLevel {
         get { return _currentLevel; }
         set { _currentLevel = value; }
     }
 
-    public bool Loaded {
-        get { return _loaded; }
-        set { _loaded = value; }
+
+    public bool HasLoaded {
+        get { return _hasLoaded; }
+        set { _hasLoaded = value; }
     }
 
     public Level(int pCurrentLevel) {
@@ -58,8 +62,6 @@ public class Level : GameObject {
         CreateTiledObjects();
         _engine = new PhysicsEngine(this);
         RenderLines();
-
-        
 
         // Assign layers to variables for ease of access.
         _foreGround = GetLayerByName("Foreground");
@@ -185,7 +187,6 @@ public class Level : GameObject {
 
     private void CreateTiledObjects() {
         foreach (ObjectGroup objGroup in _map.ObjectGroup) {
-            Console.WriteLine(objGroup.Name);
             // so that we don't dont have to give all the object groups an property
             
             if (objGroup.Name == "Bridge") {
@@ -256,7 +257,6 @@ public class Level : GameObject {
                 //Console.WriteLine("test");
                 foreach (TiledObject obj in objGroup.Object) {
                     PressurePlate _pressurePlate = new PressurePlate(this, obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
-                    Console.WriteLine(_pressurePlate.x);
                     AddChild(_pressurePlate);
                     _pressurePlates.Add(_pressurePlate);
                 }

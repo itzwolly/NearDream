@@ -43,7 +43,6 @@ public class MainMenu : GameObject {
                 btnPlay.currentFrame = 0;
                 btnPlay.y -= 4;
                 Destroy();
-                //_myGame.SetState(MyGame.GameState.LEVEL1);
                 _myGame.StartGame();
             } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnQuit.currentFrame = 0;

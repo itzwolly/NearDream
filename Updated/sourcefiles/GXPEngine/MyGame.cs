@@ -50,19 +50,6 @@ public class MyGame : Game //MyGame is a Game
 	//update game here
 	private void Update () {
 		//empty
-		if (Input.GetKeyDown(Key.TILDE)) {
-
-			SetState(GameState.LEVEL1);
-			_level.visible = false;
-			_level.GetHUD().visible = false;
-		}
-
-		if (Input.GetKeyDown(Key.LEFT_SHIFT)) {
-			AddChild(_level);
-			_level.Loaded = true;
-			_level.visible = true;
-			_level.GetHUD().visible = true;
-		}
 	}
 
 	public void SetState(GameState pGameState) {
@@ -102,19 +89,19 @@ public class MyGame : Game //MyGame is a Game
 
 	public void LoadLevel() {
 		SetState(GameState.LEVEL1);
-		_level.visible = false;
-		_level.GetHUD().visible = false;
+		StartLevel();
 	}
 
 	public void StartLevel() {
 		AddChild(_level);
-		_level.Loaded = true;
-		_level.visible = true;
-		_level.GetHUD().visible = true;
+		new Timer(1000, LoadData);
+	}
+
+	private void LoadData() {
+		_level.HasLoaded = true;
 	}
 
 	public void StopState(GameState pGameState) {
-		
 		switch (pGameState) {
 			case GameState.MAINMENU:
 				if (_menu != null) {
@@ -132,6 +119,7 @@ public class MyGame : Game //MyGame is a Game
 			case GameState.LEVEL2:
 			case GameState.LEVEL3:
 				if (_level != null) {
+					_level.HasLoaded = false;
 					_level.Destroy();
 					_level.GetHUD().Destroy();
 					_level = null;

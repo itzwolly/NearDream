@@ -24,7 +24,6 @@ public class LoadingScreen : Canvas
         graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 50, game.height / 2 - 50);
 
         new Timer(1000, _myGame.LoadLevel);
-        new Timer(3000, _myGame.StartLevel);
     }
 
     private void Update() {

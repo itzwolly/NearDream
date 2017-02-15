@@ -14,7 +14,7 @@ public class GravityChanger : Canvas
         SetOrigin(width / 2, height / 2);
         x = pX;
         y = pY;
-
+        
         graphics.Clear(Color.Yellow);
 
         if (direction.ToLower() == "down")

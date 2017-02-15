@@ -114,7 +114,7 @@ namespace GXPEngine
 
 		public float GetAngleRadians()
 		{
-			return Mathf.Atan(y / x);
+			return Mathf.Atan2(y, x);
 		}
 
 		public float GetAngleDegrees()
@@ -176,26 +176,26 @@ namespace GXPEngine
 			return new Vec2(-y, x).Normalize();
 		}
 
-        //public void Reflect(Vec2 other,float elasticity)
-        //{
-        //    this.Subtract(other.Normal().Clone().Scale( 2*this.Dot(other.Normal().Clone())));
-        //    this.Scale(elasticity);
-        //}
+		//public void Reflect(Vec2 other,float elasticity)
+		//{
+		//    this.Subtract(other.Normal().Clone().Scale( 2*this.Dot(other.Normal().Clone())));
+		//    this.Scale(elasticity);
+		//}
 
-        public void Reflect(Vec2 pOther, float pElasticity) {
-            this.Subtract(pOther.Normal().Clone().Scale((1 + pElasticity) * this.Dot(pOther.Normal().Clone())));
-        }
+		public void Reflect(Vec2 pOther, float pElasticity) {
+			this.Subtract(pOther.Normal().Clone().Scale((1 + pElasticity) * this.Dot(pOther.Normal().Clone())));
+		}
 
 		public float Dot(Vec2 pOther)
 		{
 			return x * pOther.x + y * pOther.y;
 		}
 
-        public void ReflectOnPoint(Vec2 pNormal, float pElasticity) {
-            //Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
-            this.Subtract(pNormal.Clone().Scale((1 + pElasticity) * this.Dot(pNormal)));
-            //this.Scale(elasticity);
-        }
+		public void ReflectOnPoint(Vec2 pNormal, float pElasticity) {
+			//Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
+			this.Subtract(pNormal.Clone().Scale((1 + pElasticity) * this.Dot(pNormal)));
+			//this.Scale(elasticity);
+		}
 	}
 }
 

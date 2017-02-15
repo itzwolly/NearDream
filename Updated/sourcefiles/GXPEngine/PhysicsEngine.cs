@@ -319,7 +319,7 @@ public class PhysicsEngine {
 
         if (Input.GetMouseButton(0) && _level.GetBall().OnPlayer) {
 
-            _level.GetBall().chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = true;
+            _level.GetBall().charge = true;
 
             if (_level.GetPlayer().GetIndicator() == null) {
                 _level.CreateIndicator();
@@ -336,17 +336,20 @@ public class PhysicsEngine {
                 _level.GetBall().StartingBallVelocity -= 0.3f;
             }
 
+            _level.GetPlayer().GetIndicator().IndicatorVec = new Vec2(Input.mouseX - _level.GetPlayer().x + _level.GetXOffset(), Input.mouseY - _level.GetPlayer().y + _level.GetYOffSet());
             HandleIndicator((int) _level.GetBall().StartingBallVelocity / 4);
-        } else if (Input.GetMouseButtonUp(0) && _level.GetBall().OnPlayer) {
+        } else if (Input.GetMouseButtonUp(0) && _level.GetBall().OnPlayer && _level.GetPlayer().GetIndicator() != null) {
             _level.GetBall().Position.x = _level.GetPlayer().x;
             _level.GetBall().Position.y = _level.GetPlayer().y;
-            _level.GetBall().Velocity.x = (Input.mouseX - _level.GetPlayer().x + _level.GetXOffset());
-            _level.GetBall().Velocity.y = (Input.mouseY - _level.GetPlayer().y + _level.GetYOffSet());
+
+            _level.GetBall().Velocity = _level.GetPlayer().GetIndicator().IndicatorVec.Clone();
+            //_level.GetBall().Velocity.x = (Input.mouseX - _level.GetPlayer().x + _level.GetXOffset());
+            //_level.GetBall().Velocity.y = (Input.mouseY - _level.GetPlayer().y + _level.GetYOffSet());
             _level.GetBall().Velocity.Normalize().Scale(_level.GetBall().StartingBallVelocity);
             _level.GetBall().OnPlayer = false;
             _level.GetBall().StartingBallVelocity = Ball.SPEED;
             RemoveIndicator();
-            _level.GetBall().chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee = false;
+            _level.GetBall().charge = false;
             //_sounds.StopCharge();
             //_sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {
@@ -430,16 +433,21 @@ public class PhysicsEngine {
     }
 
     private void HandleIndicator(int pPower) {
-        _level.GetPlayer().GetIndicator().x = _level.GetPlayer().x;
-        _level.GetPlayer().GetIndicator().y = _level.GetPlayer().y;
-        _level.GetPlayer().GetIndicator().SetPower(pPower);
+        if (_level.GetPlayer().GetIndicator() != null) {
+            _level.GetPlayer().GetIndicator().x = _level.GetPlayer().x;
+            _level.GetPlayer().GetIndicator().y = _level.GetPlayer().y;
+            _level.GetPlayer().GetIndicator().rotation = _level.GetPlayer().GetIndicator().IndicatorVec.GetAngleDegrees() + 90;
+            _level.GetPlayer().GetIndicator().SetPower(pPower);
+        }
     }
 
     private void RemoveIndicator() {
         _goingUp = true;
-        if(_level.GetPlayer().GetIndicator()!=null)
-        _level.GetPlayer().GetIndicator().Destroy();
-        _level.GetPlayer().SetIndicator(null);
+        if (_level.GetPlayer().GetIndicator() != null) {
+            _level.GetPlayer().GetIndicator().Destroy();
+            _level.GetPlayer().SetIndicator(null);
+        }
+        
     }
 
     public Vec2 CheckIntersection(Vec2 lineStart, Vec2 lineEnd, Vec2 ballPosition, Vec2 ballNextPosition, Vec2 difference) {
