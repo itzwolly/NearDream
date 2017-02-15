@@ -27,3 +27,8 @@ C:\Users\jeyhun\Documents\project-2d-physics\Updated\sourcefiles\GXPEngine\bin\D
 C:\Users\jeyhun\Documents\project-2d-physics\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.csprojResolveAssemblyReference.cache
 C:\Users\jeyhun\Documents\project-2d-physics\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.exe
 C:\Users\jeyhun\Documents\project-2d-physics\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.pdb
+D:\Saxion\Project 2D Physics\Repository\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.exe
+D:\Saxion\Project 2D Physics\Repository\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.pdb
+D:\Saxion\Project 2D Physics\Repository\Updated\sourcefiles\GXPEngine\bin\Debug\GXPEngine.exe
+D:\Saxion\Project 2D Physics\Repository\Updated\sourcefiles\GXPEngine\bin\Debug\GXPEngine.pdb
+D:\Saxion\Project 2D Physics\Repository\Updated\sourcefiles\GXPEngine\obj\x86\Debug\GXPEngine.csprojResolveAssemblyReference.cache

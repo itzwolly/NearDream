@@ -3,6 +3,7 @@ using System.Drawing;
 using GXPEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing.Text;
 
 public class MyGame : Game //MyGame is a Game
 {
@@ -10,6 +11,9 @@ public class MyGame : Game //MyGame is a Game
 
 	private GameState _state;
 	private Level _level;
+	private MainMenu _menu;
+	private LoadingScreen _loadingScreen;
+	private static PrivateFontCollection _pfc;
 
 	public enum Asset {
 		NONE,
@@ -20,10 +24,12 @@ public class MyGame : Game //MyGame is a Game
 		MUSIC,
 		HUD,
 		FONT,
+		UI
 	}
 
 	public enum GameState {
 		MAINMENU,
+		LOADINGSCREEN,
 		LEVELSELECTMENU,
 		PAUSEMENU,
 		LEVEL1,
@@ -35,7 +41,9 @@ public class MyGame : Game //MyGame is a Game
 	//initialize game here
 	public MyGame () : base(1600, 960, false, false) {
 		targetFps = 60;
-		SetState(GameState.LEVEL1);
+		_pfc = new PrivateFontCollection();
+		_pfc.AddFontFile(MyGame.GetAssetFilePath(MyGame.Asset.FONT) + "\\Augusta.ttf");
+		SetState(GameState.MAINMENU);
 
 	}
 	
@@ -43,7 +51,17 @@ public class MyGame : Game //MyGame is a Game
 	private void Update () {
 		//empty
 		if (Input.GetKeyDown(Key.TILDE)) {
-			SetState(GameState.LEVEL2);
+
+			SetState(GameState.LEVEL1);
+			_level.visible = false;
+			_level.GetHUD().visible = false;
+		}
+
+		if (Input.GetKeyDown(Key.LEFT_SHIFT)) {
+			AddChild(_level);
+			_level.Loaded = true;
+			_level.visible = true;
+			_level.GetHUD().visible = true;
 		}
 	}
 
@@ -53,13 +71,20 @@ public class MyGame : Game //MyGame is a Game
 		StartState(_state);
 	}
 
-	void StartState(GameState pGameState) {
+	private void StartState(GameState pGameState) {
 		switch (pGameState) {
+			case GameState.MAINMENU:
+				_menu = new MainMenu(this);
+				AddChild(_menu);
+				break;
+			case GameState.LOADINGSCREEN:
+				_loadingScreen = new LoadingScreen(this);
+				AddChild(_loadingScreen);
+				break;
 			case GameState.LEVEL1:
 				_level = new Level(1);
-				AddChild(_level);
+				//AddChild(_level);
 				_level.CreateHUD();
-				
 				break;
 			case GameState.LEVEL2:
 				_level = new Level(2);
@@ -71,9 +96,38 @@ public class MyGame : Game //MyGame is a Game
 		}
 	}
 
+	public void StartGame() {
+		SetState(GameState.LOADINGSCREEN);
+	}
+
+	public void LoadLevel() {
+		SetState(GameState.LEVEL1);
+		_level.visible = false;
+		_level.GetHUD().visible = false;
+	}
+
+	public void StartLevel() {
+		AddChild(_level);
+		_level.Loaded = true;
+		_level.visible = true;
+		_level.GetHUD().visible = true;
+	}
+
 	public void StopState(GameState pGameState) {
 		
 		switch (pGameState) {
+			case GameState.MAINMENU:
+				if (_menu != null) {
+					_menu.Destroy();
+					_menu = null;
+				}
+				break;
+			case GameState.LOADINGSCREEN:
+				if (_loadingScreen != null) {
+					_loadingScreen.Destroy();
+					_loadingScreen = null;
+				}
+				break;
 			case GameState.LEVEL1:
 			case GameState.LEVEL2:
 			case GameState.LEVEL3:
@@ -100,6 +154,10 @@ public class MyGame : Game //MyGame is a Game
 			}
 		}
 		return "";
+	}
+
+	public static FontFamily GetFont() {
+		return _pfc.Families[0];
 	}
 
 	public GameState GetState() {

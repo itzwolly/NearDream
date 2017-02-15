@@ -26,7 +26,7 @@ using GXPEngine;
 		NextPosition = Position.Clone().Add(Velocity);
 		NextPositionBorder = Position.Clone().Add(Velocity.Clone().Normalize().Scale(Velocity.Length() + radius));
 		_ballColor = pColor ?? Color.Blue;
-
+        _animation.Destroy();
 		draw();
 		Step();
 	}

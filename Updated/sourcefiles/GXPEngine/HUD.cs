@@ -12,7 +12,6 @@ public class HUD : Canvas {
 
     private List<Canvas> _trophyCanvases = new List<Canvas>();
     private Font _font, _changeBallFont;
-    private PrivateFontCollection _pfc;
     private Level _level;
 
     private int _timer;
@@ -20,11 +19,8 @@ public class HUD : Canvas {
     public HUD(Level pLevel) : base(MyGame.main.width, 100) {
         _level = pLevel;
 
-        _pfc = new PrivateFontCollection();
-        _pfc.AddFontFile(MyGame.GetAssetFilePath(MyGame.Asset.FONT) + "\\Augusta.ttf");
-
-        _font = new Font(_pfc.Families[0], 58);
-        _changeBallFont = new Font(_pfc.Families[0], 21);
+        _font = new Font(MyGame.GetFont(), 58);
+        _changeBallFont = new Font(MyGame.GetFont(), 21);
 
         _timerContainer = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.HUD) + "\\score_container.png");
         _trophyContainer = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.HUD) + "\\trophy_container.png");
@@ -73,12 +69,13 @@ public class HUD : Canvas {
     }
 
     private void Update() {
-        _timerCanvas.graphics.Clear(Color.Transparent);
-        _scoreCanvas.graphics.Clear(Color.Transparent);
-        _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
-        _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
-
-        IncreaseTimer();
+        if (_level.Loaded) {
+            _timerCanvas.graphics.Clear(Color.Transparent);
+            _scoreCanvas.graphics.Clear(Color.Transparent);
+            _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
+            _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
+            IncreaseTimer();
+        }
     }
 
     private void DrawCurrentBall(System.Drawing.Image pImage) {

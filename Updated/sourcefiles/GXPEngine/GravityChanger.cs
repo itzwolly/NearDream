@@ -14,7 +14,9 @@ public class GravityChanger : Canvas
         SetOrigin(width / 2, height / 2);
         x = pX;
         y = pY;
-        graphics.Clear(Color.Gray);
+
+        graphics.Clear(Color.Yellow);
+
         if (direction.ToLower() == "down")
         {
             changedGravity = new Vec2(0,0.5f);
@@ -31,8 +33,9 @@ public class GravityChanger : Canvas
         {
             changedGravity = new Vec2(0.5f, 0);
         }
+        if (direction.ToLower() == "none") {
+            changedGravity = new Vec2(0, 0);
+        }
     }
-
-    
 }
 
