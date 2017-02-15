@@ -134,11 +134,11 @@ public class Level : GameObject {
 
 		if (x < 0 && x > -(_map.GetLevelWidth() - game.width)) {
 			if (_player.IsMoving) {
-				if (_playerDirection == Player.Direction.RIGHT) {
+				if (_playerDirection == Player.Direction.RIGHT && _engine.collision.dir != CollidedOption.Direction.LEFT) {
 					_foreGround.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					MoveTrees(6.5f);
-				} else if (_playerDirection == Player.Direction.LEFT) {
+				} else if (_playerDirection == Player.Direction.LEFT && _engine.collision.dir != CollidedOption.Direction.RIGHT) {
 					_foreGround.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					MoveTrees(-6.5f);
