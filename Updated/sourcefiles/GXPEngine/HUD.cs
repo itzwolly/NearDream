@@ -69,7 +69,7 @@ public class HUD : Canvas {
     }
 
     private void Update() {
-        if (_level.Loaded) {
+        if (_level.HasLoaded) {
             _timerCanvas.graphics.Clear(Color.Transparent);
             _scoreCanvas.graphics.Clear(Color.Transparent);
             _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);

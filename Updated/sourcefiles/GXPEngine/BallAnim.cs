@@ -26,7 +26,7 @@ public class BallAnim:AnimationSprite
             _velocityLenght = _ball.Velocity.Length();
             if (_ball.IsExploding)
             {
-                if (_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+                if (_ball.charge)
                 {
                     if (currentFrame >= 86)
                         currentFrame = 86;
@@ -48,7 +48,7 @@ public class BallAnim:AnimationSprite
             else if (!_ball.IsExploding)
             {
 
-                if (_ball.chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
+                if (_ball.charge)
                 {
                     if (currentFrame >= 38)
                         currentFrame = 38;

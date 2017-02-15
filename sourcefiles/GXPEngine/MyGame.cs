@@ -44,6 +44,7 @@ public class MyGame : Game //MyGame is a Game
 			case STATE.LEVEL1:
 				_level = new Level(this, 1);
 				AddChild(_level);
+                ShowMouse(true);
 				break;
 			case STATE.LEVEL2:
 				_level = new Level(this, 2);

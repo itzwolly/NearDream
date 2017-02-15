@@ -25,7 +25,7 @@ namespace GXPEngine
 		private bool _isExploding;
 		private bool _startedTimer;
 		public bool _addGravity;
-        public bool chargeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee;
+        public bool charge;
 
 		private bool _OnPlayer;
 		private Color _ballColor;

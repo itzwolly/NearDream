@@ -566,6 +566,7 @@ public class Level:GameObject
                 _startingBallVelocity -= 0.3f;
 
             _indicatorVec = new Vec2(Input.mouseX - _player.x + _xOffset, Input.mouseY - _player.y + _yOffset);
+            Console.WriteLine("test");
             HandleIndicator((int)_startingBallVelocity/4);
         }
         else if (Input.GetMouseButtonUp(0) && _ball.OnPlayer)
