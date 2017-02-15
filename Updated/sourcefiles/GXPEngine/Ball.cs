@@ -12,7 +12,7 @@ namespace GXPEngine
 		public const float COLLISION_FRICTION = 0.8f;
 
 		/* Boom ball */
-		public const float BLASTSIZE = 100;
+		public const float BLASTSIZE = 500;
 		public const int WAITFORBOOM = 180;
 		/* */
 

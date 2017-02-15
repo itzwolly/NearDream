@@ -196,10 +196,10 @@ public class Level : GameObject {
 			}
 			if (objGroup.Name == "GravityChanger") {
 				foreach (TiledObject obj in objGroup.Object) {
-                    //Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
+					//Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
 					GravityChanger gravityChanger = new GravityChanger(obj.X, obj.Y, obj.Width, obj.Height, Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
-				    AddChild(gravityChanger);
-				    _gravityChangers.Add(gravityChanger);
+					AddChild(gravityChanger);
+					_gravityChangers.Add(gravityChanger);
 				}
 			}
 			if (objGroup.Name == "Rope") {
@@ -234,13 +234,14 @@ public class Level : GameObject {
 					Plank plank = new Plank();
 					plank.x = obj.X + obj.Width / 2;
 					plank.y = obj.Y + obj.Height / 2;
-					plank.position.x = plank.x;
-					plank.position.y = plank.y;
+					plank.Position.x = plank.x;
+					plank.Position.y = plank.y;
 					plank.SpriteName = obj.Name;
 					_pressurePlateObjects.Add(plank);
 					_planks.Add(plank);
 					_destroyables.Add(plank);
 					AddChildAt(plank, 2);
+					_lines.Add(plank.GetLine());
 				}
 			}
 			if (objGroup.Name == "Stones") {
