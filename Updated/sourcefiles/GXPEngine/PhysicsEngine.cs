@@ -519,8 +519,8 @@ public class PhysicsEngine {
         //_ballToLineStart = _ball.position.Clone().Subtract(line.start);
         //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.Position, ball.NextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius - 2));//try on border
-        float _distanceToStart = line.start.DistanceTo(ball.NextPosition);
-        float _distanceToEnd = line.end.DistanceTo(ball.NextPosition);
+        float _distanceToStart = line.start.DistanceTo(ball.Position);
+        float _distanceToEnd = line.end.DistanceTo(ball.Position);
         //Console.WriteLine(_intersection);
         if (_intersection.y != 0) {
             if (stick) {
@@ -666,10 +666,10 @@ public class PhysicsEngine {
 
     private void CheckInGravityChangers(Ball ball) {
         foreach (GravityChanger gravchangers in _level.GetGravityChangers()) {
-            if (ball.Position.x < gravchangers.x + gravchangers.width / 2 &&
-                ball.Position.x > gravchangers.x - gravchangers.width / 2 &&
-                ball.Position.y > gravchangers.y - gravchangers.height / 2 &&
-                ball.Position.y < gravchangers.y + gravchangers.height / 2) {
+            if (ball.Position.x < gravchangers.x + gravchangers.width &&
+                ball.Position.x > gravchangers.x &&
+                ball.Position.y > gravchangers.y &&
+                ball.Position.y < gravchangers.y + gravchangers.height) {
                 ball.Velocity.Add(gravchangers.changedGravity);
                 CheckAllLines(ball);
                 //_sounds.PlayWind();
