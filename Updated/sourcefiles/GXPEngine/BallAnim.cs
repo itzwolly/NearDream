@@ -11,7 +11,7 @@ public class BallAnim:AnimationSprite
     private float _velocityLenght;
     private float _waitTime;
 
-    public BallAnim(Ball pBall):base("assets\\sprites\\dragon_anim.png", 4,44)
+    public BallAnim(Ball pBall):base("assets\\sprites\\dragon_anim1.png", 4,44)
     {
         _ball = pBall;
         SetOrigin(width / 2, height / 2);
@@ -28,7 +28,7 @@ public class BallAnim:AnimationSprite
             {
                 if (_ball.charge)
                 {
-                    if (currentFrame >= 163)
+                if (currentFrame >= 163)
                         currentFrame = 163;
                     else if (currentFrame < 127)
                         currentFrame = 127;

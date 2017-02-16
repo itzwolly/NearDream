@@ -183,7 +183,7 @@ public class Level : GameObject {
 	}
 
 	private void CreateBall() {
-		_ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
+		_ball = new Ball(20, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
 		AddChildAt(_ball, 1);
 		_ball.Velocity = new Vec2();
 		_ballToLine = new LineSegment(null, null);

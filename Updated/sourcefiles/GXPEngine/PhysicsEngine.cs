@@ -357,9 +357,10 @@ public class PhysicsEngine {
         } else if (!_level.GetBall().OnPlayer) {
             CheckInGravityChangers(_level.GetBall());
             _level.GetBall().Velocity.Add(_gravity);
-            for (int i = 0; i <= Ball.REPETITIONS; i++) {
-                _level.GetBall().Step();
+            for (int i = 0; i <= Ball.REPETITIONS; i++)
+            {
                 CheckAllLines(_level.GetBall());
+                _level.GetBall().Step();
             }
         }
     }
@@ -377,15 +378,20 @@ public class PhysicsEngine {
                 ;
                 Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetBall().Position).Normalize();
                 //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                _level.GetBall().Position.Subtract(_stoneToStone.Scale(_level.GetBall().radius - _tempdistance / 2));
-                _level.GetStones()[i].Velocity = _level.GetBall().Velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                _level.GetBall().Position.Subtract(_stoneToStone.Clone().Scale(_level.GetBall().radius - _tempdistance / 2));
+                _level.GetStones()[i].Velocity = _level.GetBall().Velocity.Clone().Scale(0.5f);//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                //_level.GetStones()[i].UpdateNextPosition();
                 CheckAllLines(_level.GetStones()[i]);
-                _level.GetStones()[i].Step();
-                _level.GetBall().Velocity = Vec2.zero;
+                _level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
+                _level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
                 //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
+                //_level.GetBall().UpdateNextPosition();
                 CheckAllLines(_level.GetBall());
+
+
                 _level.GetBall().Step();
+                _level.GetStones()[i].Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 _level.GetStones()[i].active = true;
                 //stone.hitPlayer = true;
@@ -406,17 +412,18 @@ public class PhysicsEngine {
                     //stone.position.x - ();
                     //stone.position.y - ();
                     Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetStones()[j].Position).Normalize();
-                    _level.GetStones()[i].Position.Add(_stoneToStone.Scale(_level.GetStones()[i].radius - _tempDistance / 2));
+                    _level.GetStones()[i].Position.Add(_stoneToStone.Clone().Scale(_level.GetStones()[i].radius - _tempDistance / 2));
                     //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
                     _level.GetStones()[j].active = true;
                     //if (!stone2.started)
                     {
                         //_sounds.PlayRockBounce();
-                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
+                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone().Scale(0.5f);//new Vec2(1, 0).Scale(stone.velocity.Length());
                         // stone2.started = true;
                     }
                     _level.GetStones()[i].hitPlayer = false;
-                    _level.GetStones()[i].Velocity.Scale(0.0f);
+                    _level.GetStones()[i].Velocity.ReflectOnPoint(_stoneToStone, Ball.ELASTICITY);
+                    _level.GetStones()[i].Velocity.Scale(0.5f);
                     //CheckAllLines(_stones[i]);
                     //CheckAllLines(_stones[j]);
                     _level.GetStones()[i].Step();
@@ -663,8 +670,8 @@ public class PhysicsEngine {
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
-                        _level.GetLines().Remove(plank.PlankLine);
-                        plank.PlankLine.Destroy();
+                        _level.GetLines().Remove(plank.GetLine());
+                        plank.GetLine().Destroy();
                         _level.GetDestroyables().Remove(plank);
                         _level.GetPlanks().Remove(plank);
                         plank.Destroy();
