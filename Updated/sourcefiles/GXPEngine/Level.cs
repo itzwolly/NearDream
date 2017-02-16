@@ -60,7 +60,7 @@ public class Level : GameObject {
 		CreateTiledObjects();
 		_engine = new PhysicsEngine(this);
 		RenderLines();
-
+		
 		// Assign layers to variables for ease of access.
 		_foreGround = GetLayerByName("Foreground");
 		_foreGroundPartTwo = GetLayerByName("Foreground_2");
@@ -97,11 +97,16 @@ public class Level : GameObject {
 			//_player.Mirror(true, false);
 			_player.scaleX = 1.0f;
             _ball.scaleX = 1.0f;
-        }
+		}
+	}
+
+	public void CreateHUD() {
+		_hud = new HUD(this);
+		game.AddChild(_hud);
+    }
 
 
 		//Console.WriteLine(_playerDirection);
-	}
 
 	private void RenderLines() {
 		foreach (NLineSegment line in _lines) {
@@ -406,11 +411,6 @@ public class Level : GameObject {
 
 	public int[] GetTrophyArray() {
 		return _trophyArray;
-	}
-
-	public void CreateHUD() {
-		_hud = new HUD(this);
-		game.AddChild(_hud);
 	}
 
 	public HUD GetHUD() {

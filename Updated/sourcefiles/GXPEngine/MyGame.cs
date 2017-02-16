@@ -7,7 +7,7 @@ using System.Drawing.Text;
 
 public class MyGame : Game //MyGame is a Game
 {
-	private const string ASSETS_FOLDER_NAME = "assets";
+	public const string ASSETS_FOLDER_NAME = "assets";
 
 	private GameState _state;
 	private Level _level;
@@ -24,7 +24,8 @@ public class MyGame : Game //MyGame is a Game
 		MUSIC,
 		HUD,
 		FONT,
-		UI
+		UI,
+		LOADINGSCREEN
 	}
 
 	public enum GameState {
@@ -44,7 +45,6 @@ public class MyGame : Game //MyGame is a Game
 		_pfc = new PrivateFontCollection();
 		_pfc.AddFontFile(MyGame.GetAssetFilePath(MyGame.Asset.FONT) + "\\Augusta.ttf");
 		SetState(GameState.MAINMENU);
-
 	}
 	
 	//update game here
@@ -71,7 +71,6 @@ public class MyGame : Game //MyGame is a Game
 			case GameState.LEVEL1:
 				_level = new Level(1);
 				//AddChild(_level);
-				_level.CreateHUD();
 				break;
 			case GameState.LEVEL2:
 				_level = new Level(2);
@@ -94,6 +93,7 @@ public class MyGame : Game //MyGame is a Game
 
 	public void StartLevel() {
 		AddChild(_level);
+		_level.CreateHUD();
 		new Timer(1000, LoadData);
 	}
 
