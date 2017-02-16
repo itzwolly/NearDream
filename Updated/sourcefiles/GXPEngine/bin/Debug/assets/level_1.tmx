@@ -262,7 +262,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Foreground" width="60" height="30" visible="0" offsetx="0" offsety="-4">
+ <layer name="Foreground" width="60" height="30" offsetx="0" offsety="-4">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -303,27 +303,11 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="Pressureplates">
-  <object id="202" name="Pressureplate_1" x="2880" y="768" width="64" height="64">
-   <properties>
-    <property name="HasCover" type="bool" value="true"/>
-    <property name="ItemToInteract" value="Plank_1"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup name="Pressureplates"/>
  <objectgroup name="Stones"/>
  <objectgroup name="Points">
   <object id="58" x="0" y="0">
    <polyline points="0,0 640,0"/>
-  </object>
-  <object id="213" x="2752" y="704">
-   <polyline points="0,0 128,128"/>
-  </object>
-  <object id="214" x="2880" y="832">
-   <polyline points="0,0 64,0"/>
-  </object>
-  <object id="215" x="2944" y="832">
-   <polyline points="0,0 0,-514"/>
   </object>
   <object id="216" x="0" y="192">
    <polyline points="0,0 448,0"/>
