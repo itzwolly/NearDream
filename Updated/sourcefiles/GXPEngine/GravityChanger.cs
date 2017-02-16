@@ -37,6 +37,7 @@ public class GravityChanger : Canvas
         if (pDirection == 0) {
             changedGravity = new Vec2(0, 0);
         }
+        alpha = 0.5f;
     }
 }
 

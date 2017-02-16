@@ -31,8 +31,8 @@ public class PlayerAnim:AnimationSprite
         }
         else if (_player.horizontalDirection == Player.Direction.RIGHT || _player.horizontalDirection == Player.Direction.LEFT)
         {
-            if (_player.verticalDirection == Player.Direction.NONE && (currentFrame < 2 || currentFrame > 71))
-                SetFrame(1);
+            if (_player.verticalDirection == Player.Direction.NONE && (currentFrame < 2 || currentFrame > 50))
+                SetFrame(2);
         }
         if (_player.verticalDirection == Player.Direction.UP)
             SetFrame(52);

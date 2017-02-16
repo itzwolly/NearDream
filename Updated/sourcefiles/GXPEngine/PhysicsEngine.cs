@@ -8,6 +8,7 @@ public class PhysicsEngine {
     public const int GRAVITY = 15;
     private const float EPSILON = 0.1f;
 
+    private Sounds _sounds;
     private Vec2 _gravity = new Vec2(0, 1);
     private Vec2 _ballToLineStart, _intersection;
     private Level _level;
@@ -22,6 +23,7 @@ public class PhysicsEngine {
     // Constructor
     public PhysicsEngine(Level pLevel) {
         _level = pLevel;
+        _sounds = new Sounds();
     }
 
     private void CheckAllLines(Ball ball) {
@@ -95,16 +97,15 @@ public class PhysicsEngine {
         }
         //Console.WriteLine(_level.GetPlayer().horizontalDirection+" || "+ _level.GetPlayer().verticalDirection);
         if (Input.GetKeyDown(Key.SPACE)) {
-            //_sounds.PlayJump();
             if (!_level.GetPlayer().Jumped) {
-                //_sounds.PlayJump();
+                _sounds.PlayJump();
                 _level.GetPlayer().Position.y--;
                 _level.GetPlayer().Velocity.y = -GRAVITY;
                 _level.GetPlayer().Jumped = true;
             }
         }
 
-        if (Input.GetKeyDown(Key.R)) {
+        if (Input.GetMouseButtonDown(1)) {
             ResetBall();
         }
 
@@ -308,11 +309,13 @@ public class PhysicsEngine {
 
     public void HandleBall() {
         if (Input.GetKeyDown(Key.E)) {
+
             //_sounds.PlaySwitch();
             if (_level.GetPlayer().StickyAmount > 0) {
                 _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
                 _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding, _level.GetPlayer().StickyAmount);
             }
+            _sounds.PlaySwitch();
         }
         
 
@@ -322,7 +325,10 @@ public class PhysicsEngine {
         }
 
         if (Input.GetMouseButton(0) && _level.GetBall().OnPlayer) {
-
+            if (!_level.GetBall().charge)
+            {
+                _sounds.PlayCharge();
+            }
             _level.GetBall().charge = true;
 
             if (_level.GetPlayer().GetIndicator() == null) {
@@ -358,15 +364,16 @@ public class PhysicsEngine {
             RemoveIndicator();
             _level.GetBall().charge = false;
             _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding, _level.GetPlayer().StickyAmount);
-            
-            //_sounds.StopCharge();
-            //_sounds.PlayShoot();
+
+            _sounds.StopCharge();
+            _sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {
             CheckInGravityChangers(_level.GetBall());
             _level.GetBall().Velocity.Add(_gravity);
-            for (int i = 0; i <= Ball.REPETITIONS; i++) {
-                _level.GetBall().Step();
+            for (int i = 0; i <= Ball.REPETITIONS; i++)
+            {
                 CheckAllLines(_level.GetBall());
+                _level.GetBall().Step();
             }
         }
     }
@@ -384,15 +391,21 @@ public class PhysicsEngine {
                 ;
                 Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetBall().Position).Normalize();
                 //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                _level.GetBall().Position.Subtract(_stoneToStone.Scale(_level.GetBall().radius - _tempdistance / 2));
-                _level.GetStones()[i].Velocity = _level.GetBall().Velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                _level.GetBall().Position.Subtract(_stoneToStone.Clone().Scale(_level.GetBall().radius - _tempdistance / 2));
+                _level.GetStones()[i].Velocity =_level.GetBall().Velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                //_level.GetStones()[i].UpdateNextPosition();
                 CheckAllLines(_level.GetStones()[i]);
-                _level.GetStones()[i].Step();
                 _level.GetBall().Velocity = Vec2.zero;
+                //_level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
+                //_level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
                 //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
+                //_level.GetBall().UpdateNextPosition();
                 CheckAllLines(_level.GetBall());
+
+
                 _level.GetBall().Step();
+                _level.GetStones()[i].Step();
                 //CollisionFix2Balls(stone, _ball);.Scale
                 _level.GetStones()[i].active = true;
                 //stone.hitPlayer = true;
@@ -413,7 +426,7 @@ public class PhysicsEngine {
                     //stone.position.x - ();
                     //stone.position.y - ();
                     Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetStones()[j].Position).Normalize();
-                    _level.GetStones()[i].Position.Add(_stoneToStone.Scale(_level.GetStones()[i].radius - _tempDistance / 2));
+                    _level.GetStones()[i].Position.Add(_stoneToStone.Clone().Scale(_level.GetStones()[i].radius - _tempDistance / 2));
                     //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
                     _level.GetStones()[j].active = true;
                     //if (!stone2.started)
@@ -423,9 +436,14 @@ public class PhysicsEngine {
                         // stone2.started = true;
                     }
                     _level.GetStones()[i].hitPlayer = false;
-                    _level.GetStones()[i].Velocity.Scale(0.0f);
-                    //CheckAllLines(_stones[i]);
-                    //CheckAllLines(_stones[j]);
+                    _level.GetStones()[i].Velocity = Vec2.zero;
+
+                    //_level.GetStones()[i].Velocity.ReflectOnPoint(_stoneToStone, Ball.ELASTICITY);
+                    //_level.GetStones()[i].Velocity.Scale(0.5f);
+                    _level.GetStones()[i].UpdateNextPosition();
+                    _level.GetStones()[j].UpdateNextPosition();
+                    CheckAllLines(_level.GetStones()[i]);
+                    CheckAllLines(_level.GetStones()[j]);
                     _level.GetStones()[i].Step();
                     _level.GetStones()[j].Step();
                 }
@@ -629,11 +647,11 @@ public class PhysicsEngine {
                         if (bridge.BridgeName == rope.BridgeToDrop) {
                             bridge.GetBridgePlank().StartAnimation = true;
                             bridge.Down = true;
-                            //_sounds.PlayBridgeFall();
+                            _sounds.PlayBridgeFall();
                         }
                     }
                 }
-                //_sounds.PlayCutRope();
+                _sounds.PlayCutRope();
                 rope.Destroy();
             }
         }
@@ -646,6 +664,8 @@ public class PhysicsEngine {
                 ball.Position.y > gravchangers.y - gravchangers.height / 2 &&
                 ball.Position.y < gravchangers.y + gravchangers.height / 2) {
                 ball.Velocity.Add(gravchangers.changedGravity);
+                CheckAllLines(ball);
+                //_sounds.PlayWind();
             }
         }
     }
@@ -679,12 +699,12 @@ public class PhysicsEngine {
     public void HandleStickyBall() {
         if (_level.GetBall().StartedTimer) {
             if (_explosionWait == Ball.WAITFORBOOM) {
-                //_sounds.PlayExplosion();
+                _sounds.PlayExplosion();
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
-                        _level.GetLines().Remove(plank.PlankLine);
-                        plank.PlankLine.Destroy();
+                        _level.GetLines().Remove(plank.GetLine());
+                        plank.GetLine().Destroy();
                         _level.GetDestroyables().Remove(plank);
                         _level.GetPlanks().Remove(plank);
                         plank.Destroy();

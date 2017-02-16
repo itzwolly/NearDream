@@ -15,7 +15,7 @@ public class Level : GameObject {
 	private PhysicsEngine _engine;
 	private Player.Direction _playerDirection;
 	private HUD _hud;
-	
+	private Sounds _sounds;
 	private Dictionary<string, Layer> _layers = new Dictionary<string, Layer>();
 	private List<LineSegment> _lines = new List<LineSegment>();
 	private List<Bridge> _bridges = new List<Bridge>();
@@ -55,7 +55,8 @@ public class Level : GameObject {
 	public Level(int pCurrentLevel) {
 		_currentLevel = pCurrentLevel;
 		_map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + _currentLevel + ".tmx");
-
+		_sounds = new Sounds();
+		_sounds.PlayMusic();
 		BuildLevel();
 		CreatePlayer();
 		CreateBall();
@@ -221,7 +222,7 @@ public class Level : GameObject {
 	}
 
 	private void CreateBall() {
-		_ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
+		_ball = new Ball(20, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
 		AddChildAt(_ball, 100);
 		_ball.Velocity = new Vec2();
 		_ballToLine = new LineSegment(null, null);
