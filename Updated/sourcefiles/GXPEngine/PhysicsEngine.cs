@@ -309,7 +309,6 @@ public class PhysicsEngine {
 
     public void HandleBall() {
         if (Input.GetKeyDown(Key.E)) {
-
             //_sounds.PlaySwitch();
             if (_level.GetPlayer().StickyAmount > 0) {
                 _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
@@ -657,9 +656,11 @@ public class PhysicsEngine {
                             _sounds.PlayBridgeFall();
                         }
                     }
+
                 }
                 _sounds.PlayCutRope();
                 rope.Destroy();
+                //_level.GetRopes().Remove(rope);
             }
         }
     }

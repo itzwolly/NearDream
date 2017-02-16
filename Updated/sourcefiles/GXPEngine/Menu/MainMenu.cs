@@ -8,6 +8,14 @@ public class MainMenu : GameObject {
     private Canvas _backgroundCanvas;
     private System.Drawing.Image _backgroundImage;
     private Sounds _sounds = new Sounds();
+    private ControlsScreen _controlsScreen;
+
+    private bool _controlsShown = false;
+
+    public bool ControlsShown {
+        get { return _controlsShown; }
+        set { _controlsShown = value; }
+    }
 
     public MainMenu(MyGame myGame) {
         _myGame = myGame;
@@ -37,47 +45,43 @@ public class MainMenu : GameObject {
         btnQuit.y = (game.height + (btnQuit.height * 2.185f)) * 0.5f;
     }
 
-    void Update() {
+    private void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnPlay.currentFrame = 1;
-                btnPlay.y += 7;
-            } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnHowTo.currentFrame = 1;
-                btnHowTo.y += 7;
-            } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnQuit.currentFrame = 1;
-                btnQuit.y += 7;
-            } 
-        }
-        if (Input.GetMouseButtonUp(0)) {
-            if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnPlay.currentFrame = 0;
-                btnPlay.y -= 7;
-                _sounds.StopMenuMusic();
-                Destroy();
-                _myGame.StartGame();
-            } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnHowTo.currentFrame = 0;
-                btnHowTo.y -= 7;
-                _sounds.StopMenuMusic();
-                Destroy();
-                ControlsScreen _controlsScreen = new ControlsScreen(_myGame);
-                game.AddChild(_controlsScreen);
-                _controlsScreen.y =game.height/2;
-
-                _controlsScreen.x = game.width / 2;
-                //Destroy();
-                // show controls 
-            } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
-                btnQuit.currentFrame = 0;
-                btnQuit.y -= 7;
-                Environment.Exit(0);
+            if (!_controlsShown) {
+                if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnPlay.currentFrame = 1;
+                    btnPlay.y += 7;
+                } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnHowTo.currentFrame = 1;
+                    btnHowTo.y += 7;
+                } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnQuit.currentFrame = 1;
+                    btnQuit.y += 7;
+                }
             }
         }
-    }
-
-    void hideMenu() {
-        //
+        if (Input.GetMouseButtonUp(0)) {
+            if (!_controlsShown) {
+                if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnPlay.currentFrame = 0;
+                    btnPlay.y -= 7;
+                    _sounds.StopMenuMusic();
+                    Destroy();
+                    _myGame.StartGame();
+                } else if(btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnHowTo.currentFrame = 0;
+                    btnHowTo.y -= 7;
+                    _controlsScreen = new ControlsScreen(this);
+                    game.AddChild(_controlsScreen);
+                    _controlsScreen.x = game.width - _controlsScreen.width / 2;
+                    _controlsScreen.y = game.height / 2 + _controlsScreen.height * 0.1f;
+                    _controlsShown = true;
+                }else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                    btnQuit.currentFrame = 0;
+                    btnQuit.y -= 7;
+                    Environment.Exit(0);
+                }
+            }
+        }
     }
 }

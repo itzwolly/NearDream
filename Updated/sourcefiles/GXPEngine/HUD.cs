@@ -62,7 +62,8 @@ public class HUD : Canvas {
         graphics.DrawImage(_trophyContainer, 0, 0, 200, 100);
         graphics.DrawImage(_currentBallContainer, game.width - 600, 0, 100, 100);
 
-        _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+        
+        
 
         DrawTrophies();
         DrawCurrentBall(_currentBall);
@@ -74,6 +75,16 @@ public class HUD : Canvas {
             _scoreCanvas.graphics.Clear(Color.Transparent);
             _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
             _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
+
+            if (_level.GetBall().IsExploding) {
+                _changeBallCanvas.graphics.Clear(Color.Transparent);
+                _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                _changeBallCanvas.graphics.DrawString("x" + _level.GetPlayer().StickyAmount, _changeBallFont, Brushes.WhiteSmoke, _changeBallCanvas.width - 39, _changeBallCanvas.height - 31);
+            } else {
+                _changeBallCanvas.graphics.Clear(Color.Transparent);
+                _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+            }
+
             IncreaseTimer();
         }
     }

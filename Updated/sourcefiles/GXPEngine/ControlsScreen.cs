@@ -6,44 +6,52 @@ using GXPEngine;
 using System.Drawing;
 using System.IO;
 
-class ControlsScreen : Sprite
-{
-    MyGame _game;
+public class ControlsScreen : Sprite {
     private Sounds _sounds = new Sounds();
     private AnimationButton btnBack;
-    public ControlsScreen(MyGame pGame) : base(MyGame.GetAssetFilePath(MyGame.Asset.UI) +  "\\controlsscreen.png")
-    {
-        _sounds.PlayMenuMusic();
-        _game = pGame;
+    private Canvas _canvas = new Canvas(Game.main.width, Game.main.height);
+    private bool _shown;
+    private MainMenu _mainMenu;
+
+    public bool Shown {
+        get { return _shown; }
+        set { _shown = value; }
+    }
+
+    public ControlsScreen(MainMenu pMainMenu) : base(MyGame.GetAssetFilePath(MyGame.Asset.UI) +  "\\controlsscreen.png") {
+        _mainMenu = pMainMenu;
+        //_sounds.PlayMenuMusic();
         SetOrigin(width / 2, height / 2);
-        this.scale = 0.4f;
-        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI)+"\\close_buttons.png", 2, 1);//change to back button
+        scale = 0.25f;
+
+        game.AddChild(_canvas);
+        _canvas.graphics.Clear(Color.Black);
+        _canvas.alpha = 0.6f;
+
+        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI)+"\\close_buttons.png", 2, 1); //change to back button
         AddChild(btnBack);
         btnBack.scale = 0.5f;
-        btnBack.x = width-200;
-        btnBack.y = height-100;
+        btnBack.SetOrigin(width / 2, height / 2);
+        btnBack.x = width * 2 - width / 5;
+        btnBack.y =  - height + height / 8;
     }
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY))
-            {
+
+    private void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnBack.currentFrame = 1;
                 btnBack.y += 7;
             }
         }
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY))
-            {
+        if (Input.GetMouseButtonUp(0)) {
+            if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnBack.currentFrame = 0;
                 btnBack.y -= 7;
-                _sounds.StopMenuMusic();
+                //_sounds.StopMenuMusic();
                 Destroy();
-                _game.SetState(MyGame.GameState.MAINMENU);
+                _canvas.Destroy();
+                _mainMenu.ControlsShown = false;
             }
-
         }
     }
 }
