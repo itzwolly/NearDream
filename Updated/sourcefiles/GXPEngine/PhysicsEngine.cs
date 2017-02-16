@@ -379,11 +379,12 @@ public class PhysicsEngine {
                 Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetBall().Position).Normalize();
                 //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
                 _level.GetBall().Position.Subtract(_stoneToStone.Clone().Scale(_level.GetBall().radius - _tempdistance / 2));
-                _level.GetStones()[i].Velocity = _level.GetBall().Velocity.Clone().Scale(0.5f);//new Vec2(1, 0).Scale(_ball.velocity.Length());
+                _level.GetStones()[i].Velocity =_level.GetBall().Velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
                 //_level.GetStones()[i].UpdateNextPosition();
                 CheckAllLines(_level.GetStones()[i]);
-                _level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
-                _level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
+                _level.GetBall().Velocity = Vec2.zero;
+                //_level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
+                //_level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
                 //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
                 //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
                 //_level.GetBall().UpdateNextPosition();
@@ -418,14 +419,18 @@ public class PhysicsEngine {
                     //if (!stone2.started)
                     {
                         //_sounds.PlayRockBounce();
-                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone().Scale(0.5f);//new Vec2(1, 0).Scale(stone.velocity.Length());
+                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
                         // stone2.started = true;
                     }
                     _level.GetStones()[i].hitPlayer = false;
-                    _level.GetStones()[i].Velocity.ReflectOnPoint(_stoneToStone, Ball.ELASTICITY);
-                    _level.GetStones()[i].Velocity.Scale(0.5f);
-                    //CheckAllLines(_stones[i]);
-                    //CheckAllLines(_stones[j]);
+                    _level.GetStones()[i].Velocity = Vec2.zero;
+
+                    //_level.GetStones()[i].Velocity.ReflectOnPoint(_stoneToStone, Ball.ELASTICITY);
+                    //_level.GetStones()[i].Velocity.Scale(0.5f);
+                    _level.GetStones()[i].UpdateNextPosition();
+                    _level.GetStones()[j].UpdateNextPosition();
+                    CheckAllLines(_level.GetStones()[i]);
+                    CheckAllLines(_level.GetStones()[j]);
                     _level.GetStones()[i].Step();
                     _level.GetStones()[j].Step();
                 }
