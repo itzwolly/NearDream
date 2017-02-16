@@ -90,15 +90,17 @@ public class Level : GameObject {
 		_engine.HandleDestructablePlanks();
 
 		if (_playerDirection == Player.Direction.LEFT) {
-		   // _player.Mirror(true, false);
+            // _player.Mirror(true, false);
+            _ball.scaleX = -1.0f;
 			_player.scaleX = -1.0f;
 		} else if (_playerDirection == Player.Direction.RIGHT) {
 			//_player.Mirror(true, false);
 			_player.scaleX = 1.0f;
-		}
+            _ball.scaleX = 1.0f;
+        }
 
 
-		Console.WriteLine(_playerDirection);
+		//Console.WriteLine(_playerDirection);
 	}
 
 	private void RenderLines() {
