@@ -309,8 +309,10 @@ public class PhysicsEngine {
     public void HandleBall() {
         if (Input.GetKeyDown(Key.E)) {
             //_sounds.PlaySwitch();
-            _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
-            _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding);
+            if (_level.GetPlayer().StickyAmount > 0) {
+                _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
+                _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding, _level.GetPlayer().StickyAmount);
+            }
         }
         
 
@@ -341,9 +343,12 @@ public class PhysicsEngine {
             _level.GetPlayer().GetIndicator().IndicatorVec = new Vec2(Input.mouseX - _level.GetPlayer().x + _level.GetXOffset(), Input.mouseY - _level.GetPlayer().y + _level.GetYOffSet());
             HandleIndicator((int) _level.GetBall().StartingBallVelocity / 4);
         } else if (Input.GetMouseButtonUp(0) && _level.GetBall().OnPlayer && _level.GetPlayer().GetIndicator() != null) {
+            if (_level.GetBall().IsExploding) {
+                _level.GetPlayer().StickyAmount--;
+            }
             _level.GetBall().Position.x = _level.GetPlayer().x;
             _level.GetBall().Position.y = _level.GetPlayer().y;
-
+            
             _level.GetBall().Velocity = _level.GetPlayer().GetIndicator().IndicatorVec.Clone();
             //_level.GetBall().Velocity.x = (Input.mouseX - _level.GetPlayer().x + _level.GetXOffset());
             //_level.GetBall().Velocity.y = (Input.mouseY - _level.GetPlayer().y + _level.GetYOffSet());
@@ -352,6 +357,8 @@ public class PhysicsEngine {
             _level.GetBall().StartingBallVelocity = Ball.SPEED;
             RemoveIndicator();
             _level.GetBall().charge = false;
+            _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding, _level.GetPlayer().StickyAmount);
+            
             //_sounds.StopCharge();
             //_sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {
@@ -568,6 +575,19 @@ public class PhysicsEngine {
         }*/
     }
 
+    public void CheckStickyBall() {
+        if (!_level.GetBall().OnPlayer) {
+            foreach (StickyBall ball in _level.GetStickyBalls()) {
+                if (_level.GetBall().HitTest(ball)) {
+                    if (!ball.IsDestroyed()) {
+                        _level.GetPlayer().StickyAmount++;
+                    }
+                    ball.Destroy();
+                }
+            }
+        }
+    }
+
     public void CheckTrophyCollision() {
         if (!_level.GetBall().OnPlayer) {
             foreach (Trophy trophy in _level.GetTrophies()) {
@@ -674,6 +694,9 @@ public class PhysicsEngine {
                 ResetBall();
                 _explosionWait = 0;
                 _level.GetBall().StartedTimer = false;
+                if (_level.GetBall().IsExploding) {
+                    _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
+                }
             }
             _explosionWait++;
         }

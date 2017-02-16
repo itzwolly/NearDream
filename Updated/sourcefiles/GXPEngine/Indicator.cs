@@ -16,6 +16,7 @@ public class Indicator : AnimationSprite
     {
         SetFrame(1);
         SetOrigin(width/2,height);
+        scale = 0.3f;
     }
 
     public void SetPower(int pFrame)

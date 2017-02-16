@@ -16,6 +16,7 @@ public class Player : Sprite
     private int _score;
     private bool _isMoving = false;
     private bool _jumped;
+    private int _stickyAmount = 0;
 
     public Vec2 Position {
         get { return _position; }
@@ -30,6 +31,11 @@ public class Player : Sprite
     public bool IsMoving {
         get { return _isMoving; }
         set { _isMoving = value; }
+    }
+
+    public int StickyAmount {
+        get { return _stickyAmount; }
+        set { _stickyAmount = value; }
     }
 
     public int AmountOfTrophies {

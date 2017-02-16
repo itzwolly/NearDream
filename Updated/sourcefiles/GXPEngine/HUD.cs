@@ -82,8 +82,8 @@ public class HUD : Canvas {
         _currentBallCanvas.graphics.DrawImage(pImage, 15, 32);
     }
 
-    public void ReDrawCurrentBall(bool pIsExploding) {
-        if (pIsExploding) {
+    public void ReDrawCurrentBall(bool pIsExploding, int pStickyAmount) {
+        if (pIsExploding && pStickyAmount > 0) {
             _currentBall = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.HUD) + "\\sticky_ball.png");
         } else {
             _currentBall = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.HUD) + "\\regular_ball.png");

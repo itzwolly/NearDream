@@ -6,7 +6,9 @@ using GXPEngine;
 
 public class Level : GameObject {
 	private Map _map;
-	private Layer _layer, _foreGround, _foreGroundPartTwo ,_midGround, _backGround;
+	#region LOL
+	private Layer _layer, _foreGround, _foreGroundPartTwo ,_midGround, _backGround, _cloudLayer, _cloudLayerPartTwo, _skyLines, _skyLinesPartTwo, _groundTiles, _groundTilesPartTwo, _backGroundFar, _backGroundFarPartTwo, _stonesBackground, _stonesBackgroundPartTwo;
+	#endregion
 	private Player _player;
 	private Ball _ball;
 	private LineSegment _line, _ballToLine;
@@ -29,6 +31,7 @@ public class Level : GameObject {
 	private List<GravityChanger> _gravityChangers = new List<GravityChanger>();
 	private List<PressurePlate> _pressurePlates = new List<PressurePlate>();
 	private List<GameObject> _pressurePlateObjects = new List<GameObject>();
+	private List<StickyBall> _stickyBalls = new List<StickyBall>();
 
 	private TMXParser _tmxParser = new TMXParser();
 	
@@ -59,6 +62,7 @@ public class Level : GameObject {
 		//CreatePressurePlates();
 		CreateTiledObjects();
 		_engine = new PhysicsEngine(this);
+		CreateReticle();
 		RenderLines();
 		
 		// Assign layers to variables for ease of access.
@@ -66,6 +70,17 @@ public class Level : GameObject {
 		_foreGroundPartTwo = GetLayerByName("Foreground_2");
 		_midGround = GetLayerByName("Midground"); // note midGround is the base layer.
 		_backGround = GetLayerByName("Background");
+		_skyLines = GetLayerByName("Skylines");
+		_skyLinesPartTwo = GetLayerByName("Skylines_2");
+		_cloudLayer = GetLayerByName("Cloud");
+		_cloudLayerPartTwo = GetLayerByName("Cloud_2");
+		_groundTiles = GetLayerByName("Groundtiles");
+		_groundTilesPartTwo = GetLayerByName("Groundtiles_2");
+		_backGroundFar = GetLayerByName("Backgroundfar");
+		_backGroundFarPartTwo = GetLayerByName("Backgroundfar_2");
+		_stonesBackground = GetLayerByName("Stonesbackground");
+		_stonesBackgroundPartTwo = GetLayerByName("Stonesbackground_2");
+
 
 		foreach (GameTile tile in _midGround.GetTiles()) {
 			_collidables.Add(tile);
@@ -88,25 +103,25 @@ public class Level : GameObject {
 		_engine.CheckTrophyCollision();
 		_engine.CheckRopeCollision();
 		_engine.HandleDestructablePlanks();
+		_engine.CheckStickyBall();
 
 		if (_playerDirection == Player.Direction.LEFT) {
-            // _player.Mirror(true, false);
-            _ball.scaleX = -1.0f;
+			// _player.Mirror(true, false);
+			_ball.scaleX = -1.0f;
 			_player.scaleX = -1.0f;
 		} else if (_playerDirection == Player.Direction.RIGHT) {
 			//_player.Mirror(true, false);
 			_player.scaleX = 1.0f;
-            _ball.scaleX = 1.0f;
+			_ball.scaleX = 1.0f;
 		}
 	}
 
 	public void CreateHUD() {
 		_hud = new HUD(this);
 		game.AddChild(_hud);
-    }
+	}
 
-
-		//Console.WriteLine(_playerDirection);
+	//Console.WriteLine(_playerDirection);
 
 	private void RenderLines() {
 		foreach (NLineSegment line in _lines) {
@@ -140,18 +155,33 @@ public class Level : GameObject {
 		}
 
 		if (x < 0 && x > -(_map.GetLevelWidth() - game.width)) {
+			//_cloudLayer, _skyLines, _groundTiles, _backGroundFar, _stonesBackground;
 			if (_player.IsMoving) {
 				if (_playerDirection == Player.Direction.RIGHT && _engine.collision.dir != CollidedOption.Direction.LEFT) {
 					_foreGround.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.LEFT, 4.5f);
+
+					_groundTiles.MoveLayer(Layer.Direction.LEFT, 0.075f);
+					_groundTilesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.075f);
+					_stonesBackground.MoveLayer(Layer.Direction.LEFT, 0.006f);
+					_stonesBackgroundPartTwo.MoveLayer(Layer.Direction.LEFT, 0.006f);
 					MoveTrees(6.5f);
 				} else if (_playerDirection == Player.Direction.LEFT && _engine.collision.dir != CollidedOption.Direction.RIGHT) {
 					_foreGround.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 4.5f);
+
+					_groundTiles.MoveLayer(Layer.Direction.RIGHT, 0.075f);
+					_groundTilesPartTwo.MoveLayer(Layer.Direction.RIGHT, 0.075f);
+					_stonesBackground.MoveLayer(Layer.Direction.RIGHT, 0.006f);
+					_stonesBackgroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 0.006f);
 					MoveTrees(-6.5f);
 				}
 			}
 		}
+		_skyLines.MoveLayer(Layer.Direction.LEFT, 0.1f);
+		_skyLinesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.1f);
+		_cloudLayer.MoveLayer(Layer.Direction.LEFT, 0.5f);
+		_cloudLayerPartTwo.MoveLayer(Layer.Direction.LEFT, 0.5f);
 	}
 
 	private void MoveTrees(float pAmount) {
@@ -166,19 +196,22 @@ public class Level : GameObject {
 			AddChild(_layer);
 			_layers.Add(layer.Name, _layer);
 
-			if (layer.Name == "Foreground") {
-				_layer = new Layer(this, layer);
-				_layer.x = _map.GetLevelWidth();
-				AddChild(_layer);
-				_layers.Add(layer.Name + "_2", _layer);
+			if (layer.Name == "Foreground" || layer.Name == "Skylines" || layer.Name == "Cloud" || layer.Name == "Groundtiles" || layer.Name == "Stonesbackground") {
+				Layer nLayer = new Layer(this, layer);
+				nLayer.x = _map.GetLevelWidth();
+				AddChild(nLayer);
+				_layers.Add(layer.Name + "_2", nLayer);
 			}
 		}
 	}
 
 	private void CreatePlayer() {
 		_player = new Player(200, game.height / 2);
-		AddChildAt(_player, 0);
-		AddChildAt(_player.GetReticle(), 31);
+		AddChildAt(_player, 8);
+	}
+
+	private void CreateReticle() {
+		AddChild(_player.GetReticle());
 	}
 
 	public void CreateIndicator() {
@@ -189,7 +222,7 @@ public class Level : GameObject {
 
 	private void CreateBall() {
 		_ball = new Ball(25, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
-		AddChildAt(_ball, 1);
+		AddChildAt(_ball, 100);
 		_ball.Velocity = new Vec2();
 		_ballToLine = new LineSegment(null, null);
 		AddChild(_ballToLine);
@@ -198,6 +231,7 @@ public class Level : GameObject {
 	private void CreateTiledObjects() {
 		foreach (ObjectGroup objGroup in _map.ObjectGroup) {
 			// so that we don't dont have to give all the object groups an property
+			
 			if (objGroup.Name == "Bridge") {
 				foreach (TiledObject obj in objGroup.Object) {
 					Bridge bridge = new Bridge();
@@ -206,18 +240,22 @@ public class Level : GameObject {
 					bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
 					bridge.SpriteName = obj.Name;
 					_bridges.Add(bridge);
-					AddChildAt(bridge, 7);
+					AddChildAt(bridge, 12);
 					_pressurePlateObjects.Add(bridge);
 					bridge.BridgeCollider = new BridgeCollider(obj.X + bridge.width / 2 , obj.Y - 180, 450, 400);
 					_bridgeColliders.Add(bridge.BridgeCollider);
 				}
 			}
 			if (objGroup.Name == "GravityChanger") {
-				foreach (TiledObject obj in objGroup.Object) {
-					//Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
-					GravityChanger gravityChanger = new GravityChanger(obj.X, obj.Y, obj.Width, obj.Height, Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
-					AddChild(gravityChanger);
-					_gravityChangers.Add(gravityChanger);
+				try {
+					foreach (TiledObject obj in objGroup.Object) {
+						//Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
+						GravityChanger gravityChanger = new GravityChanger(obj.X, obj.Y, obj.Width, obj.Height, Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
+						AddChild(gravityChanger);
+						_gravityChangers.Add(gravityChanger);
+					}
+				} catch {
+
 				}
 			}
 			if (objGroup.Name == "Rope") {
@@ -230,7 +268,7 @@ public class Level : GameObject {
 					rope.SpriteName = obj.Name;
 					_ropes.Add(rope);
 					_pressurePlateObjects.Add(rope);
-					AddChildAt(rope, 4);
+					AddChildAt(rope, 5);
 				}
 			}
 			if (objGroup.Name == "Pots") {
@@ -240,11 +278,11 @@ public class Level : GameObject {
 					pot.y = obj.Y + obj.Height / 2;
 					pot.SpriteName = obj.Name;
 					_pots.Add(pot);
-					AddChildAt(pot, 0);
+					AddChildAt(pot, 11);
 					_pressurePlateObjects.Add(pot);
 					pot.Canvas.x = pot.x - pot.width / 2;
 					pot.Canvas.y = pot.y - pot.height * 0.8f;
-					AddChildAt(pot.Canvas, 50);
+					AddChildAt(pot.Canvas, 100);
 				}
 			}
 			if (objGroup.Name == "Planks") {
@@ -258,25 +296,29 @@ public class Level : GameObject {
 					_pressurePlateObjects.Add(plank);
 					_planks.Add(plank);
 					_destroyables.Add(plank);
-					AddChildAt(plank, 2);
+					AddChildAt(plank, 5);
 					_lines.Add(plank.GetLine());
-                    AddChild(plank.GetLine());
+					AddChild(plank.GetLine());
 				}
 			}
 			if (objGroup.Name == "Stones") {
-				foreach (TiledObject obj in objGroup.Object) {
-					//25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
-					Stone stone = new Stone(25, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, false);
-					AddChild(stone);
-					_stones.Add(stone);
-					stone.Velocity = Vec2.zero;
+				try {
+					foreach (TiledObject obj in objGroup.Object) {
+						//25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
+						Stone stone = new Stone(25, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, false);
+						AddChildAt(stone, 5);
+						_stones.Add(stone);
+						stone.Velocity = Vec2.zero;
+					}
+				} catch {
+
 				}
 			}
 			if (objGroup.Name == "Pressureplates") {
 				//Console.WriteLine("test");
 				foreach (TiledObject obj in objGroup.Object) {
 					PressurePlate _pressurePlate = new PressurePlate(this, obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
-					AddChild(_pressurePlate);
+					AddChildAt(_pressurePlate, 5);
 					_pressurePlates.Add(_pressurePlate);
 				}
 			}
@@ -285,7 +327,7 @@ public class Level : GameObject {
 					Trophy trophy = new Trophy(Convert.ToInt32(obj.Properties.GetPropertyByName("number").Value), MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\trophy_sprite.png", 8, 8);
 					trophy.x = obj.X + obj.Width / 4;
 					trophy.y = obj.Y + obj.Height / 4;
-					AddChildAt(trophy, 0);
+					AddChild(trophy);
 					_trophies.Add(trophy);
 					trophy.SpriteName = obj.Name;
 					_pressurePlateObjects.Add(trophy);
@@ -297,6 +339,15 @@ public class Level : GameObject {
 						_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
 						_lines.Add(_line);
 					}
+				}
+			}
+			if (objGroup.Name == "Stickyball") {
+				foreach (TiledObject obj in objGroup.Object) {
+					StickyBall stickyBall = new StickyBall();
+					stickyBall.x = obj.X + obj.Width / 2;
+					stickyBall.y = obj.Y + obj.Height / 2;
+					AddChildAt(stickyBall, 5);
+					_stickyBalls.Add(stickyBall);
 				}
 			}
 			if (objGroup.Name == "ForegroundTree") {
@@ -315,13 +366,13 @@ public class Level : GameObject {
 			tree.x = pObj.X - pObj.Width;
 			tree.y = pObj.Y + pObj.Height;
 			_trees.Add(tree);
-			AddChildAt(tree, 50);
+			AddChild(tree);
 		} else {
 			Tree tree = new Tree(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\tree_2.png"); // tree_2
 			tree.x = pObj.X - pObj.Width;
 			tree.y = pObj.Y + pObj.Height;
 			_trees.Add(tree);
-			AddChildAt(tree, 50);
+			AddChild(tree);
 		}
 	}
 
@@ -419,5 +470,9 @@ public class Level : GameObject {
 
 	public List<GameObject> GetPressurePlateObjects() {
 		return _pressurePlateObjects;
+	}
+
+	public List<StickyBall> GetStickyBalls() {
+		return _stickyBalls;
 	}
 }
