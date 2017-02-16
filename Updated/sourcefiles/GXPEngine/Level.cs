@@ -90,18 +90,23 @@ public class Level : GameObject {
 		_engine.HandleDestructablePlanks();
 
 		if (_playerDirection == Player.Direction.LEFT) {
-		   // _player.Mirror(true, false);
+            // _player.Mirror(true, false);
+            _ball.scaleX = -1.0f;
 			_player.scaleX = -1.0f;
 		} else if (_playerDirection == Player.Direction.RIGHT) {
 			//_player.Mirror(true, false);
 			_player.scaleX = 1.0f;
+            _ball.scaleX = 1.0f;
 		}
 	}
 
 	public void CreateHUD() {
 		_hud = new HUD(this);
 		game.AddChild(_hud);
-	}
+    }
+
+
+		//Console.WriteLine(_playerDirection);
 
 	private void RenderLines() {
 		foreach (NLineSegment line in _lines) {
@@ -136,11 +141,11 @@ public class Level : GameObject {
 
 		if (x < 0 && x > -(_map.GetLevelWidth() - game.width)) {
 			if (_player.IsMoving) {
-				if (_playerDirection == Player.Direction.RIGHT) {
+				if (_playerDirection == Player.Direction.RIGHT && _engine.collision.dir != CollidedOption.Direction.LEFT) {
 					_foreGround.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					MoveTrees(6.5f);
-				} else if (_playerDirection == Player.Direction.LEFT) {
+				} else if (_playerDirection == Player.Direction.LEFT && _engine.collision.dir != CollidedOption.Direction.RIGHT) {
 					_foreGround.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					MoveTrees(-6.5f);
@@ -255,6 +260,7 @@ public class Level : GameObject {
 					_destroyables.Add(plank);
 					AddChildAt(plank, 2);
 					_lines.Add(plank.GetLine());
+                    AddChild(plank.GetLine());
 				}
 			}
 			if (objGroup.Name == "Stones") {

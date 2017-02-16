@@ -13,7 +13,9 @@ public class PlayerAnim:AnimationSprite
     */
     private Player _player;
 
-    public PlayerAnim(Player pPlayer) : base("assets\\sprites\\playeranim.png", 13, 8)
+    private int _wait;
+
+    public PlayerAnim(Player pPlayer) : base("assets\\sprites\\player_anim.png", 8, 9)
     {
         _player = pPlayer;
         SetOrigin(width / 2-10, height / 2+35);
@@ -23,17 +25,18 @@ public class PlayerAnim:AnimationSprite
     {
         NextFrame();
 
-        if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE)
-            SetFrame(0);
+        if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE && (currentFrame < 53 || currentFrame > 71))
+        {
+            SetFrame(53);
+        }
         else if (_player.horizontalDirection == Player.Direction.RIGHT || _player.horizontalDirection == Player.Direction.LEFT)
         {
-            if(_player.verticalDirection==Player.Direction.NONE && (currentFrame < 2 || currentFrame > 49))
-            SetFrame(1);
+            if (_player.verticalDirection == Player.Direction.NONE && (currentFrame < 2 || currentFrame > 71))
+                SetFrame(1);
         }
         if (_player.verticalDirection == Player.Direction.UP)
-            SetFrame(50);
+            SetFrame(52);
         else if (_player.verticalDirection == Player.Direction.DOWN)
-            SetFrame(69);
+            SetFrame(51);
     }
 }
-

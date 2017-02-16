@@ -24,10 +24,11 @@ public class Plank : Sprite
     {
         SetOrigin(width / 2, height / 2);
         _position = new Vec2();
+        _plankLine = new NLineSegment(new Vec2(Position.x - width / 2, Position.y), new Vec2(Position.x + width / 2, Position.y), 0xffffff00, 4);
     }
 
     public NLineSegment GetLine()
     {
-        return _plankLine = new NLineSegment(new Vec2(Position.x - width / 2, Position.y), new Vec2(Position.x + width / 2, Position.y), 0xffffff00, 4);
+        return _plankLine;
     }
 }

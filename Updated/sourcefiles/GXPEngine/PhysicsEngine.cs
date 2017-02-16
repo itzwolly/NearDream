@@ -11,7 +11,7 @@ public class PhysicsEngine {
     private Vec2 _gravity = new Vec2(0, 1);
     private Vec2 _ballToLineStart, _intersection;
     private Level _level;
-    private CollidedOption _collision;
+    public CollidedOption collision;
     private Random _rnd = new Random();
     private int _explosionWait;
 
@@ -62,14 +62,14 @@ public class PhysicsEngine {
 
     public void HandlePlayer() {
         if (Input.GetKey(Key.D)) {
-            if (_collision.dir == CollidedOption.Direction.UP)
+            if (collision.dir == CollidedOption.Direction.UP)
                 _level.GetPlayer().horizontalDirection = Player.Direction.RIGHT;
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
             _level.GetPlayer().scaleX = -1;
-            if (_collision.dir == CollidedOption.Direction.UP)
+            if (collision.dir == CollidedOption.Direction.UP)
                 _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x -= Player.SPEED / 2;
@@ -108,28 +108,28 @@ public class PhysicsEngine {
             ResetBall();
         }
 
-        CheckPlayerCollision(_level.GetPlayer(), ref _collision);
+        CheckPlayerCollision(_level.GetPlayer(), ref collision);
 
-        if (_collision.dir != CollidedOption.Direction.NONE) {
-            if (_collision.dir == CollidedOption.Direction.UP) {
+        if (collision.dir != CollidedOption.Direction.NONE) {
+            if (collision.dir == CollidedOption.Direction.UP) {
                 //_sounds.PlayWalk();
-                _level.GetPlayer().Position.y = _collision.obj.y - _collision.obj.height / 2 - _level.GetPlayer().height / 2;
+                _level.GetPlayer().Position.y = collision.obj.y - collision.obj.height / 2 - _level.GetPlayer().height / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
                 _level.GetPlayer().Jumped = false;
             }
-            if (_collision.dir == CollidedOption.Direction.DOWN) {
-                _level.GetPlayer().Position.y = _collision.obj.y + _collision.obj.height / 2 + _level.GetPlayer().height / 2;
+            if (collision.dir == CollidedOption.Direction.DOWN) {
+                _level.GetPlayer().Position.y = collision.obj.y + collision.obj.height / 2 + _level.GetPlayer().height / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
             }
-            if (_collision.dir == CollidedOption.Direction.RIGHT) {
-                _level.GetPlayer().Position.x = _collision.obj.x + _collision.obj.width / 2 + _level.GetPlayer().width / 2;
+            if (collision.dir == CollidedOption.Direction.RIGHT) {
+                _level.GetPlayer().Position.x = collision.obj.x + collision.obj.width / 2 + _level.GetPlayer().width / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
             }
-            if (_collision.dir == CollidedOption.Direction.LEFT) {
-                _level.GetPlayer().Position.x = _collision.obj.x - _collision.obj.width / 2 - _level.GetPlayer().width / 2;
+            if (collision.dir == CollidedOption.Direction.LEFT) {
+                _level.GetPlayer().Position.x = collision.obj.x - collision.obj.width / 2 - _level.GetPlayer().width / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
             }
-        } else if (_collision.obj == null) {
+        } else if (collision.obj == null) {
             _level.GetPlayer().Velocity.y += _gravity.y;
         }
 

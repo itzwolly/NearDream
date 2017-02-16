@@ -38,7 +38,7 @@ public class LoadingScreen : Canvas
 
         graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 50, game.height / 2 - 50);
         
-        //new Timer(1000, _myGame.LoadLevel);
+        new Timer(1000, _myGame.LoadLevel);
     }
 
     private void Update() {
@@ -74,8 +74,10 @@ public class LoadingScreen : Canvas
         int row = Convert.ToInt32(colRow[1]);
         int col = Convert.ToInt32(colRow[2]);
         _amountEmptyFrames = Convert.ToInt32(colRow[3]);
+        bool isReversed = (colRow[4].ToString() == "r");
 
-        if (file == "fallingbridgesprite_7-6-1.png") {
+
+        if (isReversed) {
             _loadingBall = new AnimationSprite(MyGame.GetAssetFilePath(MyGame.Asset.LOADINGSCREEN) + "\\" + file, row, col);
         } else {
             _loadingBall = new AnimationSprite(MyGame.GetAssetFilePath(MyGame.Asset.LOADINGSCREEN) + "\\" + file, col, row);
