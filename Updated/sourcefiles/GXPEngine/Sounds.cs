@@ -24,12 +24,18 @@ class Sounds
     private Sound _switch;
     private Sound _wind;
     private Sound _music;
+    private Sound _bombPickUp;
+    private Sound _trophyPickUp;
+    private Sound _potBreak;
     private Sound _menuMusic;
     private SoundChannel _musicChannel;
     private SoundChannel _menuMusicChannel;
 
     public Sounds()
     {
+        _bombPickUp = new Sound("assets//sounds//bombpick.wav", false, false);
+        _trophyPickUp = new Sound("assets//sounds//trophy.wav", false, false);
+        _potBreak = new Sound("assets//sounds//breakPot.wav", false, false);
         _switch = new Sound("assets//sounds//switch.wav", false, false);
         _shoot = new Sound("assets//sounds//shoot.wav", false, false);
         _charge = new Sound("assets//sounds//charge.wav", false, false);
@@ -40,7 +46,7 @@ class Sounds
         _walk = new Sound("assets//sounds//walk.wav", false, false);
         _cutRope = new Sound("assets//sounds//cutRope.wav", false, false);
         _bridgeFall = new Sound("assets//sounds//bridgeFall.wav", false, false);
-        _explosion = new Sound("assets//sounds//explosion.wav", false, false);
+        _explosion = new Sound("assets//sounds//explosion1short.wav", false, false);
         _plankBlow = new Sound("assets//sounds//plankBlow.wav", false, false);
         _breakPot = new Sound("assets//sounds//breakPot.wav", false, false);
         _pickUp = new Sound("assets//sounds//pickUp.wav", false, false);
@@ -49,6 +55,19 @@ class Sounds
         _music = new Sound("assets//sounds//music.mp3", true, true);
         _menuMusic = new Sound("assets//sounds//menumusic.mp3", true, true);
     }
+    public void PlayTrophy()
+    {
+        _trophyPickUp.Play();
+    }
+    public void PlayPot()
+    {
+        _potBreak.Play();
+    }
+    public void PlayBomb()
+    {
+        _bombPickUp.Play();
+    }
+
     public void PlayWind()
     {
         _wind.Play();

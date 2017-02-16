@@ -608,7 +608,9 @@ public class PhysicsEngine {
 
     public void CheckTrophyCollision() {
         if (!_level.GetBall().OnPlayer) {
-            foreach (Trophy trophy in _level.GetTrophies()) {
+            for (int i = 0; i < _level.GetTrophies().Count; i++)
+            {
+                Trophy trophy = _level.GetTrophies()[i];
                 if (_level.GetBall().HitTest(trophy)) {
                     if (!trophy.IsDestroyed()) {
                         _level.GetTrophyArray().SetValue(1, trophy.Id - 1);
@@ -616,7 +618,9 @@ public class PhysicsEngine {
                         _level.GetPlayer().AmountOfTrophies++;
                     }
                     trophy.Destroy();
-                    //_sounds.PlayPickUp();
+                    _level.GetTrophies().Remove(trophy);
+                    _sounds.PlayTrophy();
+                    i--;
                 }
             }
         }
@@ -624,7 +628,8 @@ public class PhysicsEngine {
 
     public void CheckPotCollision() {
         if (!_level.GetBall().OnPlayer) {
-            foreach (Pot pot in _level.GetPots()) {
+            for (int i =0; i<_level.GetPots().Count;i++) {
+                Pot pot = _level.GetPots()[i];
                 if (_level.GetBall().HitTest(pot)) {
                     if (!pot.IsDestroyed()) {
                         int score = _rnd.Next(100, 275);
@@ -632,8 +637,10 @@ public class PhysicsEngine {
                         pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
                         new Timer(1500, pot.Canvas.Destroy);
                     }
-                    //_sounds.PlayBreakPot();
+                    _sounds.PlayPot();
+                    _level.GetPots().Remove(pot);
                     pot.Destroy();
+                    i--;
                 }
             }
         }
@@ -699,7 +706,6 @@ public class PhysicsEngine {
     public void HandleStickyBall() {
         if (_level.GetBall().StartedTimer) {
             if (_explosionWait == Ball.WAITFORBOOM) {
-                _sounds.PlayExplosion();
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
@@ -711,6 +717,7 @@ public class PhysicsEngine {
                         i--;
                     }
                 }
+                _sounds.PlayExplosion();
                 ResetBall();
                 _explosionWait = 0;
                 _level.GetBall().StartedTimer = false;
