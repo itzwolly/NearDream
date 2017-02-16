@@ -13,8 +13,6 @@ public class PlayerAnim:AnimationSprite
     */
     private Player _player;
 
-    private int _wait;
-
     public PlayerAnim(Player pPlayer) : base("assets\\sprites\\playeranim.png", 13, 8)
     {
         _player = pPlayer;

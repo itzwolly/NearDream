@@ -79,7 +79,7 @@ public class HUD : Canvas {
     }
 
     private void DrawCurrentBall(System.Drawing.Image pImage) {
-        _currentBallCanvas.graphics.DrawImage(pImage, 15, 23);
+        _currentBallCanvas.graphics.DrawImage(pImage, 15, 32);
     }
 
     public void ReDrawCurrentBall(bool pIsExploding) {
