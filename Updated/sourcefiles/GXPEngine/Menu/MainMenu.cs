@@ -7,10 +7,11 @@ public class MainMenu : GameObject {
     private MyGame _myGame;
     private Canvas _backgroundCanvas;
     private System.Drawing.Image _backgroundImage;
+    private Sounds _sounds = new Sounds();
 
     public MainMenu(MyGame myGame) {
         _myGame = myGame;
-
+        _sounds.PlayMenuMusic();
         _backgroundCanvas = new Canvas(game.width, game.height);
         AddChild(_backgroundCanvas);
 
@@ -53,11 +54,13 @@ public class MainMenu : GameObject {
             if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnPlay.currentFrame = 0;
                 btnPlay.y -= 7;
+                _sounds.StopMenuMusic();
                 Destroy();
                 _myGame.StartGame();
             } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnHowTo.currentFrame = 0;
                 btnHowTo.y -= 7;
+                _sounds.StopMenuMusic();
                 Destroy();
                 ControlsScreen _controlsScreen = new ControlsScreen(_myGame);
                 game.AddChild(_controlsScreen);

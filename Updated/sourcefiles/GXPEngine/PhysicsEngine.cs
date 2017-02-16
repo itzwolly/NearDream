@@ -8,6 +8,7 @@ public class PhysicsEngine {
     public const int GRAVITY = 15;
     private const float EPSILON = 0.1f;
 
+    private Sounds _sounds;
     private Vec2 _gravity = new Vec2(0, 1);
     private Vec2 _ballToLineStart, _intersection;
     private Level _level;
@@ -22,6 +23,7 @@ public class PhysicsEngine {
     // Constructor
     public PhysicsEngine(Level pLevel) {
         _level = pLevel;
+        _sounds = new Sounds();
     }
 
     private void CheckAllLines(Ball ball) {
@@ -95,9 +97,8 @@ public class PhysicsEngine {
         }
         //Console.WriteLine(_level.GetPlayer().horizontalDirection+" || "+ _level.GetPlayer().verticalDirection);
         if (Input.GetKeyDown(Key.SPACE)) {
-            //_sounds.PlayJump();
             if (!_level.GetPlayer().Jumped) {
-                //_sounds.PlayJump();
+                _sounds.PlayJump();
                 _level.GetPlayer().Position.y--;
                 _level.GetPlayer().Velocity.y = -GRAVITY;
                 _level.GetPlayer().Jumped = true;
@@ -308,7 +309,7 @@ public class PhysicsEngine {
 
     public void HandleBall() {
         if (Input.GetKeyDown(Key.E)) {
-            //_sounds.PlaySwitch();
+            _sounds.PlaySwitch();
             _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
             _level.GetHUD().ReDrawCurrentBall(_level.GetBall().IsExploding);
         }
@@ -320,7 +321,10 @@ public class PhysicsEngine {
         }
 
         if (Input.GetMouseButton(0) && _level.GetBall().OnPlayer) {
-
+            if (!_level.GetBall().charge)
+            {
+                _sounds.PlayCharge();
+            }
             _level.GetBall().charge = true;
 
             if (_level.GetPlayer().GetIndicator() == null) {
@@ -352,8 +356,8 @@ public class PhysicsEngine {
             _level.GetBall().StartingBallVelocity = Ball.SPEED;
             RemoveIndicator();
             _level.GetBall().charge = false;
-            //_sounds.StopCharge();
-            //_sounds.PlayShoot();
+            _sounds.StopCharge();
+            _sounds.PlayShoot();
         } else if (!_level.GetBall().OnPlayer) {
             CheckInGravityChangers(_level.GetBall());
             _level.GetBall().Velocity.Add(_gravity);
@@ -621,11 +625,11 @@ public class PhysicsEngine {
                         if (bridge.BridgeName == rope.BridgeToDrop) {
                             bridge.GetBridgePlank().StartAnimation = true;
                             bridge.Down = true;
-                            //_sounds.PlayBridgeFall();
+                            _sounds.PlayBridgeFall();
                         }
                     }
                 }
-                //_sounds.PlayCutRope();
+                _sounds.PlayCutRope();
                 rope.Destroy();
             }
         }
@@ -638,6 +642,7 @@ public class PhysicsEngine {
                 ball.Position.y > gravchangers.y - gravchangers.height / 2 &&
                 ball.Position.y < gravchangers.y + gravchangers.height / 2) {
                 ball.Velocity.Add(gravchangers.changedGravity);
+                //_sounds.PlayWind();
             }
         }
     }
@@ -671,7 +676,7 @@ public class PhysicsEngine {
     public void HandleStickyBall() {
         if (_level.GetBall().StartedTimer) {
             if (_explosionWait == Ball.WAITFORBOOM) {
-                //_sounds.PlayExplosion();
+                _sounds.PlayExplosion();
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {

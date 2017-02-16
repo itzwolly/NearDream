@@ -9,9 +9,11 @@ using System.IO;
 class ControlsScreen : Sprite
 {
     MyGame _game;
+    private Sounds _sounds = new Sounds();
     private AnimationButton btnBack;
     public ControlsScreen(MyGame pGame) : base("assets//UI//controlsscreen.png")
     {
+        _sounds.PlayMenuMusic();
         _game = pGame;
         SetOrigin(width / 2, height / 2);
         this.scale = 0.4f;
@@ -37,6 +39,7 @@ class ControlsScreen : Sprite
             {
                 btnBack.currentFrame = 0;
                 btnBack.y -= 7;
+                _sounds.StopMenuMusic();
                 Destroy();
                 _game.SetState(MyGame.GameState.MAINMENU);
             }

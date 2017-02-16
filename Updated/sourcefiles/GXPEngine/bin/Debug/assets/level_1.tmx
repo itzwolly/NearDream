@@ -12,7 +12,7 @@
  <objectgroup name="GravityChanger">
   <object id="216" name="GraviryChanger_1" x="704" y="256" width="128" height="512">
    <properties>
-    <property name="Direction" type="int" value="1"/>
+    <property name="Direction" type="int" value="2"/>
    </properties>
   </object>
  </objectgroup>

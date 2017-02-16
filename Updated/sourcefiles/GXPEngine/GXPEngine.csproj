@@ -92,6 +92,7 @@
     <Compile Include="PressurePlate.cs" />
     <Compile Include="Reticle.cs" />
     <Compile Include="Rope.cs" />
+    <Compile Include="Sounds.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="TMX_Objects\Data.cs" />
     <Compile Include="TMX_Objects\Ellipse.cs" />
