@@ -6,7 +6,7 @@ using GXPEngine;
 
 public class Level : GameObject {
 	private Map _map;
-	#region LOL
+	#region Layers
 	private Layer _layer, _foreGround, _foreGroundPartTwo ,_midGround, _backGround, _cloudLayer, _cloudLayerPartTwo, _skyLines, _skyLinesPartTwo, _groundTiles, _groundTilesPartTwo, _backGroundFar, _backGroundFarPartTwo, _stonesBackground, _stonesBackgroundPartTwo;
 	#endregion
 	private Player _player;
@@ -81,8 +81,7 @@ public class Level : GameObject {
 		_backGroundFarPartTwo = GetLayerByName("Backgroundfar_2");
 		_stonesBackground = GetLayerByName("Stonesbackground");
 		_stonesBackgroundPartTwo = GetLayerByName("Stonesbackground_2");
-
-
+        
 		foreach (GameTile tile in _midGround.GetTiles()) {
 			_collidables.Add(tile);
 		}
@@ -231,8 +230,6 @@ public class Level : GameObject {
 
 	private void CreateTiledObjects() {
 		foreach (ObjectGroup objGroup in _map.ObjectGroup) {
-			// so that we don't dont have to give all the object groups an property
-			
 			if (objGroup.Name == "Bridge") {
 				foreach (TiledObject obj in objGroup.Object) {
 					Bridge bridge = new Bridge();
@@ -299,7 +296,7 @@ public class Level : GameObject {
 					_destroyables.Add(plank);
 					AddChildAt(plank, 5);
 					_lines.Add(plank.GetLine());
-					AddChild(plank.GetLine());
+					AddChild(plank.PlankLine);
 				}
 			}
 			if (objGroup.Name == "Stones") {
