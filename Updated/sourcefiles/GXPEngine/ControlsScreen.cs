@@ -11,13 +11,13 @@ class ControlsScreen : Sprite
     MyGame _game;
     private Sounds _sounds = new Sounds();
     private AnimationButton btnBack;
-    public ControlsScreen(MyGame pGame) : base("assets//UI//controlsscreen.png")
+    public ControlsScreen(MyGame pGame) : base(MyGame.GetAssetFilePath(MyGame.Asset.UI) +  "\\controlsscreen.png")
     {
         _sounds.PlayMenuMusic();
         _game = pGame;
         SetOrigin(width / 2, height / 2);
         this.scale = 0.4f;
-        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI)+"//quit_buttons.png",2,1);//change to back button
+        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI)+"\\close_buttons.png", 2, 1);//change to back button
         AddChild(btnBack);
         btnBack.scale = 0.5f;
         btnBack.x = width-200;
