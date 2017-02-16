@@ -114,7 +114,7 @@ namespace GXPEngine
 
 		public float GetAngleRadians()
 		{
-			return Mathf.Atan(y / x);
+			return Mathf.Atan2(y , x);
 		}
 
 		public float GetAngleDegrees()
@@ -165,27 +165,28 @@ namespace GXPEngine
 			y = newy + Y;
 		}
 
-		public void ReflectOnPoint(Vec2 other,Vec2 other1, float elasticity)
+		public void ReflectOnPoint(Vec2 normal, float elasticity)
 		{
-			Vec2 _tempVec = other.Clone().Subtract(other1).Normal();
-			this.Add(_tempVec.Clone().Scale( this.Dot(_tempVec)));
-            this.Scale(elasticity);
+			//Vec2 _tempVec = other1.Clone().Subtract(other).Normalize();
+			this.Subtract(normal.Clone().Scale((1 + elasticity) * this.Dot(normal)));
+			//this.Scale(elasticity);
 		}
+
+
 
 		public Vec2 Normal()
 		{
 			return new Vec2(-y, x).Normalize();
 		}
 
-        public Vec2 NormalNotNormalized()
-        {
-            return new Vec2(-y, x);
-        }
-
-        public void Reflect(Vec2 other,float elasticity)
+		public Vec2 NormalNotNormalized()
 		{
-			this.Subtract(other.Normal().Clone().Scale( 2*this.Dot(other.Normal().Clone())));
-			this.Scale(elasticity);
+			return new Vec2(-y, x);
+		}
+
+		public void Reflect(Vec2 other,float elasticity)
+		{
+			this.Subtract(other.Normal().Clone().Scale((1 + elasticity) * this.Dot(other.Normal().Clone())));
 		}
 
 		public float Dot(Vec2 pOther)

@@ -41,7 +41,7 @@ namespace GXPEngine
 		}
 
 		protected void draw() {
-            Console.WriteLine("lol");
+            //Console.WriteLine("lol");
 			graphics.Clear (Color.Empty);
 			graphics.FillEllipse (
 				new SolidBrush (_ballColor),
