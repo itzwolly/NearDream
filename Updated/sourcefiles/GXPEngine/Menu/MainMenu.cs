@@ -58,6 +58,12 @@ public class MainMenu : GameObject {
             } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnHowTo.currentFrame = 0;
                 btnHowTo.y -= 7;
+                Destroy();
+                ControlsScreen _controlsScreen = new ControlsScreen(_myGame);
+                game.AddChild(_controlsScreen);
+                _controlsScreen.y =game.height/2;
+
+                _controlsScreen.x = game.width / 2;
                 //Destroy();
                 // show controls 
             } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {

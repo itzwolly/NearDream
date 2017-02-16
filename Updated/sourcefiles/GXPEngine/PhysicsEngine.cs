@@ -104,7 +104,7 @@ public class PhysicsEngine {
             }
         }
 
-        if (Input.GetKeyDown(Key.R)) {
+        if (Input.GetMouseButtonDown(1)) {
             ResetBall();
         }
 
