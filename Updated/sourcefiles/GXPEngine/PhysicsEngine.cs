@@ -642,6 +642,7 @@ public class PhysicsEngine {
                 ball.Position.y > gravchangers.y - gravchangers.height / 2 &&
                 ball.Position.y < gravchangers.y + gravchangers.height / 2) {
                 ball.Velocity.Add(gravchangers.changedGravity);
+                CheckAllLines(ball);
                 //_sounds.PlayWind();
             }
         }
