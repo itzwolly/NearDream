@@ -72,12 +72,17 @@ public class MyGame : Game //MyGame is a Game
 				_level = new Level(1);
 				//AddChild(_level);
 				break;
-			case GameState.LEVEL2:
-				_level = new Level(2);
-				AddChild(_level);
-				_level.CreateHUD();
-				break;
-			default:
+            case GameState.LEVEL2:
+                _level = new Level(2);
+                AddChild(_level);
+                _level.CreateHUD();
+                break;
+            case GameState.LEVEL3:
+                _level = new Level(3);
+                AddChild(_level);
+                _level.CreateHUD();
+                break;
+            default:
 				break;
 		}
 	}
@@ -87,7 +92,7 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	public void LoadLevel() {
-		SetState(GameState.LEVEL1);
+		SetState(GameState.LEVEL3);
 		StartLevel();
 	}
 

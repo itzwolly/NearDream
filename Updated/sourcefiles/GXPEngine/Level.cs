@@ -312,9 +312,12 @@ public class Level : GameObject {
 				}
 			}
 			if (objGroup.Name == "Pressureplates") {
-				//Console.WriteLine("test");
-                try {
-                    foreach (TiledObject obj in objGroup.Object) {
+                //Console.WriteLine("test");
+                try
+                {
+                    foreach (TiledObject obj in objGroup.Object)
+                    {
+
                         PressurePlate _pressurePlate = new PressurePlate(this, obj.X + obj.Width / 2, obj.Y + obj.Height, obj.Properties.GetPropertyByName("ItemToInteract").Value, Convert.ToBoolean(obj.Properties.GetPropertyByName("HasCover").Value), 64, 128);
                         AddChildAt(_pressurePlate, 5);
                         _pressurePlates.Add(_pressurePlate);
@@ -322,7 +325,6 @@ public class Level : GameObject {
                 } catch {
 
                 }
-				
 			}
 			if (objGroup.Name == "Trophies") {
 				foreach (TiledObject obj in objGroup.Object) {
