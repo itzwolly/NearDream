@@ -647,7 +647,8 @@ public class PhysicsEngine {
     }
 
     public void CheckRopeCollision() {
-        foreach (Rope rope in _level.GetRopes()) {
+        for (int i= 0;i <= _level.GetRopes().Count;i++) {
+            Rope rope = _level.GetRopes()[i];
             if (_level.GetBall().HitTest(rope)) {
                 if (!rope.IsDestroyed()) {
                     foreach (Bridge bridge in _level.GetBridges()) {
@@ -659,7 +660,9 @@ public class PhysicsEngine {
                     }
                 }
                 _sounds.PlayCutRope();
+                _level.GetRopes().Remove(rope);
                 rope.Destroy();
+                i--;
             }
         }
     }
