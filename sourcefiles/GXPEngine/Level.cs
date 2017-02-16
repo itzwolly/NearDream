@@ -48,7 +48,7 @@ public class Level:GameObject
 
     public enum direction
     {
-        none, middle, left, right,below,above
+        none, middle, left, right,below, above
     }
 
     public struct CollidedOption
@@ -102,6 +102,7 @@ public class Level:GameObject
     {
         _currentLevel = pCurrentLevel;
         _map = _tmxParser.ParseFile(ASSET_FILE_PATH + "level_" + _currentLevel + ".tmx");
+
         _sounds = new Sounds();
         _destroyables = new List<Plank>();
         _collidables = new List<GameTile>();
@@ -163,6 +164,7 @@ public class Level:GameObject
 
         _reticle.x = Input.mouseX + _xOffset;
         _reticle.y = Input.mouseY + _yOffset;
+
         PlayerCamera();
 
         HandleBall();
@@ -252,9 +254,9 @@ public class Level:GameObject
         AddChild(_ballToLine);
     }
 
-    private void CreateStones()
+    private void CreateStones() // TODO: transfer to new project
     {
-        Stone _stone = new Stone(25, new Vec2(2550,500 ), null, Color.Blue, false);
+        Stone _stone = new Stone(25, new Vec2(2550, 500), null, Color.Blue, false);
         AddChild(_stone);
         _stones.Add(_stone);
         _stone.velocity = Vec2.zero;
@@ -452,7 +454,7 @@ public class Level:GameObject
         AddChild(_indicator);
     }
 
-    private void HandleIndicator(int pPower)
+    private void HandleIndicator(int pPower) // TODO: add to new project
     {
         _indicator.x = _player.x;
         _indicator.y = _player.y;
