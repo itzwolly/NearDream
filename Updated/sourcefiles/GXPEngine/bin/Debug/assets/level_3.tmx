@@ -343,9 +343,6 @@
   <object id="303" x="896" y="384">
    <polyline points="0,0 128,-64"/>
   </object>
-  <object id="305" x="576" y="320">
-   <polyline points="0,0 64,64"/>
-  </object>
   <object id="306" x="448" y="320">
    <polyline points="0,0 128,-128"/>
   </object>
@@ -354,6 +351,18 @@
   </object>
   <object id="311" x="384" y="320">
    <polyline points="0,0 64,0"/>
+  </object>
+  <object id="314" x="576" y="320">
+   <polyline points="0,0 128,128"/>
+  </object>
+  <object id="315" x="704" y="448">
+   <polyline points="0,0 128,64"/>
+  </object>
+  <object id="316" x="832" y="512">
+   <polyline points="0,0 128,0"/>
+  </object>
+  <object id="317" x="1344" y="512">
+   <polyline points="0,0 0,-192"/>
   </object>
  </objectgroup>
  <objectgroup name="Trophies">
@@ -378,7 +387,7 @@
   <object id="139" name="Tree_2" x="2432" y="960" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Rope">
-  <object id="222" name="Rope_1" x="1216" y="192">
+  <object id="222" name="Rope_1" x="896" y="448">
    <properties>
     <property name="bridge_to_drop" value="bridge_1"/>
    </properties>

@@ -75,15 +75,15 @@ public class MyGame : Game //MyGame is a Game
 				AddChild(_loadingScreen);
 				break;
 			case GameState.LEVEL1:
-				_level = new Level(1);
+				_level = new Level(this, 1);
 				//AddChild(_level);
 				break;
             case GameState.LEVEL2:
-                _level = new Level(2);
+                _level = new Level(this, 2);
                 //AddChild(_level);
                 break;
             case GameState.LEVEL3:
-                _level = new Level(3);
+                _level = new Level(this, 3);
                 //AddChild(_level);
                 break;
             default:
@@ -116,10 +116,7 @@ public class MyGame : Game //MyGame is a Game
 
     public void StartLevel() {
 		AddChild(_level);
-		//_level.CreateHUD();
-
-        //WinScreen ws = new WinScreen(this, _level);
-        //_level.AddChild(ws);
+		_level.CreateHUD();
 
         new Timer(1000, LoadData);
 	}

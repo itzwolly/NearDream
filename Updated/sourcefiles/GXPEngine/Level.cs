@@ -6,6 +6,7 @@ using GXPEngine;
 
 public class Level : GameObject {
 	private Map _map;
+    private MyGame _myGame;
 	#region Layers
 	private Layer _layer, _foreGround, _foreGroundPartTwo ,_midGround, _backGround, _cloudLayer, _cloudLayerPartTwo, _skyLines, _skyLinesPartTwo, _groundTiles, _groundTilesPartTwo, _backGroundFar, _backGroundFarPartTwo, _stonesBackground, _stonesBackgroundPartTwo;
 	#endregion
@@ -34,7 +35,9 @@ public class Level : GameObject {
 	private List<StickyBall> _stickyBalls = new List<StickyBall>();
 	private TMXParser _tmxParser = new TMXParser();
 
-	private int _currentLevel;
+
+    public int wait;
+    private int _currentLevel;
 	private float _xOffset, _yOffset;
 	private int[] _trophyArray = { 0, 0, 0};
 	private bool _hasLoaded = false;
@@ -55,7 +58,8 @@ public class Level : GameObject {
 		set { _hasLoaded = value; }
 	}
 
-	public Level(int pCurrentLevel) {
+	public Level(MyGame pMyGame, int pCurrentLevel) {
+        _myGame = pMyGame;
         _finishedLevel = false;
 		_currentLevel = pCurrentLevel;
 		_map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + _currentLevel + ".tmx");
@@ -93,6 +97,7 @@ public class Level : GameObject {
 
 	private void Update() {
         if (!_finishedLevel) {
+            wait++;
             _xOffset = game.x - this.x;
             _yOffset = game.y - this.y;
 
@@ -123,6 +128,8 @@ public class Level : GameObject {
 		
         if (Input.GetKey(Key.UP)) {
             _finishedLevel = true;
+            WinScreen ws = new WinScreen(_myGame, this);
+            AddChild(ws);
         }
 	}
 
