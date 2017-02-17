@@ -681,10 +681,15 @@ public class PhysicsEngine {
                         }
                     }
                     _sounds.PlayCutRope();
-                    _level.GetRopes().Remove(rope);
+                if (rope.PathBlockName != "") {
+                    _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                    _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
+                }
+                _level.GetRopes().Remove(rope);
                     rope.Destroy();
                     i--;
                 }
+
                 foreach(Stone stone in _level.GetStones())
                 {
                     if (stone.HitTest(rope))

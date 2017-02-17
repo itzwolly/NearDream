@@ -18,8 +18,15 @@ namespace GXPEngine
 		public uint color = 0xffffffff;
 		public uint lineWidth = 1;
 
-		//stay in this object's coordinate space or interpret vectors as screen coordinates?
-		public bool useGlobalCoords = false;
+        private string _lineName;
+
+        public string LineName {
+            get { return _lineName; }
+            set { _lineName = value; }
+        }
+
+        //stay in this object's coordinate space or interpret vectors as screen coordinates?
+        public bool useGlobalCoords = false;
 
 		public LineSegment (float pStartX, float pStartY, float pEndX, float pEndY, uint pColor = 0xffffffff, uint pLineWidth = 1, bool pGlobalCoords = false)
 			: this (new Vec2 (pStartX, pStartY), new Vec2 (pEndX, pEndY), pColor, pLineWidth)

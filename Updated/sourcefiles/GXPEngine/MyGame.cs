@@ -14,8 +14,14 @@ public class MyGame : Game //MyGame is a Game
 	private MainMenu _menu;
 	private LoadingScreen _loadingScreen;
 	private static PrivateFontCollection _pfc;
+    private int _levelCounter;
 
-	public enum Asset {
+    public int LevelCounter {
+        get { return _levelCounter; }
+        set { _levelCounter = value; }
+    }
+
+    public enum Asset {
 		NONE,
 		ROOT,
 		SPRITES,
@@ -69,18 +75,16 @@ public class MyGame : Game //MyGame is a Game
 				AddChild(_loadingScreen);
 				break;
 			case GameState.LEVEL1:
-				_level = new Level(1);
+				_level = new Level(this, 1);
 				//AddChild(_level);
 				break;
             case GameState.LEVEL2:
-                _level = new Level(2);
-                AddChild(_level);
-                _level.CreateHUD();
+                _level = new Level(this, 2);
+                //AddChild(_level);
                 break;
             case GameState.LEVEL3:
-                _level = new Level(3);
-                AddChild(_level);
-                _level.CreateHUD();
+                _level = new Level(this, 3);
+                //AddChild(_level);
                 break;
             default:
 				break;
@@ -91,15 +95,30 @@ public class MyGame : Game //MyGame is a Game
 		SetState(GameState.LOADINGSCREEN);
 	}
 
-	public void LoadLevel() {
-		SetState(GameState.LEVEL3);
-		StartLevel();
+	public void LoadLevelOne() {
+        SetState(GameState.LEVEL1);
+        StartLevel();
 	}
 
-	public void StartLevel() {
+    public void LoadLevelTwo() {
+        SetState(GameState.LEVEL2);
+        StartLevel();
+    }
+
+    public void LoadLevelThree() {
+        SetState(GameState.LEVEL3);
+        StartLevel();
+    }
+
+    public void LoadMainMenu() {
+        SetState(GameState.MAINMENU);
+    }
+
+    public void StartLevel() {
 		AddChild(_level);
 		_level.CreateHUD();
-		new Timer(1000, LoadData);
+
+        new Timer(1000, LoadData);
 	}
 
 	private void LoadData() {

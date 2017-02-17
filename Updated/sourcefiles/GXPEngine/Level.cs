@@ -6,6 +6,7 @@ using GXPEngine;
 
 public class Level : GameObject {
 	private Map _map;
+    private MyGame _myGame;
 	#region Layers
 	private Layer _layer, _foreGround, _foreGroundPartTwo ,_midGround, _backGround, _cloudLayer, _cloudLayerPartTwo, _skyLines, _skyLinesPartTwo, _groundTiles, _groundTilesPartTwo, _backGroundFar, _backGroundFarPartTwo, _stonesBackground, _stonesBackgroundPartTwo;
 	#endregion
@@ -40,9 +41,14 @@ public class Level : GameObject {
 	private float _xOffset, _yOffset;
 	private int[] _trophyArray = { 0, 0, 0};
 	private bool _hasLoaded = false;
+    private bool _finishedLevel;
+    
+    public bool FinishedLevel {
+        get { return _finishedLevel; }
+        set { _finishedLevel = value; }
+    }
 
-
-	public int CurrentLevel {
+    public int CurrentLevel {
 		get { return _currentLevel; }
 		set { _currentLevel = value; }
 	}
@@ -52,7 +58,9 @@ public class Level : GameObject {
 		set { _hasLoaded = value; }
 	}
 
-	public Level(int pCurrentLevel) {
+	public Level(MyGame pMyGame, int pCurrentLevel) {
+        _myGame = pMyGame;
+        _finishedLevel = false;
 		_currentLevel = pCurrentLevel;
 		_map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + _currentLevel + ".tmx");
 		_sounds = new Sounds();
@@ -88,33 +96,41 @@ public class Level : GameObject {
 	}
 
 	private void Update() {
-        wait++;
-		_xOffset = game.x - this.x;
-		_yOffset = game.y - this.y;
+        if (!_finishedLevel) {
+            wait++;
+            _xOffset = game.x - this.x;
+            _yOffset = game.y - this.y;
 
-		_player.GetReticle().x = Input.mouseX + _xOffset;
-		_player.GetReticle().y = Input.mouseY + _yOffset;
+            _player.GetReticle().x = Input.mouseX + _xOffset;
+            _player.GetReticle().y = Input.mouseY + _yOffset;
 
-		PlayerCamera();
-		_engine.HandlePlayer();
-		_engine.HandleBall();
-		_engine.CheckStones();
-		_engine.HandleStickyBall();
-		_engine.CheckPotCollision();
-		_engine.CheckTrophyCollision();
-		_engine.CheckRopeCollision();
-		_engine.HandleDestructablePlanks();
-		_engine.CheckStickyBall();
+            PlayerCamera();
+            _engine.HandlePlayer();
+            _engine.HandleBall();
+            _engine.CheckStones();
+            _engine.HandleStickyBall();
+            _engine.CheckPotCollision();
+            _engine.CheckTrophyCollision();
+            _engine.CheckRopeCollision();
+            _engine.HandleDestructablePlanks();
+            _engine.CheckStickyBall();
 
-		if (_playerDirection == Player.Direction.LEFT) {
-			// _player.Mirror(true, false);
-			_ball.scaleX = -1.0f;
-			_player.scaleX = -1.0f;
-		} else if (_playerDirection == Player.Direction.RIGHT) {
-			//_player.Mirror(true, false);
-			_player.scaleX = 1.0f;
-			_ball.scaleX = 1.0f;
-		}
+            if (_playerDirection == Player.Direction.LEFT) {
+                // _player.Mirror(true, false);
+                _ball.scaleX = -1.0f;
+                _player.scaleX = -1.0f;
+            } else if (_playerDirection == Player.Direction.RIGHT) {
+                //_player.Mirror(true, false);
+                _player.scaleX = 1.0f;
+                _ball.scaleX = 1.0f;
+            }
+        }
+		
+        if (Input.GetKey(Key.UP)) {
+            _finishedLevel = true;
+            WinScreen ws = new WinScreen(_myGame, this);
+            AddChild(ws);
+        }
 	}
 
 	public void CreateHUD() {
@@ -207,7 +223,7 @@ public class Level : GameObject {
 	}
 
 	private void CreatePlayer() {
-		_player = new Player(200, game.height / 2);
+		_player = new Player(200, game.height / 2 + 64,this);
 		AddChildAt(_player, 8);
 	}
 
@@ -250,25 +266,53 @@ public class Level : GameObject {
 					foreach (TiledObject obj in objGroup.Object) {
 						//Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
 						GravityChanger gravityChanger = new GravityChanger(obj.X, obj.Y, obj.Width, obj.Height, Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
-						AddChild(gravityChanger);
+                        gravityChanger.Name = obj.Name;
+						//AddChild(gravityChanger);
 						_gravityChangers.Add(gravityChanger);
 					}
 				} catch {
 
 				}
 			}
+            if (objGroup.Name == "Fan") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    string fanConnectedTo = obj.Properties.GetPropertyByName("connected_to").Value;
+                    Fan fan = null;
+                    if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 2) { // right
+                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanright.png", 2, 15);
+                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 3) { // up
+                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanup.png", 15, 2);
+                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 1) { // down
+                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fandown.png", 2, 15);
+                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 4) { // left
+                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanleft.png", 2, 15);
+                    }
+
+                    fan.x = obj.X + obj.Width / 2;
+                    fan.y = obj.Y + obj.Height / 2;
+                    AddChildAt(fan, 5);
+                }
+
+            }
 			if (objGroup.Name == "Rope") {
 				foreach (TiledObject obj in objGroup.Object) {
-					Rope rope = new Rope();
-					rope.x = obj.X;
-					rope.y = obj.Y;
-					rope.rotation = 340;
-					rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-					rope.SpriteName = obj.Name;
-					_ropes.Add(rope);
-					_pressurePlateObjects.Add(rope);
-					AddChildAt(rope, 5);
-				}
+                    if (_currentLevel == 1) {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y;
+                        rope.rotation = 315;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 5);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
+                    } else if (_currentLevel == 2) {
+                        // add ropes here :/
+                    } else if (_currentLevel == 3) {
+                        // add ropes here :/
+                    }
+                }
 			}
 			if (objGroup.Name == "Pots") {
 				foreach (TiledObject obj in objGroup.Object) {
@@ -329,21 +373,27 @@ public class Level : GameObject {
                 }
 			}
 			if (objGroup.Name == "Trophies") {
-				foreach (TiledObject obj in objGroup.Object) {
-					Trophy trophy = new Trophy(Convert.ToInt32(obj.Properties.GetPropertyByName("number").Value), MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\trophy_sprite.png", 8, 8);
-					trophy.x = obj.X + obj.Width / 4;
-					trophy.y = obj.Y + obj.Height / 4;
-					AddChild(trophy);
-					_trophies.Add(trophy);
-					trophy.SpriteName = obj.Name;
-					_pressurePlateObjects.Add(trophy);
-				}
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        Trophy trophy = new Trophy(Convert.ToInt32(obj.Properties.GetPropertyByName("number").Value), MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\trophy_sprite.png", 8, 8);
+                        trophy.x = obj.X + obj.Width / 4;
+                        trophy.y = obj.Y + obj.Height / 4;
+                        AddChild(trophy);
+                        _trophies.Add(trophy);
+                        trophy.SpriteName = obj.Name;
+                        _pressurePlateObjects.Add(trophy);
+                    }
+                } catch {
+
+                }
+				
 			}
 			if (objGroup.Name == "Points") {
 				foreach (TiledObject obj in objGroup.Object) {
 					foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
 						_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
-						_lines.Add(_line);
+                        _line.LineName = obj.Name;
+                        _lines.Add(_line);
 					}
 				}
 			}
@@ -357,10 +407,10 @@ public class Level : GameObject {
 				}
 			}
 			if (objGroup.Name == "ForegroundTree") {
-				foreach (TiledObject obj in objGroup.Object) {
-					CreateRandomTree(obj);
-				}
-			}
+                //foreach (TiledObject obj in objGroup.Object) {
+                //    CreateRandomTree(obj);
+                //}
+            }
 		}
 	}
 

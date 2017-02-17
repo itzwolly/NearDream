@@ -28,6 +28,10 @@ public class Layer : CustomRenderer {
         //empty
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pTiledLayer"></param>
     private void BuildLayer(TiledLayer pTiledLayer) {
         pTiledLayer.Data.SetLevelArray(_level.GetMap().Height, _level.GetMap().Width);
         _layerLayout = pTiledLayer.Data.GetLevelArray();
@@ -55,6 +59,7 @@ public class Layer : CustomRenderer {
             }
         }
     }
+
 
     // For now we only need them to move in one direction.
     public void MoveLayer(Direction pDirection, float pAmount) {

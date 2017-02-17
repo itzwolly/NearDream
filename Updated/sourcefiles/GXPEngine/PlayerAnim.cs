@@ -11,12 +11,14 @@ public class PlayerAnim:AnimationSprite
     50 to 90 frames = Jumping
     91 to 111 frames = Throwing
     */
+    private Level _level;
     private Player _player;
 
     private int _wait;
 
-    public PlayerAnim(Player pPlayer) : base("assets\\sprites\\player_anim.png", 8, 9)
+    public PlayerAnim(Player pPlayer, Level pLevel) : base("assets\\sprites\\player_anim.png", 8, 9)
     {
+        _level = pLevel;
         _player = pPlayer;
         SetOrigin(width / 2-10, height / 2+35);
     }
@@ -27,7 +29,11 @@ public class PlayerAnim:AnimationSprite
 
         if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE && (currentFrame < 53 || currentFrame > 71))
         {
-            SetFrame(53);
+            if (_level.wait > 23)
+            {
+                SetFrame(53);
+                _level.wait = 0;
+            }
         }
         else if (_player.horizontalDirection == Player.Direction.RIGHT || _player.horizontalDirection == Player.Direction.LEFT)
         {

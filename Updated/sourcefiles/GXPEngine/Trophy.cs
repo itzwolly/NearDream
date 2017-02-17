@@ -15,6 +15,7 @@ public class Trophy : Item {
 
     public Trophy(int pTrophyNumber, string pFileName, int pSpriteSheetCol, int pSpriteSheetRow) : base(pFileName, pSpriteSheetCol, pSpriteSheetRow) {
         _id = pTrophyNumber;
+        SetOrigin(width / 2, height * 0.32f);
         scale = 0.65f;
     }
 
