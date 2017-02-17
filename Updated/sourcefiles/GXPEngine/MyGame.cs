@@ -41,8 +41,9 @@ public class MyGame : Game //MyGame is a Game
 		PAUSEMENU,
 		LEVEL1,
 		LEVEL2,
-		LEVEL3,
-		WINSCREEN
+        LEVEL3,
+        LEVEL4,
+        WINSCREEN
 	}
 
 	//initialize game here
@@ -86,6 +87,10 @@ public class MyGame : Game //MyGame is a Game
                 _level = new Level(this, 3);
                 //AddChild(_level);
                 break;
+            case GameState.LEVEL4:
+                _level = new Level(this, 4);
+                //AddChild(_level);
+                break;
             default:
 				break;
 		}
@@ -109,6 +114,13 @@ public class MyGame : Game //MyGame is a Game
         SetState(GameState.LEVEL3);
         StartLevel();
     }
+
+    public void LoadLevelFour()
+    {
+        SetState(GameState.LEVEL4);
+        StartLevel();
+    }
+
 
     public void LoadMainMenu() {
         SetState(GameState.MAINMENU);

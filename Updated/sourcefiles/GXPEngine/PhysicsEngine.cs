@@ -614,6 +614,7 @@ public class PhysicsEngine {
                         _level.GetPlayer().StickyAmount++;
                     }
                     ball.Destroy();
+                    _sounds.PlayBomb();
                 }
             }
         }
@@ -650,7 +651,7 @@ public class PhysicsEngine {
                         pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
                         new Timer(1500, pot.Canvas.Destroy);
                     }
-                    _sounds.PlayPot();
+                    _sounds.PlayBreakPot();
                     _level.GetPots().Remove(pot);
                     pot.Destroy();
                     i--;

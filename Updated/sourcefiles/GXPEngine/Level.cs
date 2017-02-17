@@ -223,7 +223,7 @@ public class Level : GameObject {
 	}
 
 	private void CreatePlayer() {
-		_player = new Player(200, game.height / 2 + 64,this);
+		_player = new Player(200, game.height / 2 + 64);
 		AddChildAt(_player, 8);
 	}
 
@@ -275,23 +275,35 @@ public class Level : GameObject {
 				}
 			}
             if (objGroup.Name == "Fan") {
-                foreach (TiledObject obj in objGroup.Object) {
-                    string fanConnectedTo = obj.Properties.GetPropertyByName("connected_to").Value;
-                    Fan fan = null;
-                    if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 2) { // right
-                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanright.png", 2, 15);
-                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 3) { // up
-                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanup.png", 15, 2);
-                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 1) { // down
-                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fandown.png", 2, 15);
-                    } else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 4) { // left
-                        fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanleft.png", 2, 15);
-                    }
+                try
+                {
+                    foreach (TiledObject obj in objGroup.Object)
+                    {
+                        string fanConnectedTo = obj.Properties.GetPropertyByName("connected_to").Value;
+                        Fan fan = null;
+                        if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 2)
+                        { // right
+                            fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanright.png", 2, 15);
+                        }
+                        else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 3)
+                        { // up
+                            fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanup.png", 15, 2);
+                        }
+                        else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 1)
+                        { // down
+                            fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fandown.png", 2, 15);
+                        }
+                        else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 4)
+                        { // left
+                            fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanleft.png", 2, 15);
+                        }
 
-                    fan.x = obj.X + obj.Width / 2;
-                    fan.y = obj.Y + obj.Height / 2;
-                    AddChildAt(fan, 5);
+                        fan.x = obj.X + obj.Width / 2;
+                        fan.y = obj.Y + obj.Height / 2;
+                        AddChildAt(fan, 5);
+                    }
                 }
+                catch { }
 
             }
 			if (objGroup.Name == "Rope") {
@@ -305,44 +317,88 @@ public class Level : GameObject {
                         rope.SpriteName = obj.Name;
                         _ropes.Add(rope);
                         _pressurePlateObjects.Add(rope);
-                        AddChildAt(rope, 5);
+                        AddChildAt(rope, 20);
                         rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-                    } else if (_currentLevel == 2) {
+                    } else if (_currentLevel == 2)
+                    {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y;
+                        rope.rotation = 315;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 20);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
                         // add ropes here :/
-                    } else if (_currentLevel == 3) {
+                    } else if (_currentLevel == 3)
+                    {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y;
+                        rope.rotation = 315;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 20);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
+                        // add ropes here :/
+                    }
+                    else if (_currentLevel == 4)
+                    {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y;
+                        rope.rotation = 315;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 20);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
                         // add ropes here :/
                     }
                 }
 			}
 			if (objGroup.Name == "Pots") {
-				foreach (TiledObject obj in objGroup.Object) {
-					Pot pot = new Pot();
-					pot.x = obj.X + obj.Width / 2;
-					pot.y = obj.Y + obj.Height / 2;
-					pot.SpriteName = obj.Name;
-					_pots.Add(pot);
-					AddChildAt(pot, 11);
-					_pressurePlateObjects.Add(pot);
-					pot.Canvas.x = pot.x - pot.width / 2;
-					pot.Canvas.y = pot.y - pot.height * 0.8f;
-					AddChildAt(pot.Canvas, 100);
-				}
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        Pot pot = new Pot();
+                        pot.x = obj.X + obj.Width / 2;
+                        pot.y = obj.Y + obj.Height / 2;
+                        pot.SpriteName = obj.Name;
+                        _pots.Add(pot);
+                        AddChildAt(pot, 11);
+                        _pressurePlateObjects.Add(pot);
+                        pot.Canvas.x = pot.x - pot.width / 2;
+                        pot.Canvas.y = pot.y - pot.height * 0.8f;
+                        AddChildAt(pot.Canvas, 100);
+                    }
+                }
+                catch { }
 			}
 			if (objGroup.Name == "Planks") {
-				foreach (TiledObject obj in objGroup.Object) {
-					Plank plank = new Plank();
-					plank.x = obj.X + obj.Width / 2;
-					plank.y = obj.Y + obj.Height / 2;
-					plank.Position.x = plank.x;
-					plank.Position.y = plank.y;
-					plank.SpriteName = obj.Name;
-					_pressurePlateObjects.Add(plank);
-					_planks.Add(plank);
-					_destroyables.Add(plank);
-					AddChildAt(plank, 5);
-					_lines.Add(plank.GetLine());
-					AddChild(plank.PlankLine);
-				}
+                try
+                {
+                    foreach (TiledObject obj in objGroup.Object)
+                    {
+                        Plank plank = new Plank();
+                        plank.x = obj.X + obj.Width / 2;
+                        plank.y = obj.Y + obj.Height / 2;
+                        plank.Position.x = plank.x;
+                        plank.Position.y = plank.y;
+                        plank.SpriteName = obj.Name;
+                        _pressurePlateObjects.Add(plank);
+                        _planks.Add(plank);
+                        _destroyables.Add(plank);
+                        AddChildAt(plank, 5);
+                        _lines.Add(plank.GetLine());
+                        AddChild(plank.PlankLine);
+                    }
+                }
+                catch { }
 			}
 			if (objGroup.Name == "Stones") {
 				try {
@@ -389,22 +445,28 @@ public class Level : GameObject {
 				
 			}
 			if (objGroup.Name == "Points") {
-				foreach (TiledObject obj in objGroup.Object) {
-					foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
-						_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
-                        _line.LineName = obj.Name;
-                        _lines.Add(_line);
-					}
-				}
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
+                            _line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
+                            _line.LineName = obj.Name;
+                            _lines.Add(_line);
+                        }
+                    }
+                }
+                catch { }
 			}
 			if (objGroup.Name == "Stickyball") {
-				foreach (TiledObject obj in objGroup.Object) {
-					StickyBall stickyBall = new StickyBall();
-					stickyBall.x = obj.X + obj.Width / 2;
-					stickyBall.y = obj.Y + obj.Height / 2;
-					AddChildAt(stickyBall, 5);
-					_stickyBalls.Add(stickyBall);
-				}
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        StickyBall stickyBall = new StickyBall();
+                        stickyBall.x = obj.X + obj.Width / 2;
+                        stickyBall.y = obj.Y + obj.Height / 2;
+                        AddChildAt(stickyBall, 5);
+                        _stickyBalls.Add(stickyBall);
+                    }
+                }
+                catch { }
 			}
 			if (objGroup.Name == "ForegroundTree") {
                 //foreach (TiledObject obj in objGroup.Object) {

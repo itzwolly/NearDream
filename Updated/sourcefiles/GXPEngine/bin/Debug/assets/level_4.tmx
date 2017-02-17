@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="64" tileheight="64" nextobjectid="325">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="64" tileheight="64" nextobjectid="342">
  <tileset firstgid="1" name="foreground" tilewidth="64" tileheight="64" tilecount="112" columns="28">
   <image source="sprites/foreground.png" trans="ff00ff" width="1792" height="256"/>
  </tileset>
@@ -143,13 +143,13 @@
  </layer>
  <layer name="Midground" width="25" height="15">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,2970,3029,3029,3029,3029,3029,3029,2959,2959,2959,2959,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2959,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2958,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3032,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,2946,3031,3031,3031,3031,3031,3031,3031,3031,3031,2959,0,
+0,0,0,0,0,0,0,2946,3031,3031,2947,3031,3031,3031,3031,3031,3031,3031,2947,3031,3031,2947,3031,0,0,
+0,0,0,0,0,0,0,3032,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,3032,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2959,0,0,
+0,0,0,0,0,0,0,3032,2959,0,0,0,3031,3031,3031,3031,3031,3031,3031,0,0,0,2959,0,0,
+0,0,0,0,0,0,0,3032,2959,0,0,0,0,0,0,0,0,0,0,0,0,0,3032,0,0,
+0,0,0,0,0,0,0,2970,2971,0,0,0,0,0,0,0,0,0,0,0,0,0,3032,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,3031,3031,3031,3031,3031,3031,3031,3031,3031,3031,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -183,55 +183,83 @@
  <objectgroup name="Pressureplates"/>
  <objectgroup name="Stones"/>
  <objectgroup name="Points">
-  <object id="217" x="832" y="384">
+  <object id="217" x="768" y="384">
    <polyline points="0,0 640,0"/>
   </object>
-  <object id="237" x="1472" y="256">
+  <object id="237" x="1408" y="256">
    <polyline points="0,0 0,128"/>
   </object>
-  <object id="221" x="1280" y="192">
+  <object id="221" x="1216" y="192">
    <polyline points="0,0 -448,0"/>
   </object>
-  <object id="223" x="1280" y="192">
-   <polyline points="0,0 192,64"/>
+  <object id="288" name="path_blocker_1" x="1152" y="384">
+   <polyline points="0,0 0,384"/>
   </object>
-  <object id="318" x="832" y="384">
-   <polyline points="0,0 0,64"/>
+  <object id="316" x="640" y="192">
+   <polyline points="0,0 -128,0"/>
   </object>
-  <object id="321" x="832" y="448">
-   <polyline points="0,0 704,0"/>
+  <object id="317" x="640" y="192">
+   <polyline points="0,0 -64,192"/>
   </object>
-  <object id="322" x="1536" y="448">
-   <polyline points="0,0 0,-320"/>
-  </object>
-  <object id="323" x="1536" y="128">
-   <polyline points="0,0 -704,0"/>
-  </object>
-  <object id="324" x="832" y="128">
-   <polyline points="0,0 0,64"/>
-  </object>
- </objectgroup>
- <objectgroup name="Trophies">
-  <object id="315" name="Trophy_1" x="1152" y="0" width="64" height="128">
+  <object id="318" name="Trophy_1" x="960" y="64" width="64" height="128">
    <properties>
     <property name="number" type="int" value="1"/>
    </properties>
   </object>
+  <object id="325" x="576" y="384">
+   <polyline points="0,0 -128,0"/>
+  </object>
+  <object id="326" x="448" y="384">
+   <polyline points="0,0 0,-384"/>
+  </object>
+  <object id="328" x="448" y="0">
+   <polyline points="0,0 1088,0"/>
+  </object>
+  <object id="329" x="512" y="192">
+   <polyline points="0,0 0,-128"/>
+  </object>
+  <object id="330" x="512" y="64">
+   <polyline points="0,0 896,0"/>
+  </object>
+  <object id="331" x="1408" y="64">
+   <polyline points="0,0 -384,128"/>
+  </object>
+  <object id="332" x="768" y="384">
+   <polyline points="0,0 0,64"/>
+  </object>
+  <object id="333" x="768" y="448">
+   <polyline points="0,0 704,0"/>
+  </object>
+  <object id="334" x="1472" y="448">
+   <polyline points="0,0 0,-384"/>
+  </object>
+  <object id="335" x="768" y="192">
+   <polyline points="0,0 0,64"/>
+  </object>
+  <object id="338" x="768" y="256">
+   <polyline points="0,0 512,0"/>
+  </object>
+  <object id="339" x="1536" y="0">
+   <polyline points="0,0 -64,64"/>
+  </object>
+  <object id="340" x="1280" y="256">
+   <polyline points="0,0 64,128"/>
+  </object>
  </objectgroup>
+ <objectgroup name="Trophies"/>
  <objectgroup name="ForegroundTree">
   <object id="117" name="Tree_1" x="1024" y="960" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Rope">
-  <object id="298" x="1280" y="192">
+  <object id="341" x="1216" y="256">
    <properties>
-    <property name="bridge_to_drop" value="bridge_1"/>
-    <property name="path_blocker_name" value="path_blocker_1"/>
+    <property name="bridge_to_drop" value="Bridge_1"/>
    </properties>
-   <polyline points="0,0 128,192"/>
+   <polyline points="0,0 128,128"/>
   </object>
  </objectgroup>
  <objectgroup name="Bridge">
-  <object id="138" name="Bridge_1" x="1216" y="768">
+  <object id="138" name="Bridge_1" x="1152" y="768">
    <properties>
     <property name="bridge_name" value="bridge_1"/>
    </properties>
@@ -239,7 +267,8 @@
   </object>
  </objectgroup>
  <objectgroup name="Pots">
-  <object id="140" name="Pot_1" x="1152" y="320" width="64" height="64"/>
+  <object id="140" name="Pot_1" x="896" y="320" width="64" height="64"/>
+  <object id="171" name="Pot_4" x="1024" y="320" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Planks">
   <properties>
@@ -247,5 +276,11 @@
   </properties>
  </objectgroup>
  <objectgroup name="Stickyball"/>
- <objectgroup name="Fan"/>
+ <objectgroup name="Fan">
+  <object id="311" name="Fan_1" x="512" y="128" width="64" height="64">
+   <properties>
+    <property name="connected_to" value="Gravitychanger_1"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -60,7 +60,7 @@ public class Player : Sprite
     public Direction horizontalDirection;
     public Direction verticalDirection;
 
-    public Player(float pX,float pY, Level pLevel) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\square.png")
+    public Player(float pX,float pY) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\square.png")
     {
         x = pX;
         y = pY;
@@ -69,7 +69,7 @@ public class Player : Sprite
         _velocity = Vec2.zero;
 
         SetOrigin(width/2,height/2);
-        PlayerAnim animation = new PlayerAnim(this,pLevel);
+        PlayerAnim animation = new PlayerAnim(this);
         AddChild(animation);
         _reticle = new Reticle();
     }
