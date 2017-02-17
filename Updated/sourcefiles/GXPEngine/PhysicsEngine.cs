@@ -645,7 +645,8 @@ public class PhysicsEngine {
         }
     }
 
-    public void CheckRopeCollision() {
+    public void CheckRopeCollision()
+    {
         try
         {
             for (int i = 0; i <= _level.GetRopes().Count; i++)
@@ -665,14 +666,39 @@ public class PhysicsEngine {
                             }
                         }
                     }
+                    _sounds.PlayCutRope();
+                    _level.GetRopes().Remove(rope);
+                    rope.Destroy();
+                    i--;
                 }
-                _sounds.PlayCutRope();
-                _level.GetRopes().Remove(rope);
-                rope.Destroy();
-                i--;
+                foreach(Stone stone in _level.GetStones())
+                {
+                    if (stone.HitTest(rope))
+                    {
+                        if (!rope.IsDestroyed())
+                        {
+                            foreach (Bridge bridge in _level.GetBridges())
+                            {
+                                if (bridge.BridgeName == rope.BridgeToDrop)
+                                {
+                                    bridge.GetBridgePlank().StartAnimation = true;
+                                    bridge.Down = true;
+                                    _sounds.PlayBridgeFall();
+                                }
+                            }
+                        }
+                        _sounds.PlayCutRope();
+                        _level.GetRopes().Remove(rope);
+                        rope.Destroy();
+                        i--;
+                    }
                 }
             }
-        catch { };
+        }
+        catch
+        {
+
+        }
     }
 
     private void CheckInGravityChangers(Ball ball) {
