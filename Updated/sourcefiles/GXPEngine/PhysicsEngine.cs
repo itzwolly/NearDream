@@ -65,14 +65,28 @@ public class PhysicsEngine {
     public void HandlePlayer() {
         if (Input.GetKey(Key.D)) {
             if (collision.dir == CollidedOption.Direction.UP)
+            {
                 _level.GetPlayer().horizontalDirection = Player.Direction.RIGHT;
+                if (_level.wait > 23)
+                {
+                    _sounds.PlayWalk();
+                    _level.wait = 0;
+                }
+            }
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
             _level.GetPlayer().scaleX = -1;
             if (collision.dir == CollidedOption.Direction.UP)
+            {
                 _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
+                if (_level.wait > 23)
+                {
+                    _sounds.PlayWalk();
+                    _level.wait = 0;
+                }
+            }
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x -= Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.LEFT);
@@ -113,7 +127,7 @@ public class PhysicsEngine {
 
         if (collision.dir != CollidedOption.Direction.NONE) {
             if (collision.dir == CollidedOption.Direction.UP) {
-                //_sounds.PlayWalk();
+                
                 _level.GetPlayer().Position.y = collision.obj.y - collision.obj.height / 2 - _level.GetPlayer().height / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
                 _level.GetPlayer().Jumped = false;

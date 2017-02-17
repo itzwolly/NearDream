@@ -33,9 +33,10 @@ public class Level : GameObject {
 	private List<GameObject> _pressurePlateObjects = new List<GameObject>();
 	private List<StickyBall> _stickyBalls = new List<StickyBall>();
 	private TMXParser _tmxParser = new TMXParser();
-	
 
-	private int _currentLevel;
+
+    public int wait;
+    private int _currentLevel;
 	private float _xOffset, _yOffset;
 	private int[] _trophyArray = { 0, 0, 0};
 	private bool _hasLoaded = false;
@@ -87,6 +88,7 @@ public class Level : GameObject {
 	}
 
 	private void Update() {
+        wait++;
 		_xOffset = game.x - this.x;
 		_yOffset = game.y - this.y;
 
