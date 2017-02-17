@@ -360,6 +360,20 @@ public class Level : GameObject {
                         rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
                         // add ropes here :/
                     }
+                    else if (_currentLevel == 5)
+                    {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y;
+                        rope.rotation = 315;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 20);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
+                        // add ropes here :/
+                    }
                 }
 			}
 			if (objGroup.Name == "Pots") {

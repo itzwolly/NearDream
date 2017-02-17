@@ -43,6 +43,10 @@ public class LoadingScreen : Canvas
         }
         else if (_myGame.LevelCounter == 4)
         {
+            new Timer(1000, _myGame.LoadLevelFive);
+        }
+        else if (_myGame.LevelCounter == 5)
+        {
             new Timer(1000, _myGame.LoadMainMenu);
         }
     }
