@@ -665,14 +665,22 @@ public class PhysicsEngine {
                             }
                         }
                     }
-                }
-                _sounds.PlayCutRope();
-                _level.GetRopes().Remove(rope);
-                rope.Destroy();
-                i--;
+
+                    _sounds.PlayCutRope();
+                    if (rope.PathBlockName != "") {
+                        _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                        _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
+                    }
+                    
+                    _level.GetRopes().Remove(rope);
+                    rope.Destroy();
+                    i--;
                 }
             }
-        catch { };
+        }
+        catch {
+
+        }
     }
 
     private void CheckInGravityChangers(Ball ball) {

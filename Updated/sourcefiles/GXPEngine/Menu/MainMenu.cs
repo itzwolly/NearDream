@@ -67,6 +67,7 @@ public class MainMenu : GameObject {
                     btnPlay.y -= 7;
                     _sounds.StopMenuMusic();
                     Destroy();
+                    _myGame.LevelCounter = 0;
                     _myGame.StartGame();
                 } else if(btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnHowTo.currentFrame = 0;

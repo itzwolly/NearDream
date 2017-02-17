@@ -7,6 +7,6 @@ using GXPEngine;
 public class Item : AnimationSprite
 {
     public Item(string pFileName, int pSpriteSheetCol, int pSpriteSheetRow) : base(pFileName, pSpriteSheetCol, pSpriteSheetRow) {
-        SetOrigin(width / 2, height / 2);
+        //SetOrigin(width / 2, height / 2);
     }
 }

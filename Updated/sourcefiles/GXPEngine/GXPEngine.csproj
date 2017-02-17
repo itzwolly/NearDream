@@ -46,6 +46,7 @@
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="Components\NLineSegment.cs" />
     <Compile Include="ControlsScreen.cs" />
+    <Compile Include="Fan.cs" />
     <Compile Include="GameTile.cs" />
     <Compile Include="GravityChanger.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Utils\Timer.cs" />
     <Compile Include="Utils\TMXParser.cs" />
     <Compile Include="Utils\Vec2.cs" />
+    <Compile Include="WinScreen.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
