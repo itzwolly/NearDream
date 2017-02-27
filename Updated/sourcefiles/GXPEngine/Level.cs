@@ -22,7 +22,7 @@ public class Level : GameObject {
 	private List<Bridge> _bridges = new List<Bridge>();
 	private List<BridgeCollider> _bridgeColliders = new List<BridgeCollider>();
 	private List<Rope> _ropes = new List<Rope>();
-	private List<Trophy> _trophies = new List<Trophy>();
+	private List<Item> _trophies = new List<Item>();
 	private List<Pot> _pots = new List<Pot>();
 	private List<Plank> _planks = new List<Plank>();
 	private List<GameTile> _collidables = new List<GameTile>();
@@ -71,7 +71,7 @@ public class Level : GameObject {
 		CreateTiledObjects();
 		_engine = new PhysicsEngine(this);
 		CreateReticle();
-		RenderLines();
+		//RenderLines();
 		
 		// Assign layers to variables for ease of access.
 		_foreGround = GetLayerByName("Foreground");
@@ -307,76 +307,23 @@ public class Level : GameObject {
 				catch { }
 
 			}
-			if (objGroup.Name == "Rope") {
-				foreach (TiledObject obj in objGroup.Object) {
-					if (_currentLevel == 1) {
-						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-						rope.x = obj.X;
-						rope.y = obj.Y;
-						rope.rotation = 315;
-						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-						rope.SpriteName = obj.Name;
-						_ropes.Add(rope);
-						_pressurePlateObjects.Add(rope);
-						AddChildAt(rope, 20);
-						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-					} else if (_currentLevel == 2)
-					{
-						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-						rope.x = obj.X;
-						rope.y = obj.Y;
-						rope.rotation = 315;
-						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-						rope.SpriteName = obj.Name;
-						_ropes.Add(rope);
-						_pressurePlateObjects.Add(rope);
-						AddChildAt(rope, 20);
-						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-						// add ropes here :/
-					} else if (_currentLevel == 3)
-					{
-						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-						rope.x = obj.X;
-						rope.y = obj.Y;
-						rope.rotation = 315;
-						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-						rope.SpriteName = obj.Name;
-						_ropes.Add(rope);
-						_pressurePlateObjects.Add(rope);
-						AddChildAt(rope, 20);
-						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-						// add ropes here :/
-					}
-					else if (_currentLevel == 4)
-					{
-						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-						rope.x = obj.X;
-						rope.y = obj.Y;
-						rope.rotation = 315;
-						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-						rope.SpriteName = obj.Name;
-						_ropes.Add(rope);
-						_pressurePlateObjects.Add(rope);
-						AddChildAt(rope, 20);
-						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-						// add ropes here :/
-					}
-					else if (_currentLevel == 5)
-					{
-						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-						rope.x = obj.X;
-						rope.y = obj.Y;
-						rope.rotation = 315;
-						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-						rope.SpriteName = obj.Name;
-						_ropes.Add(rope);
-						_pressurePlateObjects.Add(rope);
-						AddChildAt(rope, 20);
-						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-						// add ropes here :/
-					}
-				}
-			}
+            if (objGroup.Name == "Rope") {
+                foreach (TiledObject obj in objGroup.Object) {
+                    if (_currentLevel == 3) {
+                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+                        rope.x = obj.X;
+                        rope.y = obj.Y + 4;
+                        rope.rotation = 330;
+                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+                        rope.SpriteName = obj.Name;
+                        _ropes.Add(rope);
+                        _pressurePlateObjects.Add(rope);
+                        AddChildAt(rope, 20);
+                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
+                        // add ropes here :/
+                    }
+                }
+            }
 			if (objGroup.Name == "Pots") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
@@ -385,7 +332,7 @@ public class Level : GameObject {
 						pot.y = obj.Y + obj.Height / 2;
 						pot.SpriteName = obj.Name;
 						_pots.Add(pot);
-						AddChildAt(pot, 11);
+						AddChildAt(pot, 8);
 						_pressurePlateObjects.Add(pot);
 						pot.Canvas.x = pot.x - pot.width / 2;
 						pot.Canvas.y = pot.y - pot.height * 0.8f;
@@ -458,6 +405,20 @@ public class Level : GameObject {
 				}
 				
 			}
+            if (objGroup.Name == "Finish") {
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        Finish finish = new Finish(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\trophy_sprite.png", 8, 8);
+                        finish.x = obj.X + obj.Width / 4;
+                        finish.y = obj.Y + obj.Height / 4;
+                        AddChild(finish);
+                        _trophies.Add(finish);
+                        finish.SpriteName = obj.Name;
+                    }
+                } catch {
+
+                }
+            }
 			if (objGroup.Name == "Points") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
@@ -536,7 +497,7 @@ public class Level : GameObject {
 		return _bridges;
 	}
 
-	public List<Trophy> GetTrophies() {
+	public List<Item> GetTrophies() {
 		return _trophies;
 	}
 
@@ -607,4 +568,8 @@ public class Level : GameObject {
 	public List<StickyBall> GetStickyBalls() {
 		return _stickyBalls;
 	}
+
+    public MyGame GetMyGame() {
+        return _myGame;
+    }
 }

@@ -624,17 +624,34 @@ public class PhysicsEngine {
         if (!_level.GetBall().OnPlayer) {
             for (int i = 0; i < _level.GetTrophies().Count; i++)
             {
-                Trophy trophy = _level.GetTrophies()[i];
-                if (_level.GetBall().HitTest(trophy)) {
-                    if (!trophy.IsDestroyed()) {
-                        _level.GetTrophyArray().SetValue(1, trophy.Id - 1);
-                        _level.GetHUD().ReDrawTrophy(trophy.Id - 1);
-                        _level.GetPlayer().AmountOfTrophies++;
+                Item item = _level.GetTrophies()[i];
+                if (item is Trophy) {
+                    Trophy trophy = item as Trophy;
+                    if (_level.GetBall().HitTest(trophy)) {
+                        if (!trophy.IsDestroyed()) {
+                            _level.GetTrophyArray().SetValue(1, trophy.Id - 1);
+                            _level.GetHUD().ReDrawTrophy(trophy.Id - 1);
+                            _level.GetPlayer().AmountOfTrophies++;
+                        }
+                        trophy.Destroy();
+                        _level.GetTrophies().Remove(trophy);
+                        _sounds.PlayTrophy();
+                        i--;
                     }
-                    trophy.Destroy();
-                    _level.GetTrophies().Remove(trophy);
-                    _sounds.PlayTrophy();
-                    i--;
+                } else if (item is Finish) {
+                    Finish finish = item as Finish;
+                    if (_level.GetBall().HitTest(finish)) {
+                        if (!finish.IsDestroyed()) {
+                            //_level.GetPlayer().AmountOfTrophies++;
+                            _level.FinishedLevel = true;
+                            WinScreen ws = new WinScreen(_level.GetMyGame(), _level);
+                            _level.AddChild(ws);
+                        }
+                        finish.Destroy();
+                        _level.GetTrophies().Remove(finish);
+                        //_sounds.PlayTrophy();
+                        i--;
+                    }
                 }
             }
         }

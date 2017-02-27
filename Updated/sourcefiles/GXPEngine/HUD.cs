@@ -48,21 +48,23 @@ public class HUD : Canvas {
         _changeBallCanvas.y = y;
         AddChild(_changeBallCanvas);
 
-        for (int i = 0; i < _level.GetTrophyArray().Length; i++) {
-            _trophyCanvas = new Canvas(200 / 3, 100);
-            _trophyCanvases.Add(_trophyCanvas);
-            _trophyCanvases[i].x = (200 / 3) * i;
-            _trophyCanvases[i].y = y;
-            _trophyCanvases[i].alpha = 0.2f;
-            AddChild(_trophyCanvas);
+        if (Convert.ToBoolean(_level.GetMap().Properties.GetPropertyByName("HasTrophies").Value)) {
+            for (int i = 0; i < _level.GetTrophyArray().Length; i++) {
+                _trophyCanvas = new Canvas(200 / 3, 100);
+                _trophyCanvases.Add(_trophyCanvas);
+                _trophyCanvases[i].x = (200 / 3) * i;
+                _trophyCanvases[i].y = y;
+                _trophyCanvases[i].alpha = 0.2f;
+                AddChild(_trophyCanvas);
+            }
+            graphics.DrawImage(_trophyContainer, 0, 0, 200, 100);
+            DrawTrophies();
         }
         
         graphics.DrawImage(_timerContainer, game.width - 400, 0, 200, 100);
         graphics.DrawImage(_timerContainer, game.width - 200, 0, 200, 100);
-        graphics.DrawImage(_trophyContainer, 0, 0, 200, 100);
         graphics.DrawImage(_currentBallContainer, game.width - 600, 0, 100, 100);
 
-        DrawTrophies();
         DrawCurrentBall(_currentBall);
     }
 

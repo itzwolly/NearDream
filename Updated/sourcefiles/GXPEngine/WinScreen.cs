@@ -8,7 +8,7 @@ public class WinScreen : Canvas {
     private Canvas _canvas;
     private MyGame _myGame;
     private Level _level;
-    private Font _font;
+    private Font _font, _nextLevelFont;
     private AnimationButton _btnNextLevel;
 
 
@@ -20,23 +20,25 @@ public class WinScreen : Canvas {
         _canvas = new Canvas(500, 515);
         _canvas.x = game.width / 2 - _canvas.width / 2 + 10;
         _canvas.y = game.height / 2 - _canvas.height / 3;
-        _canvas.alpha = 0.3f;
 
+        //_canvas.alpha = 0.3f;
         //_canvas.graphics.Clear(Color.White);
 
-        AddChild(_canvas);
-
         _btnNextLevel = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\next_level_button.png", 1, 1);
-        _btnNextLevel.scale = 0.05f;
+        _btnNextLevel.scale = 0.085f;
         _btnNextLevel.x = game.width / 2 + 50;
         _btnNextLevel.y = game.height - _canvas.height / 2 + 30;
         AddChild(_btnNextLevel);
 
+        AddChild(_canvas);
+        
         _font = new Font(MyGame.GetFont(), 32);
+        _nextLevelFont = new Font(MyGame.GetFont(), 28);
 
         graphics.DrawImage(_victoryScreen, 0, 0);
         _canvas.graphics.DrawString("Score: " + _level.GetPlayer().Score, _font, Brushes.Black, 50, 40);
         _canvas.graphics.DrawString("Time: " + _level.GetHUD().GetFormattedTimer(), _font, Brushes.Black, 70, 100);
+        _canvas.graphics.DrawString("Next Level", _nextLevelFont, Brushes.Black, 208, 405);
     }
 
     private void Update() {
