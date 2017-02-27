@@ -41,8 +41,10 @@ public class MyGame : Game //MyGame is a Game
 		PAUSEMENU,
 		LEVEL1,
 		LEVEL2,
-		LEVEL3,
-		WINSCREEN
+        LEVEL3,
+        LEVEL4,
+        LEVEL5,
+        WINSCREEN
 	}
 
 	//initialize game here
@@ -86,6 +88,14 @@ public class MyGame : Game //MyGame is a Game
                 _level = new Level(this, 3);
                 //AddChild(_level);
                 break;
+            case GameState.LEVEL4:
+                _level = new Level(this, 4);
+                //AddChild(_level);
+                break;
+            case GameState.LEVEL5:
+                _level = new Level(this, 5);
+                //AddChild(_level);
+                break;
             default:
 				break;
 		}
@@ -107,6 +117,17 @@ public class MyGame : Game //MyGame is a Game
 
     public void LoadLevelThree() {
         SetState(GameState.LEVEL3);
+        StartLevel();
+    }
+
+    public void LoadLevelFour()
+    {
+        SetState(GameState.LEVEL4);
+        StartLevel();
+    }
+    public void LoadLevelFive()
+    {
+        SetState(GameState.LEVEL5);
         StartLevel();
     }
 
@@ -141,6 +162,8 @@ public class MyGame : Game //MyGame is a Game
 				break;
 			case GameState.LEVEL1:
 			case GameState.LEVEL2:
+            case GameState.LEVEL4:
+            case GameState.LEVEL5:
 			case GameState.LEVEL3:
 				if (_level != null) {
 					_level.HasLoaded = false;

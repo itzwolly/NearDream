@@ -614,6 +614,7 @@ public class PhysicsEngine {
                         _level.GetPlayer().StickyAmount++;
                     }
                     ball.Destroy();
+                    _sounds.PlayBomb();
                 }
             }
         }
@@ -650,7 +651,7 @@ public class PhysicsEngine {
                         pot.Canvas.graphics.DrawString("+" + score, new Font(FontFamily.GenericSansSerif, 18, FontStyle.Italic), Brushes.Green, 0, 0);
                         new Timer(1500, pot.Canvas.Destroy);
                     }
-                    _sounds.PlayPot();
+                    _sounds.PlayBreakPot();
                     _level.GetPots().Remove(pot);
                     pot.Destroy();
                     i--;
@@ -688,6 +689,38 @@ public class PhysicsEngine {
                 _level.GetRopes().Remove(rope);
                     rope.Destroy();
                     i--;
+                }
+
+                foreach(Stone stone in _level.GetStones())
+                {
+                    if (stone.HitTest(rope))
+                    {
+                        if (!rope.IsDestroyed())
+                        {
+                            foreach (Bridge bridge in _level.GetBridges())
+                            {
+                                if (bridge.BridgeName == rope.BridgeToDrop)
+                                {
+                                    bridge.GetBridgePlank().StartAnimation = true;
+                                    bridge.Down = true;
+                                    _sounds.PlayBridgeFall();
+                                }
+                            }
+                        }
+                        _sounds.PlayCutRope();
+                        _level.GetRopes().Remove(rope);
+                        rope.Destroy();
+                        i--;
+                    }
+                    _sounds.PlayCutRope();
+
+                    _level.GetRopes().Remove(rope);
+                    rope.Destroy();
+                    i--;
+                    if (rope.PathBlockName != "") {
+                        _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                        _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
+                    }
                 }
 
                 foreach(Stone stone in _level.GetStones())

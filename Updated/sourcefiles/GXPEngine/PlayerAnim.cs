@@ -23,6 +23,16 @@ public class PlayerAnim:AnimationSprite
 
     public void Update()
     {
+        if(_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE)
+        {
+            if (_wait > 3)
+            {
+                NextFrame();
+                _wait = 0;
+            }
+            _wait++;
+        }
+        else
         NextFrame();
 
         if (_player.horizontalDirection == Player.Direction.NONE && _player.verticalDirection == Player.Direction.NONE && (currentFrame < 53 || currentFrame > 71))

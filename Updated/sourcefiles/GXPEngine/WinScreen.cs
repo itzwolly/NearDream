@@ -21,7 +21,9 @@ public class WinScreen : Canvas {
         _canvas.x = game.width / 2 - _canvas.width / 2 + 10;
         _canvas.y = game.height / 2 - _canvas.height / 3;
         _canvas.alpha = 0.3f;
-        _canvas.graphics.Clear(Color.White);
+
+        //_canvas.graphics.Clear(Color.White);
+
         AddChild(_canvas);
 
         _btnNextLevel = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\next_level_button.png", 1, 1);
@@ -55,8 +57,20 @@ public class WinScreen : Canvas {
                 } else if (_level.CurrentLevel == 2) {
                     _myGame.LevelCounter = 2;
                     _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
-                } else if (_level.CurrentLevel == 3) {
+                }
+                else if (_level.CurrentLevel == 3)
+                {
                     _myGame.LevelCounter = 3;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 4)
+                {
+                    _myGame.LevelCounter = 4;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 5)
+                {
+                    _myGame.LevelCounter = 5;
                     _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
                 }
             }

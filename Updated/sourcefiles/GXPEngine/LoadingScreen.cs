@@ -36,10 +36,20 @@ public class LoadingScreen : Canvas
             new Timer(1000, _myGame.LoadLevelTwo);
         } else if (_myGame.LevelCounter == 2) {
             new Timer(1000, _myGame.LoadLevelThree);
-        } else if (_myGame.LevelCounter == 3) {
+        }
+        else if (_myGame.LevelCounter == 3)
+        {
+            new Timer(1000, _myGame.LoadLevelFour);
+        }
+        else if (_myGame.LevelCounter == 4)
+        {
+            new Timer(1000, _myGame.LoadLevelFive);
+        }
+        else if (_myGame.LevelCounter == 5)
+        {
             new Timer(1000, _myGame.LoadMainMenu);
         }
-     }
+    }
 
     private void Update() {
         if (_startAnim) {

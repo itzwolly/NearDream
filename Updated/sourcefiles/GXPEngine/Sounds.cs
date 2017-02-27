@@ -35,10 +35,10 @@ class Sounds
     {
         _bombPickUp = new Sound("assets//sounds//bombpick.wav", false, false);
         _trophyPickUp = new Sound("assets//sounds//trophy.wav", false, false);
-        _potBreak = new Sound("assets//sounds//breakPot.wav", false, false);
+        _potBreak = new Sound("assets//sounds//potsmash.wav", false, false);
         _switch = new Sound("assets//sounds//switch.wav", false, false);
-        _shoot = new Sound("assets//sounds//shoot.wav", false, false);
-        _charge = new Sound("assets//sounds//charge.wav", false, false);
+        _shoot = new Sound("assets//sounds//shooting.wav", false, false);
+        _charge = new Sound("assets//sounds//charging.wav", false, false);
         _jump = new Sound("assets//sounds//jump.wav", false, false);
         _ballBounce = new Sound("assets//sounds//ballBounce", false, false);
         _rockBounce = new Sound("assets//sounds//rockBounce", false, false);
@@ -48,7 +48,7 @@ class Sounds
         _bridgeFall = new Sound("assets//sounds//bridgeFall.wav", false, false);
         _explosion = new Sound("assets//sounds//explosion1short.wav", false, false);
         _plankBlow = new Sound("assets//sounds//plankBlow.wav", false, false);
-        _breakPot = new Sound("assets//sounds//breakPot.wav", false, false);
+        _breakPot = new Sound("assets//sounds//potsmash.wav", false, false);
         _pickUp = new Sound("assets//sounds//pickUp.wav", false, false);
         _wind = new Sound("assets//sounds//wind.wav", false, false);
 
