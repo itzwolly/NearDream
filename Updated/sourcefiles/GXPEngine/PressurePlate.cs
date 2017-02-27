@@ -41,7 +41,10 @@ public class PressurePlate : Sprite
             pSprite.Destroy();
             if (pSprite is Plank) {
                 Plank plank = (pSprite as Plank);
+                _level.GetLines().Remove(plank.PlankLine);
+                plank.PlankLine.Destroy();
                 _level.GetDestroyables().Remove(plank);
+
             }
         }
     }

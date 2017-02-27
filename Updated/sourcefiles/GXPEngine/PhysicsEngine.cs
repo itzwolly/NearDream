@@ -65,14 +65,28 @@ public class PhysicsEngine {
     public void HandlePlayer() {
         if (Input.GetKey(Key.D)) {
             if (collision.dir == CollidedOption.Direction.UP)
+            {
                 _level.GetPlayer().horizontalDirection = Player.Direction.RIGHT;
+                if (_level.wait > 23)
+                {
+                    _sounds.PlayWalk();
+                    _level.wait = 0;
+                }
+            }
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x += Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.RIGHT);
         } else if (Input.GetKey(Key.A)) {
             _level.GetPlayer().scaleX = -1;
             if (collision.dir == CollidedOption.Direction.UP)
+            {
                 _level.GetPlayer().horizontalDirection = Player.Direction.LEFT;
+                if (_level.wait > 23)
+                {
+                    _sounds.PlayWalk();
+                    _level.wait = 0;
+                }
+            }
             _level.GetPlayer().IsMoving = true;
             _level.GetPlayer().Position.x -= Player.SPEED / 2;
             _level.SetPlayerDirection(Player.Direction.LEFT);
@@ -113,7 +127,7 @@ public class PhysicsEngine {
 
         if (collision.dir != CollidedOption.Direction.NONE) {
             if (collision.dir == CollidedOption.Direction.UP) {
-                //_sounds.PlayWalk();
+                
                 _level.GetPlayer().Position.y = collision.obj.y - collision.obj.height / 2 - _level.GetPlayer().height / 2;
                 _level.GetPlayer().Velocity = Vec2.zero;
                 _level.GetPlayer().Jumped = false;
@@ -309,7 +323,6 @@ public class PhysicsEngine {
 
     public void HandleBall() {
         if (Input.GetKeyDown(Key.E)) {
-
             //_sounds.PlaySwitch();
             if (_level.GetPlayer().StickyAmount > 0) {
                 _level.GetBall().IsExploding = !_level.GetBall().IsExploding;
@@ -519,8 +532,8 @@ public class PhysicsEngine {
         //_ballToLineStart = _ball.position.Clone().Subtract(line.start);
         //_distance = Mathf.Abs(_ballToLineStart.Dot(line.lineOnOriginNormalized.Normal().Clone()));
         _intersection = CheckIntersection(line.start.Clone(), line.end.Clone(), ball.Position, ball.NextPosition, line.lineOnOriginNormalized.Normal().Scale(ball.radius - 2));//try on border
-        float _distanceToStart = line.start.DistanceTo(ball.NextPosition);
-        float _distanceToEnd = line.end.DistanceTo(ball.NextPosition);
+        float _distanceToStart = line.start.DistanceTo(ball.Position);
+        float _distanceToEnd = line.end.DistanceTo(ball.Position);
         //Console.WriteLine(_intersection);
         if (_intersection.y != 0) {
             if (stick) {
@@ -646,30 +659,73 @@ public class PhysicsEngine {
         }
     }
 
-    public void CheckRopeCollision() {
-        foreach (Rope rope in _level.GetRopes()) {
-            if (_level.GetBall().HitTest(rope)) {
-                if (!rope.IsDestroyed()) {
-                    foreach (Bridge bridge in _level.GetBridges()) {
-                        if (bridge.BridgeName == rope.BridgeToDrop) {
-                            bridge.GetBridgePlank().StartAnimation = true;
-                            bridge.Down = true;
-                            _sounds.PlayBridgeFall();
+    public void CheckRopeCollision()
+    {
+        try
+        {
+            for (int i = 0; i <= _level.GetRopes().Count; i++)
+            {
+                Rope rope = _level.GetRopes()[i];
+                if (_level.GetBall().HitTest(rope))
+                {
+                    if (!rope.IsDestroyed())
+                    {
+                        foreach (Bridge bridge in _level.GetBridges())
+                        {
+                            if (bridge.BridgeName == rope.BridgeToDrop)
+                            {
+                                bridge.GetBridgePlank().StartAnimation = true;
+                                bridge.Down = true;
+                                _sounds.PlayBridgeFall();
+                            }
                         }
                     }
+                    _sounds.PlayCutRope();
+                if (rope.PathBlockName != "") {
+                    _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                    _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
                 }
-                _sounds.PlayCutRope();
-                rope.Destroy();
+                _level.GetRopes().Remove(rope);
+                    rope.Destroy();
+                    i--;
+                }
+
+                foreach(Stone stone in _level.GetStones())
+                {
+                    if (stone.HitTest(rope))
+                    {
+                        if (!rope.IsDestroyed())
+                        {
+                            foreach (Bridge bridge in _level.GetBridges())
+                            {
+                                if (bridge.BridgeName == rope.BridgeToDrop)
+                                {
+                                    bridge.GetBridgePlank().StartAnimation = true;
+                                    bridge.Down = true;
+                                    _sounds.PlayBridgeFall();
+                                }
+                            }
+                        }
+                        _sounds.PlayCutRope();
+                        _level.GetRopes().Remove(rope);
+                        rope.Destroy();
+                        i--;
+                    }
+                }
             }
+        }
+        catch
+        {
+
         }
     }
 
     private void CheckInGravityChangers(Ball ball) {
         foreach (GravityChanger gravchangers in _level.GetGravityChangers()) {
-            if (ball.Position.x < gravchangers.x + gravchangers.width / 2 &&
-                ball.Position.x > gravchangers.x - gravchangers.width / 2 &&
-                ball.Position.y > gravchangers.y - gravchangers.height / 2 &&
-                ball.Position.y < gravchangers.y + gravchangers.height / 2) {
+            if (ball.Position.x < gravchangers.x + gravchangers.width &&
+                ball.Position.x > gravchangers.x &&
+                ball.Position.y > gravchangers.y &&
+                ball.Position.y < gravchangers.y + gravchangers.height) {
                 ball.Velocity.Add(gravchangers.changedGravity);
                 CheckAllLines(ball);
                 //_sounds.PlayWind();
@@ -709,8 +765,8 @@ public class PhysicsEngine {
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
                     if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
-                        _level.GetLines().Remove(plank.GetLine());
-                        plank.GetLine().Destroy();
+                        _level.GetLines().Remove(plank.PlankLine);
+                        plank.PlankLine.Destroy();
                         _level.GetDestroyables().Remove(plank);
                         _level.GetPlanks().Remove(plank);
                         plank.Destroy();

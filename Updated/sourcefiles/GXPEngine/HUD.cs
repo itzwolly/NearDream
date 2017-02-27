@@ -62,19 +62,29 @@ public class HUD : Canvas {
         graphics.DrawImage(_trophyContainer, 0, 0, 200, 100);
         graphics.DrawImage(_currentBallContainer, game.width - 600, 0, 100, 100);
 
-        _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
-
         DrawTrophies();
         DrawCurrentBall(_currentBall);
     }
 
     private void Update() {
         if (_level.HasLoaded) {
-            _timerCanvas.graphics.Clear(Color.Transparent);
-            _scoreCanvas.graphics.Clear(Color.Transparent);
-            _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
-            _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
-            IncreaseTimer();
+            if (!_level.FinishedLevel) {
+                _timerCanvas.graphics.Clear(Color.Transparent);
+                _scoreCanvas.graphics.Clear(Color.Transparent);
+                _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
+                _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
+
+                if (_level.GetBall().IsExploding) {
+                    _changeBallCanvas.graphics.Clear(Color.Transparent);
+                    _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                    _changeBallCanvas.graphics.DrawString("x" + _level.GetPlayer().StickyAmount, _changeBallFont, Brushes.WhiteSmoke, _changeBallCanvas.width - 39, _changeBallCanvas.height - 31);
+                } else {
+                    _changeBallCanvas.graphics.Clear(Color.Transparent);
+                    _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                }
+
+                IncreaseTimer();
+            }
         }
     }
 
@@ -116,9 +126,17 @@ public class HUD : Canvas {
         _timer += Time.deltaTime;
     }
 
+    public string GetFormattedTimer() {
+        return FormatTimer();
+    }
+
     private string FormatTimer() {
         int seconds = (_timer / 1000) % 60;
         int minutes = (_timer / 1000) / 60;
         return (minutes.ToString("00") + ":" + seconds.ToString("00"));
+    }
+
+    public List<Canvas> GetCanvases() {
+        return _trophyCanvases;
     }
 }

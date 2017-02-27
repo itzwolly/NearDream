@@ -8,7 +8,7 @@ public class Trophy : Item {
     int index = 0;
 
     public Trophy(string pFileName, int pSpriteSheetCol, int pSpriteSheetRow) : base(pFileName, pSpriteSheetCol, pSpriteSheetRow) {
-        //currentFrame = 1;
+        //
     }
 
     private void Update() {

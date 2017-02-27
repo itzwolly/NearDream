@@ -18,14 +18,6 @@ public class LoadingScreen : Canvas
     private bool _startAnim;
     private Random _rnd = new Random();
 
-    private enum SpriteName {
-        BRIDGE,
-        DRAGONANIM,
-        POT,
-        ROCKSSPRITE,
-        TROPHYSPRITE
-    }
-
     public LoadingScreen(MyGame pMygame) : base(Game.main.width, Game.main.height) {
         _myGame = pMygame;
         _font = new Font(MyGame.GetFont(), 44);
@@ -36,10 +28,18 @@ public class LoadingScreen : Canvas
         _loadingBall.currentFrame = 38;
         AddChild(_loadingBall);
 
-        graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 50, game.height / 2 - 50);
-        
-        new Timer(1000, _myGame.LoadLevel);
-    }
+        graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 60, game.height / 2 - 50);
+
+        if (_myGame.LevelCounter == 0) {
+            new Timer(1000, _myGame.LoadLevelOne);
+        } else if (_myGame.LevelCounter == 1) {
+            new Timer(1000, _myGame.LoadLevelTwo);
+        } else if (_myGame.LevelCounter == 2) {
+            new Timer(1000, _myGame.LoadLevelThree);
+        } else if (_myGame.LevelCounter == 3) {
+            new Timer(1000, _myGame.LoadMainMenu);
+        }
+     }
 
     private void Update() {
         if (_startAnim) {
