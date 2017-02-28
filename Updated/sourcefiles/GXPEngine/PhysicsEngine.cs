@@ -43,9 +43,10 @@ public class PhysicsEngine {
             }
             iterations++;
         } while (!noOverlap && iterations < maxIterations);
+        //Console.WriteLine(iterations);
     }
 
-    bool CorrectOverlap(Ball ball, LineSegment line) {
+    private bool CorrectOverlap(Ball ball, LineSegment line) {
         Vec2 differenceVec = ball.Position.Clone().Subtract(line.start);
         Vec2 normalizedLineVec = line.end.Clone().Subtract(line.start).Normalize();
         Vec2 lineNormal = normalizedLineVec.Normal();
@@ -559,7 +560,7 @@ public class PhysicsEngine {
             Vec2[] caps = new Vec2[] { line.start, line.end };
             foreach (Vec2 cap in caps) {
                 _distanceToStart = cap.DistanceTo(ball.NextPosition);
-                if (_distanceToStart < ball.radius) {
+                if (_distanceToStart <= ball.radius) {
                     if (stick) {
                         ball.Velocity = Vec2.zero;
                         ball.StartedTimer = true;
@@ -641,6 +642,7 @@ public class PhysicsEngine {
                 } else if (item is Finish) {
                     Finish finish = item as Finish;
                     if (_level.GetBall().HitTest(finish)) {
+                        ResetBall();
                         if (!finish.IsDestroyed()) {
                             //_level.GetPlayer().AmountOfTrophies++;
                             _level.FinishedLevel = true;
@@ -699,11 +701,13 @@ public class PhysicsEngine {
                         }
                     }
                     _sounds.PlayCutRope();
-                if (rope.PathBlockName != "") {
-                    _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
-                    _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
-                }
-                _level.GetRopes().Remove(rope);
+
+                    if (rope.PathBlockName != "") {
+                        _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                        _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
+                    }
+
+                    _level.GetRopes().Remove(rope);
                     rope.Destroy();
                     i--;
                 }
@@ -725,19 +729,17 @@ public class PhysicsEngine {
                             }
                         }
                         _sounds.PlayCutRope();
+
+                        if (rope.PathBlockName != "") {
+                            _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
+                            _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
+                        }
+
                         _level.GetRopes().Remove(rope);
                         rope.Destroy();
                         i--;
                     }
-                    _sounds.PlayCutRope();
-
-                    _level.GetRopes().Remove(rope);
-                    rope.Destroy();
-                    i--;
-                    if (rope.PathBlockName != "") {
-                        _level.GetLines().First(s => s.LineName == rope.PathBlockName).Destroy();
-                        _level.GetLines().Remove(_level.GetLines().First(s => s.LineName == rope.PathBlockName));
-                    }
+                    
                 }
 
                 foreach(Stone stone in _level.GetStones())
@@ -776,7 +778,9 @@ public class PhysicsEngine {
                 ball.Position.x > gravchangers.x &&
                 ball.Position.y > gravchangers.y &&
                 ball.Position.y < gravchangers.y + gravchangers.height) {
+                    //Console.WriteLine("test");
                 ball.Velocity.Add(gravchangers.changedGravity);
+                Console.WriteLine(gravchangers.changedGravity);
                 CheckAllLines(ball);
                 //_sounds.PlayWind();
             }

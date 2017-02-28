@@ -27,17 +27,17 @@ public class GravityChanger : Canvas
         graphics.Clear(Color.Yellow);
         alpha = 0.2f;
 
-        if (pDirection == 3) // up
+        if (pDirection == 3) // down
         {
-            changedGravity = new Vec2(0, 0.5f);
+            changedGravity = new Vec2(0, 1.5f);
         }
-        if (pDirection == 1) // down
+        if (pDirection == 1) // up
         {
-            changedGravity = new Vec2(0, -1.5f); //to counteract the actual gravity
+            changedGravity = new Vec2(0, -2.5f); //to counteract the actual gravity
         }
         if (pDirection == 4) // left
         {
-            changedGravity = new Vec2(-0.5f, 0);
+            changedGravity = new Vec2(-1.5f, 0);
         }
         if (pDirection == 2) // right
         {

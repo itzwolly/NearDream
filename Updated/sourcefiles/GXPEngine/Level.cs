@@ -71,7 +71,7 @@ public class Level : GameObject {
 		CreateTiledObjects();
 		_engine = new PhysicsEngine(this);
 		CreateReticle();
-		//RenderLines();
+		RenderLines();
 		
 		// Assign layers to variables for ease of access.
 		_foreGround = GetLayerByName("Foreground");
@@ -239,7 +239,7 @@ public class Level : GameObject {
 	}
 
 	private void CreateBall() {
-		_ball = new Ball(20, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
+		_ball = new Ball(28, new Vec2(game.width / 2, game.height / 2), null, Color.Coral);
 		AddChildAt(_ball, 100);
 		_ball.Velocity = new Vec2();
 		_ballToLine = new LineSegment(null, null);
@@ -268,7 +268,7 @@ public class Level : GameObject {
 						//Console.WriteLine(Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
 						GravityChanger gravityChanger = new GravityChanger(obj.X, obj.Y, obj.Width, obj.Height, Convert.ToInt32(obj.Properties.GetPropertyByName("Direction").Value));
 						gravityChanger.Name = obj.Name;
-						//AddChild(gravityChanger);
+						AddChild(gravityChanger);
 						_gravityChangers.Add(gravityChanger);
 					}
 				} catch {
@@ -307,23 +307,22 @@ public class Level : GameObject {
 				catch { }
 
 			}
-            if (objGroup.Name == "Rope") {
-                foreach (TiledObject obj in objGroup.Object) {
-                    if (_currentLevel == 3) {
-                        Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
-                        rope.x = obj.X;
-                        rope.y = obj.Y + 4;
-                        rope.rotation = 330;
-                        rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
-                        rope.SpriteName = obj.Name;
-                        _ropes.Add(rope);
-                        _pressurePlateObjects.Add(rope);
-                        AddChildAt(rope, 20);
-                        rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
-                        // add ropes here :/
-                    }
-                }
-            }
+			if (objGroup.Name == "Rope") {
+				foreach (TiledObject obj in objGroup.Object) {
+					if (_currentLevel == 3 || _currentLevel == 5) {
+						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
+						rope.x = obj.X;
+						rope.y = obj.Y + 4;
+						rope.rotation = 330;
+						rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
+						rope.SpriteName = obj.Name;
+						_ropes.Add(rope);
+						_pressurePlateObjects.Add(rope);
+						AddChildAt(rope, 20);
+						rope.PathBlockName = obj.Properties.GetPropertyByName("path_blocker_name").Value;
+					} 
+				}
+			}
 			if (objGroup.Name == "Pots") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
@@ -366,7 +365,7 @@ public class Level : GameObject {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
 						//25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
-						Stone stone = new Stone(25, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, false);
+						Stone stone = new Stone(28, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, false);
 						AddChildAt(stone, 5);
 						_stones.Add(stone);
 						stone.Velocity = Vec2.zero;
@@ -405,20 +404,20 @@ public class Level : GameObject {
 				}
 				
 			}
-            if (objGroup.Name == "Finish") {
-                try {
-                    foreach (TiledObject obj in objGroup.Object) {
-                        Finish finish = new Finish(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\trophy_sprite.png", 8, 8);
-                        finish.x = obj.X + obj.Width / 4;
-                        finish.y = obj.Y + obj.Height / 4;
-                        AddChild(finish);
-                        _trophies.Add(finish);
-                        finish.SpriteName = obj.Name;
-                    }
-                } catch {
+			if (objGroup.Name == "Finish") {
+				try {
+					foreach (TiledObject obj in objGroup.Object) {
+						Finish finish = new Finish(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\finish_sprite.png", 8, 8);
+						finish.x = obj.X + obj.Width / 4;
+						finish.y = obj.Y + obj.Height / 4;
+						AddChild(finish);
+						_trophies.Add(finish);
+						finish.SpriteName = obj.Name;
+					}
+				} catch {
 
-                }
-            }
+				}
+			}
 			if (objGroup.Name == "Points") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
@@ -569,7 +568,7 @@ public class Level : GameObject {
 		return _stickyBalls;
 	}
 
-    public MyGame GetMyGame() {
-        return _myGame;
-    }
+	public MyGame GetMyGame() {
+		return _myGame;
+	}
 }
