@@ -310,7 +310,7 @@ public class Level : GameObject {
 			}
 			if (objGroup.Name == "Rope") {
 				foreach (TiledObject obj in objGroup.Object) {
-					if (_currentLevel == 3 || _currentLevel == 5 || _currentLevel == 6 || _currentLevel == 7) {
+					if (_currentLevel == 3 || _currentLevel == 5 || _currentLevel == 6 || _currentLevel == 7 || _currentLevel == 8) {
 						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
 						rope.x = obj.X;
 						rope.y = obj.Y + 4;
@@ -420,17 +420,18 @@ public class Level : GameObject {
 				}
 			}
 			if (objGroup.Name == "Points") {
-				try {
-					foreach (TiledObject obj in objGroup.Object) {
+                try
+                {
+                    foreach (TiledObject obj in objGroup.Object) {
 						foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
 							_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xff252a2d, 4);
-							_line.LineName = obj.Name;
-							_lines.Add(_line);
+                            _line.LineName = obj.Name;
+                            _lines.Add(_line);
 						}
 					}
-				}
-				catch { }
-			}
+                }
+                catch { }
+            }
 			if (objGroup.Name == "Stickyball") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
