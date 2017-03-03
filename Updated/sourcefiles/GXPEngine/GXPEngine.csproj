@@ -37,16 +37,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
-    <Compile Include="BallAnim.cs" />
+    <Compile Include="View\BallAnim.cs" />
     <Compile Include="Bridge.cs" />
-    <Compile Include="BridgeCollider.cs" />
-    <Compile Include="BridgePlank.cs" />
+    <Compile Include="View\Boom.cs" />
+    <Compile Include="View\BridgeCollider.cs" />
+    <Compile Include="View\BridgePlank.cs" />
     <Compile Include="CollidedOption.cs" />
     <Compile Include="Components\Arrow.cs" />
     <Compile Include="Components\LineSegment.cs" />
     <Compile Include="Components\NLineSegment.cs" />
     <Compile Include="ControlsScreen.cs" />
-    <Compile Include="Fan.cs" />
+    <Compile Include="View\Fan.cs" />
     <Compile Include="Finish.cs" />
     <Compile Include="GameTile.cs" />
     <Compile Include="GravityChanger.cs" />
@@ -87,14 +88,14 @@
     <Compile Include="MyGame.cs" />
     <Compile Include="CustomRenderer.cs" />
     <Compile Include="PhysicsEngine.cs" />
-    <Compile Include="Plank.cs" />
+    <Compile Include="View\Plank.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerAnim.cs" />
+    <Compile Include="View\PlayerAnim.cs" />
     <Compile Include="Pot.cs" />
     <Compile Include="PressurePlate.cs" />
     <Compile Include="Reticle.cs" />
     <Compile Include="Rope.cs" />
-    <Compile Include="StickyBall.cs" />
+    <Compile Include="View\StickyBall.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Stone.cs" />
     <Compile Include="TMX_Objects\Data.cs" />
@@ -110,8 +111,8 @@
     <Compile Include="TMX_Objects\Tile.cs" />
     <Compile Include="TMX_Objects\TiledObject.cs" />
     <Compile Include="TMX_Objects\TileSet.cs" />
-    <Compile Include="Tree.cs" />
-    <Compile Include="Trophy.cs" />
+    <Compile Include="View\Tree.cs" />
+    <Compile Include="View\Trophy.cs" />
     <Compile Include="Utils\Timer.cs" />
     <Compile Include="Utils\TMXParser.cs" />
     <Compile Include="Utils\Vec2.cs" />

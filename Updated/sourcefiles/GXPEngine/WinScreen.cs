@@ -10,9 +10,12 @@ public class WinScreen : Canvas {
     private Level _level;
     private Font _font;
     private AnimationButton _btnNextLevel;
+    private Sounds _sounds;
 
 
     public WinScreen(MyGame pMyGame, Level pLevel) : base (Game.main.width, Game.main.height) {
+        _sounds = new Sounds();
+        _sounds.PlayMedieval();
         _myGame = pMyGame;
         _level = pLevel;
         _victoryScreen = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\win_screen.png");
@@ -54,6 +57,7 @@ public class WinScreen : Canvas {
 
         if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(Key.ENTER)) {
             if (_btnNextLevel.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                _sounds.StopMedieval();
                 _btnNextLevel.currentFrame = 0;
                 Destroy();
                 if (_level.CurrentLevel == 1) {
@@ -78,6 +82,21 @@ public class WinScreen : Canvas {
                     _myGame.LevelCounter = 5;
                     _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
                 }
+                else if (_level.CurrentLevel == 6)
+                {
+                    _myGame.LevelCounter = 6;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 7)
+                {
+                    _myGame.LevelCounter = 7;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 8)
+                {
+                    _myGame.LevelCounter = 8;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
             } else {
                 _btnNextLevel.currentFrame = 0;
             }
@@ -99,6 +118,15 @@ public class WinScreen : Canvas {
                 _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
             } else if (_level.CurrentLevel == 5) {
                 _myGame.LevelCounter = 5;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 6) {
+                _myGame.LevelCounter = 6;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 7) {
+                _myGame.LevelCounter = 7;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 8) {
+                _myGame.LevelCounter = 8;
                 _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
             }
         }

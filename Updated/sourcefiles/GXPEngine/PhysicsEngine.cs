@@ -868,6 +868,10 @@ public class PhysicsEngine {
                         i--;
                     }
                 }
+                Boom boom = new Boom();
+                _level.AddChild(boom);
+                boom.x = _level.GetBall().Position.x;
+                boom.y = _level.GetBall().Position.y;
                 _sounds.PlayExplosion();
                 ResetBall();
                 _explosionWait = 0;
