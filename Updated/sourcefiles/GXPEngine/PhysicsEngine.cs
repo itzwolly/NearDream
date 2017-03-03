@@ -36,9 +36,11 @@ public class PhysicsEngine {
         int iterations = 0;
         int maxIterations = 20;
 
-        do {
+        do
+        {
             noOverlap = true;
-            for (int i = 0; i < _level.GetLines().Count; i++) {
+            for (int i = 0; i < _level.GetLines().Count; i++)
+            {
                 noOverlap = noOverlap & !CorrectOverlap(ball, _level.GetLines()[i]); // ActualBounce(ball, _lines[i], ball.IsExploding);
             }
             iterations++;
@@ -54,6 +56,7 @@ public class PhysicsEngine {
         float distanceToLine = differenceVec.Dot(lineNormal);
         float distanceOnLine = differenceVec.Dot(normalizedLineVec);
         if (distanceOnLine <= line.lineLenght && distanceOnLine >= 0 && distanceToLine >= -ball.radius && distanceToLine <= ball.radius) {
+            Console.WriteLine(distanceToLine);
             if (distanceToLine > 0)
                 ball.Position.Add(lineNormal.Clone().Scale(ball.radius - distanceToLine + EPSILON));
             else
@@ -560,17 +563,17 @@ public class PhysicsEngine {
             Vec2[] caps = new Vec2[] { line.start, line.end };
             foreach (Vec2 cap in caps) {
                 _distanceToStart = cap.DistanceTo(ball.NextPosition);
-                if (_distanceToStart <= ball.radius) {
+                if (_distanceToStart < ball.radius) {
                     if (stick) {
                         ball.Velocity = Vec2.zero;
                         ball.StartedTimer = true;
                         ball.OnPlayer = true;
                     } else {
                         float tempDistance = cap.DistanceTo(ball.NextPosition);
-                        ;
+                        
                         Vec2 collisionNormal = ball.NextPosition.Clone().Subtract(cap).Normalize();
                         //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
-                        ball.Position = ball.NextPosition.Clone().Add(collisionNormal.Clone().Scale(ball.radius - tempDistance)); //.Subtract(collisionNormal.Scale(_ball.radius - tempDistance / 2));
+                        ball.Position = ball.NextPosition.Clone().Add(collisionNormal.Clone().Scale(ball.radius - tempDistance + 1)); //.Subtract(collisionNormal.Scale(_ball.radius - tempDistance / 2));
                         //_sounds.PlayBallBounce();
                         //ball.position.Subtract(ball.velocity.Clone().Normalize().Scale(ball.radius));
                         ball.UpdateNextPosition();
@@ -578,7 +581,7 @@ public class PhysicsEngine {
                         //Console.WriteLine(ball.velocity.Length()+"||"+collisionNormal.Length());
                         //ball.velocity = Vec2.zero;
                         //ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
-                        //ball.Step();
+                        ball.Step();
                     }
                     break;
                 }

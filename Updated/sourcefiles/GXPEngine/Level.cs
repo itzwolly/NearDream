@@ -113,6 +113,7 @@ public class Level : GameObject {
 			_engine.CheckRopeCollision();
 			_engine.HandleDestructablePlanks();
 			_engine.CheckStickyBall();
+            //Console.WriteLine(_ball.Velocity.Length());
 
 			if (_playerDirection == Player.Direction.LEFT) {
 				// _player.Mirror(true, false);
@@ -309,7 +310,7 @@ public class Level : GameObject {
 			}
 			if (objGroup.Name == "Rope") {
 				foreach (TiledObject obj in objGroup.Object) {
-					if (_currentLevel == 3 || _currentLevel == 5) {
+					if (_currentLevel == 3 || _currentLevel == 5 || _currentLevel == 6 || _currentLevel == 7) {
 						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
 						rope.x = obj.X;
 						rope.y = obj.Y + 4;

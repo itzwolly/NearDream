@@ -75,6 +75,21 @@ public class WinScreen : Canvas {
                     _myGame.LevelCounter = 5;
                     _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
                 }
+                else if (_level.CurrentLevel == 6)
+                {
+                    _myGame.LevelCounter = 6;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 7)
+                {
+                    _myGame.LevelCounter = 7;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
+                else if (_level.CurrentLevel == 8)
+                {
+                    _myGame.LevelCounter = 8;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                }
             }
         }
     }
