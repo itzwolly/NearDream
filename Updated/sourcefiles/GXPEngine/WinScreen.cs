@@ -10,9 +10,12 @@ public class WinScreen : Canvas {
     private Level _level;
     private Font _font, _nextLevelFont;
     private AnimationButton _btnNextLevel;
+    private Sounds _sounds;
 
 
     public WinScreen(MyGame pMyGame, Level pLevel) : base (Game.main.width, Game.main.height) {
+        _sounds = new Sounds();
+        _sounds.PlayMedieval();
         _myGame = pMyGame;
         _level = pLevel;
         _victoryScreen = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\win_screen.png");
@@ -49,7 +52,9 @@ public class WinScreen : Canvas {
              }
         }
         if (Input.GetMouseButtonUp(0)) {
-            if (_btnNextLevel.HitTestPoint(Input.mouseX, Input.mouseY)) {
+            if (_btnNextLevel.HitTestPoint(Input.mouseX, Input.mouseY))
+            {
+                _sounds.StopMedieval();
                 _btnNextLevel.currentFrame = 0;
                 _btnNextLevel.y -= 7;
                 Destroy();
