@@ -7,7 +7,7 @@ using System.Linq;
 public class PhysicsEngine {
     public const int GRAVITY = 15;
     private const float EPSILON = 0.1f;
-
+    private const int AIRTIME = 150;
     private Sounds _sounds;
     private Vec2 _gravity = new Vec2(0, 1);
     private Vec2 _ballToLineStart, _intersection;
@@ -36,9 +36,11 @@ public class PhysicsEngine {
         int iterations = 0;
         int maxIterations = 20;
 
-        do {
+        do
+        {
             noOverlap = true;
-            for (int i = 0; i < _level.GetLines().Count; i++) {
+            for (int i = 0; i < _level.GetLines().Count; i++)
+            {
                 noOverlap = noOverlap & !CorrectOverlap(ball, _level.GetLines()[i]); // ActualBounce(ball, _lines[i], ball.IsExploding);
             }
             iterations++;
@@ -54,6 +56,7 @@ public class PhysicsEngine {
         float distanceToLine = differenceVec.Dot(lineNormal);
         float distanceOnLine = differenceVec.Dot(normalizedLineVec);
         if (distanceOnLine <= line.lineLenght && distanceOnLine >= 0 && distanceToLine >= -ball.radius && distanceToLine <= ball.radius) {
+            Console.WriteLine(distanceToLine);
             if (distanceToLine > 0)
                 ball.Position.Add(lineNormal.Clone().Scale(ball.radius - distanceToLine + EPSILON));
             else
@@ -323,6 +326,12 @@ public class PhysicsEngine {
     }
 
     public void HandleBall() {
+        if (_level.GetBall().InAir > AIRTIME)
+        {
+            _level.GetBall().OnPlayer = true;
+            _level.GetBall().InAir = 0;
+        }
+
         if (Input.GetKeyDown(Key.E)) {
             //_sounds.PlaySwitch();
             if (_level.GetPlayer().StickyAmount > 0) {
@@ -402,36 +411,47 @@ public class PhysicsEngine {
             if (_level.GetStones()[i].Position.DistanceTo(_level.GetBall().Position) < _level.GetStones()[i].radius + _level.GetBall().radius && !_level.GetStones()[i].hitPlayer) {
                 //_sounds.PlayBallRockCollision();
                 float _tempdistance = _level.GetStones()[i].Position.DistanceTo(_level.GetBall().Position);
-                ;
+                
                 Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetBall().Position).Normalize();
                 //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
                 _level.GetBall().Position.Subtract(_stoneToStone.Clone().Scale(_level.GetBall().radius - _tempdistance / 2));
-                _level.GetStones()[i].Velocity =_level.GetBall().Velocity.Clone();//new Vec2(1, 0).Scale(_ball.velocity.Length());
-                //_level.GetStones()[i].UpdateNextPosition();
-                CheckAllLines(_level.GetStones()[i]);
-                _level.GetBall().Velocity = Vec2.zero;
-                //_level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
-                //_level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
-                //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
-                //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
-                //_level.GetBall().UpdateNextPosition();
-                CheckAllLines(_level.GetBall());
-
-
-                _level.GetBall().Step();
-                _level.GetStones()[i].Step();
-                //CollisionFix2Balls(stone, _ball);.Scale
-                _level.GetStones()[i].active = true;
-                //stone.hitPlayer = true;
-            }
-            if (_level.GetStones()[i].active) {
-                CheckInGravityChangers(_level.GetStones()[i]);
-                _level.GetStones()[i].Velocity.Add(_gravity);
-                for (int j = 0; j < Ball.REPETITIONS; j++) {
-                    CheckPressurePlatesCollision(_level.GetStones()[i]);
+                if (_level.GetStones()[i].Velocity.Length() <= _level.GetBall().Velocity.Length())
+                {
+                    _level.GetStones()[i].Velocity = _level.GetBall().Velocity.Clone();
                     CheckAllLines(_level.GetStones()[i]);
+                    _level.GetBall().Velocity = Vec2.zero;
+                    //_level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
+                    //_level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
+                    //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
+                    //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
+                    //_level.GetBall().UpdateNextPosition();
+                    CheckAllLines(_level.GetBall());
+
+
+                    _level.GetBall().Step();
                     _level.GetStones()[i].Step();
-                    //_sounds.PlayRockBounce();
+                    //CollisionFix2Balls(stone, _ball);.Scale
+                    _level.GetStones()[i].active = true;
+                    //stone.hitPlayer = true;
+                }
+                else
+                {
+                    _level.GetBall().Velocity = _level.GetStones()[i].Velocity.Clone();
+                    CheckAllLines(_level.GetBall());
+                    _level.GetStones()[i].Velocity = Vec2.zero;
+                    //_level.GetBall().Velocity.ReflectOnPoint(_stoneToStone,Ball.ELASTICITY);
+                    //_level.GetBall().Velocity.Scale(0.5f);//= Vec2.zero;//o=c
+                    //_ball.position.Clone().Subtract(_stones[i].position).Normalize()
+                    //_ball.velocity.ReflectOnPoint(_ball.position.Clone().Subtract(_stones[i].position).Normalize(), 1);
+                    //_level.GetBall().UpdateNextPosition();
+                    CheckAllLines(_level.GetStones()[i]);
+
+
+                    _level.GetBall().Step();
+                    _level.GetStones()[i].Step();
+                    //CollisionFix2Balls(stone, _ball);.Scale
+                    _level.GetStones()[i].active = true;
+                    //stone.hitPlayer = true;
                 }
             }
             for (int j = 0; j < _level.GetStones().Count; j++) {
@@ -439,18 +459,26 @@ public class PhysicsEngine {
                 if (j != i && _tempDistance < _level.GetStones()[i].radius + _level.GetStones()[j].radius) {
                     //stone.position.x - ();
                     //stone.position.y - ();
-                    Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetStones()[j].Position).Normalize();
-                    _level.GetStones()[i].Position.Add(_stoneToStone.Clone().Scale(_level.GetStones()[i].radius - _tempDistance / 2));
-                    //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
-                    _level.GetStones()[j].active = true;
-                    //if (!stone2.started)
+                    if (_level.GetStones()[i].Velocity.Length() >= _level.GetStones()[j].Velocity.Length())
                     {
-                        //_sounds.PlayRockBounce();
-                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone();//new Vec2(1, 0).Scale(stone.velocity.Length());
-                        // stone2.started = true;
+                        Vec2 _stoneToStone = _level.GetStones()[i].Position.Clone().Subtract(_level.GetStones()[j].Position).Normalize();
+                        _level.GetStones()[i].Position.Add(_stoneToStone.Clone().Scale(_level.GetStones()[i].radius - _tempDistance / 2));
+                        //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
+                        _level.GetStones()[j].active = true;
+                        _level.GetStones()[j].Velocity = _level.GetStones()[i].Velocity.Clone();
+                        _level.GetStones()[i].hitPlayer = false;
+                        _level.GetStones()[i].Velocity = Vec2.zero;
                     }
-                    _level.GetStones()[i].hitPlayer = false;
-                    _level.GetStones()[i].Velocity = Vec2.zero;
+                    else
+                    {
+                        Vec2 _stoneToStone = _level.GetStones()[j].Position.Clone().Subtract(_level.GetStones()[i].Position).Normalize();
+                        _level.GetStones()[j].Position.Add(_stoneToStone.Clone().Scale(_level.GetStones()[j].radius - _tempDistance / 2));
+                        //_stones[j].position.Subtract(_stoneToStone.Scale(0.5f));
+                        _level.GetStones()[i].active = true;
+                        _level.GetStones()[i].Velocity = _level.GetStones()[j].Velocity.Clone();
+                        _level.GetStones()[j].hitPlayer = false;
+                        _level.GetStones()[j].Velocity = Vec2.zero;
+                    }
 
                     //_level.GetStones()[i].Velocity.ReflectOnPoint(_stoneToStone, Ball.ELASTICITY);
                     //_level.GetStones()[i].Velocity.Scale(0.5f);
@@ -460,6 +488,18 @@ public class PhysicsEngine {
                     CheckAllLines(_level.GetStones()[j]);
                     _level.GetStones()[i].Step();
                     _level.GetStones()[j].Step();
+                }
+            }
+            if (_level.GetStones()[i].active)
+            {
+                CheckInGravityChangers(_level.GetStones()[i]);
+                _level.GetStones()[i].Velocity.Add(_gravity);
+                for (int j = 0; j < Ball.REPETITIONS; j++)
+                {
+                    CheckPressurePlatesCollision(_level.GetStones()[i]);
+                    CheckAllLines(_level.GetStones()[i]);
+                    _level.GetStones()[i].Step();
+                    //_sounds.PlayRockBounce();
                 }
             }
         }
@@ -560,14 +600,14 @@ public class PhysicsEngine {
             Vec2[] caps = new Vec2[] { line.start, line.end };
             foreach (Vec2 cap in caps) {
                 _distanceToStart = cap.DistanceTo(ball.NextPosition);
-                if (_distanceToStart <= ball.radius) {
+                if (_distanceToStart < ball.radius-1) {
                     if (stick) {
                         ball.Velocity = Vec2.zero;
                         ball.StartedTimer = true;
                         ball.OnPlayer = true;
                     } else {
                         float tempDistance = cap.DistanceTo(ball.NextPosition);
-                        ;
+                        
                         Vec2 collisionNormal = ball.NextPosition.Clone().Subtract(cap).Normalize();
                         //_stones[i].position.Add(_stoneToStone.Scale(0.5f));
                         ball.Position = ball.NextPosition.Clone().Add(collisionNormal.Clone().Scale(ball.radius - tempDistance)); //.Subtract(collisionNormal.Scale(_ball.radius - tempDistance / 2));
@@ -578,7 +618,7 @@ public class PhysicsEngine {
                         //Console.WriteLine(ball.velocity.Length()+"||"+collisionNormal.Length());
                         //ball.velocity = Vec2.zero;
                         //ball.velocity.ReflectOnPoint(ball.position.Clone().Subtract(line.start).Normalize(),ELASTICITY);//line.start, ball.position, ELASTICITY);
-                        //ball.Step();
+                        ball.Step();
                     }
                     break;
                 }
@@ -811,6 +851,7 @@ public class PhysicsEngine {
         _level.GetBall().Velocity = Vec2.zero;
         _level.GetBall().OnPlayer = true;
         _level.GetBall().Step();
+        _level.GetBall().InAir = 0;
     }
 
     public void HandleStickyBall() {

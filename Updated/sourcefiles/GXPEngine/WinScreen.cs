@@ -48,7 +48,11 @@ public class WinScreen : Canvas {
                 _btnNextLevel.currentFrame = 1;
              }
         }
-        if (Input.GetMouseButtonUp(0)) {
+        if (Input.GetKeyDown(Key.ENTER)) {
+            _btnNextLevel.currentFrame = 1;
+        }
+
+        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(Key.ENTER)) {
             if (_btnNextLevel.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 _btnNextLevel.currentFrame = 0;
                 Destroy();
@@ -76,6 +80,26 @@ public class WinScreen : Canvas {
                 }
             } else {
                 _btnNextLevel.currentFrame = 0;
+            }
+        }
+        if (Input.GetKeyUp(Key.ENTER)) {
+            _btnNextLevel.currentFrame = 0;
+            Destroy();
+            if (_level.CurrentLevel == 1) {
+                _myGame.LevelCounter = 1;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 2) {
+                _myGame.LevelCounter = 2;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 3) {
+                _myGame.LevelCounter = 3;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 4) {
+                _myGame.LevelCounter = 4;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 5) {
+                _myGame.LevelCounter = 5;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
             }
         }
     }

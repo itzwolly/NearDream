@@ -23,6 +23,7 @@ class Sounds
     private Sound _pickUp;
     private Sound _switch;
     private Sound _wind;
+    private Sound _medieval;
     private Sound _music;
     private Sound _bombPickUp;
     private Sound _trophyPickUp;
@@ -30,6 +31,7 @@ class Sounds
     private Sound _menuMusic;
     private SoundChannel _musicChannel;
     private SoundChannel _menuMusicChannel;
+    private SoundChannel _medievalChannel;
 
     public Sounds()
     {
@@ -37,8 +39,8 @@ class Sounds
         _trophyPickUp = new Sound("assets//sounds//trophy.wav", false, false);
         _potBreak = new Sound("assets//sounds//potsmash.wav", false, false);
         _switch = new Sound("assets//sounds//switch.wav", false, false);
-        _shoot = new Sound("assets//sounds//shooting.wav", false, false);
-        _charge = new Sound("assets//sounds//charging.wav", false, false);
+        _shoot = new Sound("assets//sounds//shoot.wav", false, false);
+        _charge = new Sound("assets//sounds//charge.wav", false, false);
         _jump = new Sound("assets//sounds//jump.wav", false, false);
         _ballBounce = new Sound("assets//sounds//ballBounce", false, false);
         _rockBounce = new Sound("assets//sounds//rockBounce", false, false);
@@ -54,7 +56,19 @@ class Sounds
 
         _music = new Sound("assets//sounds//music.mp3", true, true);
         _menuMusic = new Sound("assets//sounds//menumusic.mp3", true, true);
+        _medieval = new Sound("assets//sounds//medieval.wav", true, true);
     }
+
+    public void PlayMedieval()
+    {
+        _medievalChannel = _medieval.Play();
+    }
+
+    public void StopMedieval()
+    {
+        _medievalChannel.Stop();
+    }
+
     public void PlayTrophy()
     {
         _trophyPickUp.Play();

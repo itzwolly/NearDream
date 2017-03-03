@@ -44,6 +44,9 @@ public class MyGame : Game //MyGame is a Game
         LEVEL3,
         LEVEL4,
         LEVEL5,
+        LEVEL6,
+        LEVEL7,
+        LEVEL8,
         WINSCREEN
 	}
 
@@ -96,6 +99,18 @@ public class MyGame : Game //MyGame is a Game
                 _level = new Level(this, 5);
                 //AddChild(_level);
                 break;
+            case GameState.LEVEL6:
+                _level = new Level(this, 6);
+                //AddChild(_level);
+                break;
+            case GameState.LEVEL7:
+                _level = new Level(this, 7);
+                //AddChild(_level);
+                break;
+            case GameState.LEVEL8:
+                _level = new Level(this, 8);
+                //AddChild(_level);
+                break;
             default:
 				break;
 		}
@@ -128,6 +143,21 @@ public class MyGame : Game //MyGame is a Game
     public void LoadLevelFive()
     {
         SetState(GameState.LEVEL5);
+        StartLevel();
+    }
+    public void LoadLevelSix()
+    {
+        SetState(GameState.LEVEL6);
+        StartLevel();
+    }
+    public void LoadLevelSeven()
+    {
+        SetState(GameState.LEVEL7);
+        StartLevel();
+    }
+    public void LoadLevelEight()
+    {
+        SetState(GameState.LEVEL8);
         StartLevel();
     }
 
@@ -164,7 +194,10 @@ public class MyGame : Game //MyGame is a Game
 			case GameState.LEVEL2:
             case GameState.LEVEL4:
             case GameState.LEVEL5:
-			case GameState.LEVEL3:
+            case GameState.LEVEL6:
+            case GameState.LEVEL7:
+            case GameState.LEVEL8:
+            case GameState.LEVEL3:
 				if (_level != null) {
 					_level.HasLoaded = false;
 					_level.Destroy();
