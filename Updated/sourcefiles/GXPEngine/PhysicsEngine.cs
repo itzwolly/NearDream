@@ -7,7 +7,7 @@ using System.Linq;
 public class PhysicsEngine {
     public const int GRAVITY = 15;
     private const float EPSILON = 0.1f;
-
+    private const int AIRTIME = 150;
     private Sounds _sounds;
     private Vec2 _gravity = new Vec2(0, 1);
     private Vec2 _ballToLineStart, _intersection;
@@ -326,6 +326,12 @@ public class PhysicsEngine {
     }
 
     public void HandleBall() {
+        if (_level.GetBall().InAir > AIRTIME)
+        {
+            _level.GetBall().OnPlayer = true;
+            _level.GetBall().InAir = 0;
+        }
+
         if (Input.GetKeyDown(Key.E)) {
             //_sounds.PlaySwitch();
             if (_level.GetPlayer().StickyAmount > 0) {
@@ -845,6 +851,7 @@ public class PhysicsEngine {
         _level.GetBall().Velocity = Vec2.zero;
         _level.GetBall().OnPlayer = true;
         _level.GetBall().Step();
+        _level.GetBall().InAir = 0;
     }
 
     public void HandleStickyBall() {

@@ -14,6 +14,7 @@ namespace GXPEngine
 		/* Boom ball */
 		public const float BLASTSIZE = 500;
 		public const int WAITFORBOOM = 180;
+        private int _inAir;
 		/* */
 
 		public readonly int radius;
@@ -49,6 +50,10 @@ namespace GXPEngine
 			get { return _nextPositionBorder; }
 			set { _nextPositionBorder = value; }
 		}
+        public int InAir{
+            get { return _inAir; }
+            set { _inAir = value; }
+        }
 		public bool IsExploding {
 			get { return _isExploding; }
 			set { _isExploding = value; }
@@ -106,6 +111,8 @@ namespace GXPEngine
 			//    velocity.y = 0;
 			_position.Add(_velocity);
 			UpdateNextPosition();
+            if (!_OnPlayer)
+                _inAir++;
 		}
 
 		public void UpdateNextPosition()
