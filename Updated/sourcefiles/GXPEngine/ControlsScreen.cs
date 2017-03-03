@@ -28,29 +28,31 @@ public class ControlsScreen : Sprite {
         _canvas.graphics.Clear(Color.Black);
         _canvas.alpha = 0.6f;
 
-        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI)+"\\close_buttons.png", 2, 1); //change to back button
+        btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\close_buttons.png", 2, 1); //change to back button
         AddChild(btnBack);
-        btnBack.scale = 0.5f;
+        btnBack.scale = 0.65f;
         btnBack.SetOrigin(width / 2, height / 2);
         btnBack.x = width * 2 - width / 5;
-        btnBack.y =  - height + height / 8;
+        btnBack.y = (-height + height / 8) - 13;
+
+        //Canvas canvas = new Canvas()
     }
 
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnBack.currentFrame = 1;
-                btnBack.y += 7;
             }
         }
         if (Input.GetMouseButtonUp(0)) {
             if (btnBack.HitTestPoint(Input.mouseX, Input.mouseY)) {
                 btnBack.currentFrame = 0;
-                btnBack.y -= 7;
                 //_sounds.StopMenuMusic();
                 Destroy();
                 _canvas.Destroy();
                 _mainMenu.ControlsShown = false;
+            } else {
+                btnBack.currentFrame = 0;
             }
         }
     }
