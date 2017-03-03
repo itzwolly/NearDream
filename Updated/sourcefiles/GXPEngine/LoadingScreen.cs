@@ -31,7 +31,7 @@ public class LoadingScreen : Canvas
         graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 60, game.height / 2 - 50);
 
         if (_myGame.LevelCounter == 0) {
-            new Timer(1000, _myGame.LoadLevelOne);
+            new Timer(1000, _myGame.LoadLevelSeven);
         } else if (_myGame.LevelCounter == 1) {
             new Timer(1000, _myGame.LoadLevelTwo);
         } else if (_myGame.LevelCounter == 2) {
