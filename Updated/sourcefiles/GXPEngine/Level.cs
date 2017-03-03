@@ -197,8 +197,8 @@ public class Level : GameObject {
 				}
 			}
 		}
-		_skyLines.MoveLayer(Layer.Direction.LEFT, 0.1f);
-		_skyLinesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.1f);
+		_skyLines.MoveLayer(Layer.Direction.LEFT, 0.05f);
+		_skyLinesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.05f);
 		_cloudLayer.MoveLayer(Layer.Direction.LEFT, 0.5f);
 		_cloudLayerPartTwo.MoveLayer(Layer.Direction.LEFT, 0.5f);
 	}
