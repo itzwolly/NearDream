@@ -423,7 +423,7 @@ public class Level : GameObject {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
 						foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
-							_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xffffff00, 4);
+							_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xff000f00, 4);
 							_line.LineName = obj.Name;
 							_lines.Add(_line);
 						}
