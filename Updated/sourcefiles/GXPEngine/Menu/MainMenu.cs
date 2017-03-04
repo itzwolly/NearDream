@@ -50,13 +50,10 @@ public class MainMenu : GameObject {
             if (!_controlsShown) {
                 if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnPlay.currentFrame = 1;
-                    btnPlay.y += 7;
                 } else if (btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnHowTo.currentFrame = 1;
-                    btnHowTo.y += 7;
                 } else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnQuit.currentFrame = 1;
-                    btnQuit.y += 7;
                 }
             }
         }
@@ -64,23 +61,30 @@ public class MainMenu : GameObject {
             if (!_controlsShown) {
                 if (btnPlay.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnPlay.currentFrame = 0;
-                    btnPlay.y -= 7;
                     _sounds.StopMenuMusic();
                     Destroy();
                     _myGame.LevelCounter = 0;
                     _myGame.StartGame();
-                } else if(btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                } else {
+                    btnPlay.currentFrame = 0;
+                }
+                    
+                if(btnHowTo.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnHowTo.currentFrame = 0;
-                    btnHowTo.y -= 7;
                     _controlsScreen = new ControlsScreen(this);
                     game.AddChild(_controlsScreen);
                     _controlsScreen.x = game.width - _controlsScreen.width / 2;
                     _controlsScreen.y = game.height / 2 + _controlsScreen.height * 0.1f;
                     _controlsShown = true;
-                }else if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
+                } else {
+                    btnHowTo.currentFrame = 0;
+                }
+                
+                if (btnQuit.HitTestPoint(Input.mouseX, Input.mouseY)) {
                     btnQuit.currentFrame = 0;
-                    btnQuit.y -= 7;
                     Environment.Exit(0);
+                } else {
+                    btnQuit.currentFrame = 0;
                 }
             }
         }

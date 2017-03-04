@@ -113,7 +113,6 @@ public class Level : GameObject {
 			_engine.CheckRopeCollision();
 			_engine.HandleDestructablePlanks();
 			_engine.CheckStickyBall();
-            //Console.WriteLine(_ball.Velocity.Length());
 
 			if (_playerDirection == Player.Direction.LEFT) {
 				// _player.Mirror(true, false);
@@ -197,8 +196,8 @@ public class Level : GameObject {
 				}
 			}
 		}
-		_skyLines.MoveLayer(Layer.Direction.LEFT, 0.1f);
-		_skyLinesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.1f);
+		_skyLines.MoveLayer(Layer.Direction.LEFT, 0.05f);
+		_skyLinesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.05f);
 		_cloudLayer.MoveLayer(Layer.Direction.LEFT, 0.5f);
 		_cloudLayerPartTwo.MoveLayer(Layer.Direction.LEFT, 0.5f);
 	}
@@ -367,7 +366,7 @@ public class Level : GameObject {
 					foreach (TiledObject obj in objGroup.Object) {
 						//25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
 						Stone stone = new Stone(28, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, Convert.ToBoolean(obj.Properties.GetPropertyByName("Active").Value));
-                        AddChildAt(stone, 5);
+						AddChildAt(stone, 5);
 						_stones.Add(stone);
 						stone.Velocity = Vec2.zero;
 					}
@@ -420,18 +419,18 @@ public class Level : GameObject {
 				}
 			}
 			if (objGroup.Name == "Points") {
-                try
-                {
-                    foreach (TiledObject obj in objGroup.Object) {
+				try
+				{
+					foreach (TiledObject obj in objGroup.Object) {
 						foreach (Vec2 points in obj.Polyline.GetPointsAsVectorList()) {
 							_line = new NLineSegment(new Vec2(obj.X, obj.Y), new Vec2(obj.X + points.x, obj.Y + points.y), 0xff252a2d, 4);
-                            _line.LineName = obj.Name;
-                            _lines.Add(_line);
+							_line.LineName = obj.Name;
+							_lines.Add(_line);
 						}
 					}
-                }
-                catch { }
-            }
+				}
+				catch { }
+			}
 			if (objGroup.Name == "Stickyball") {
 				try {
 					foreach (TiledObject obj in objGroup.Object) {
