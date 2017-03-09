@@ -130,8 +130,10 @@ public class Level : GameObject {
 				_finishedLevel = true;
 				WinScreen ws = new WinScreen(_myGame, this);
 				AddChild(ws);
+                _sounds.StopMusic();
 			}
 		}
+        _sounds.StopMusic();
 	}
 
 	public void CreateHUD() {

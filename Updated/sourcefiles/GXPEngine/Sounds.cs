@@ -167,5 +167,9 @@ class Sounds
     {
         _musicChannel = _music.Play();
     }
+    public void StopMusic()
+    {
+        _musicChannel.Stop();
+    }
 }
 
