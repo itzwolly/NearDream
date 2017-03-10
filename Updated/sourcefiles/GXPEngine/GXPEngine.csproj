@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="Menu\PauseMenu.cs" />
+    <Compile Include="Pausable.cs" />
     <Compile Include="View\BallAnim.cs" />
     <Compile Include="Bridge.cs" />
     <Compile Include="View\Boom.cs" />

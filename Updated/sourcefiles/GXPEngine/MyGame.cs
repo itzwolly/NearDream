@@ -14,14 +14,14 @@ public class MyGame : Game //MyGame is a Game
 	private MainMenu _menu;
 	private LoadingScreen _loadingScreen;
 	private static PrivateFontCollection _pfc;
-    private int _levelCounter;
+	private int _levelCounter;
 
-    public int LevelCounter {
-        get { return _levelCounter; }
-        set { _levelCounter = value; }
-    }
+	public int LevelCounter {
+		get { return _levelCounter; }
+		set { _levelCounter = value; }
+	}
 
-    public enum Asset {
+	public enum Asset {
 		NONE,
 		ROOT,
 		SPRITES,
@@ -41,13 +41,13 @@ public class MyGame : Game //MyGame is a Game
 		PAUSEMENU,
 		LEVEL1,
 		LEVEL2,
-        LEVEL3,
-        LEVEL4,
-        LEVEL5,
-        LEVEL6,
-        LEVEL7,
-        LEVEL8,
-        WINSCREEN
+		LEVEL3,
+		LEVEL4,
+		LEVEL5,
+		LEVEL6,
+		LEVEL7,
+		LEVEL8,
+		WINSCREEN
 	}
 
 	//initialize game here
@@ -83,35 +83,35 @@ public class MyGame : Game //MyGame is a Game
 				_level = new Level(this, 1);
 				//AddChild(_level);
 				break;
-            case GameState.LEVEL2:
-                _level = new Level(this, 2);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL3:
-                _level = new Level(this, 3);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL4:
-                _level = new Level(this, 4);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL5:
-                _level = new Level(this, 5);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL6:
-                _level = new Level(this, 6);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL7:
-                _level = new Level(this, 7);
-                //AddChild(_level);
-                break;
-            case GameState.LEVEL8:
-                _level = new Level(this, 8);
-                //AddChild(_level);
-                break;
-            default:
+			case GameState.LEVEL2:
+				_level = new Level(this, 2);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL3:
+				_level = new Level(this, 3);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL4:
+				_level = new Level(this, 4);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL5:
+				_level = new Level(this, 5);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL6:
+				_level = new Level(this, 6);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL7:
+				_level = new Level(this, 7);
+				//AddChild(_level);
+				break;
+			case GameState.LEVEL8:
+				_level = new Level(this, 8);
+				//AddChild(_level);
+				break;
+			default:
 				break;
 		}
 	}
@@ -121,55 +121,55 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	public void LoadLevelOne() {
-        SetState(GameState.LEVEL1);
-        StartLevel();
+		SetState(GameState.LEVEL1);
+		StartLevel();
 	}
 
-    public void LoadLevelTwo() {
-        SetState(GameState.LEVEL2);
-        StartLevel();
-    }
+	public void LoadLevelTwo() {
+		SetState(GameState.LEVEL2);
+		StartLevel();
+	}
 
-    public void LoadLevelThree() {
-        SetState(GameState.LEVEL3);
-        StartLevel();
-    }
+	public void LoadLevelThree() {
+		SetState(GameState.LEVEL3);
+		StartLevel();
+	}
 
-    public void LoadLevelFour()
-    {
-        SetState(GameState.LEVEL4);
-        StartLevel();
-    }
-    public void LoadLevelFive()
-    {
-        SetState(GameState.LEVEL5);
-        StartLevel();
-    }
-    public void LoadLevelSix()
-    {
-        SetState(GameState.LEVEL6);
-        StartLevel();
-    }
-    public void LoadLevelSeven()
-    {
-        SetState(GameState.LEVEL7);
-        StartLevel();
-    }
-    public void LoadLevelEight()
-    {
-        SetState(GameState.LEVEL8);
-        StartLevel();
-    }
+	public void LoadLevelFour()
+	{
+		SetState(GameState.LEVEL4);
+		StartLevel();
+	}
+	public void LoadLevelFive()
+	{
+		SetState(GameState.LEVEL5);
+		StartLevel();
+	}
+	public void LoadLevelSix()
+	{
+		SetState(GameState.LEVEL6);
+		StartLevel();
+	}
+	public void LoadLevelSeven()
+	{
+		SetState(GameState.LEVEL7);
+		StartLevel();
+	}
+	public void LoadLevelEight()
+	{
+		SetState(GameState.LEVEL8);
+		StartLevel();
+	}
 
-    public void LoadMainMenu() {
-        SetState(GameState.MAINMENU);
-    }
+	public void LoadMainMenu() {
+		SetState(GameState.MAINMENU);
+	}
 
-    public void StartLevel() {
+	public void StartLevel() {
 		AddChild(_level);
 		_level.CreateHUD();
 
-        new Timer(1000, LoadData);
+		new Timer(1000, LoadData);
 	}
 
 	private void LoadData() {
@@ -192,16 +192,18 @@ public class MyGame : Game //MyGame is a Game
 				break;
 			case GameState.LEVEL1:
 			case GameState.LEVEL2:
-            case GameState.LEVEL4:
-            case GameState.LEVEL5:
-            case GameState.LEVEL6:
-            case GameState.LEVEL7:
-            case GameState.LEVEL8:
-            case GameState.LEVEL3:
+			case GameState.LEVEL4:
+			case GameState.LEVEL5:
+			case GameState.LEVEL6:
+			case GameState.LEVEL7:
+			case GameState.LEVEL8:
+			case GameState.LEVEL3:
 				if (_level != null) {
 					_level.HasLoaded = false;
+					if (_level.GetHUD() != null) {
+						_level.GetHUD().Destroy();
+					}
 					_level.Destroy();
-					_level.GetHUD().Destroy();
 					_level = null;
 				}
 				break;
@@ -223,6 +225,10 @@ public class MyGame : Game //MyGame is a Game
 		}
 		return "";
 	}
+
+    public Level GetLevel() {
+        return _level;
+    }
 
 	public static FontFamily GetFont() {
 		return _pfc.Families[0];

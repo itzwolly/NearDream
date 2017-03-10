@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-public class PlayerAnim:AnimationSprite
+public class PlayerAnim : Pausable
 {
     /*1 + 50 frames = idle
     2 to 49 frames = Walking

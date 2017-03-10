@@ -17,9 +17,19 @@ public class LoadingScreen : Canvas
     private int _amountEmptyFrames;
     private bool _startAnim;
     private Random _rnd = new Random();
+    private Rectangle _rect;
+    private StringFormat _stringFormat = new StringFormat();
+    private Map _map;
+    private TMXParser _tmxParser = new TMXParser();
 
     public LoadingScreen(MyGame pMygame) : base(Game.main.width, Game.main.height) {
         _myGame = pMygame;
+        _map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + (_myGame.LevelCounter + 1) + ".tmx");
+
+        _stringFormat.Alignment = StringAlignment.Near;
+        _stringFormat.LineAlignment = StringAlignment.Near;
+        _rect = new Rectangle(game.width / 6, game.height / 10, game.width - game.width / 4, game.height / 2);
+
         _font = new Font(MyGame.GetFont(), 44);
 
         AssignLoadingSymbol();
@@ -28,38 +38,48 @@ public class LoadingScreen : Canvas
         _loadingBall.currentFrame = 38;
         AddChild(_loadingBall);
 
-        graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), game.width / 2 - 60, game.height / 2 - 50);
+        graphics.DrawString("Loading...", _font, new SolidBrush(Color.FromArgb(255, 127, 129, 65)), 50, game.height - 100);
 
         if (_myGame.LevelCounter == 0) {
-            new Timer(1000, _myGame.LoadLevelSix);
+            // add text for level one
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelOne);
         } else if (_myGame.LevelCounter == 1) {
-            new Timer(1000, _myGame.LoadLevelTwo);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelTwo);
         } else if (_myGame.LevelCounter == 2) {
-            new Timer(1000, _myGame.LoadLevelThree);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelThree);
         }
         else if (_myGame.LevelCounter == 3)
         {
-            new Timer(1000, _myGame.LoadLevelFour);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelFour);
         }
         else if (_myGame.LevelCounter == 4)
         {
-            new Timer(1000, _myGame.LoadLevelFive);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelFive);
         }
         else if (_myGame.LevelCounter == 5)
         {
-            new Timer(1000, _myGame.LoadLevelSix);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelSix);
         }
         else if (_myGame.LevelCounter == 6)
         {
-            new Timer(1000, _myGame.LoadLevelSeven);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelSeven);
         }
         else if (_myGame.LevelCounter == 7)
         {
-            new Timer(1000, _myGame.LoadLevelEight);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadLevelEight);
         }
         else if (_myGame.LevelCounter == 8)
         {
-            new Timer(1000, _myGame.LoadMainMenu);
+            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
+            new Timer(5000, _myGame.LoadMainMenu);
         }
     }
 
@@ -67,6 +87,10 @@ public class LoadingScreen : Canvas
         if (_startAnim) {
             AnimateLoadingBall();
         }
+    }
+
+    private void SetDidYouKnowText(string pText) {
+        graphics.DrawString(pText, _font, Brushes.White, _rect, _stringFormat);
     }
 
     private void AnimateLoadingBall() {
