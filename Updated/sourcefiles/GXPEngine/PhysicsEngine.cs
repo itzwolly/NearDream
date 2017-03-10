@@ -686,8 +686,12 @@ public class PhysicsEngine {
                         if (!finish.IsDestroyed()) {
                             //_level.GetPlayer().AmountOfTrophies++;
                             _level.FinishedLevel = true;
+                            //_level.x = 0;
                             WinScreen ws = new WinScreen(_level.GetMyGame(), _level);
+                            ws.x -= _level.x;
                             _level.AddChild(ws);
+                           // _sounds.StopMusic();
+
                         }
                         finish.Destroy();
                         _level.GetTrophies().Remove(finish);

@@ -19,7 +19,6 @@ public class WinScreen : Canvas {
         _myGame = pMyGame;
         _level = pLevel;
         _victoryScreen = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\win_screen.png");
-
         _canvas = new Canvas(500, 515);
         _canvas.x = game.width / 2 - _canvas.width / 2 + 10;
         _canvas.y = game.height / 2 - _canvas.height / 3;
