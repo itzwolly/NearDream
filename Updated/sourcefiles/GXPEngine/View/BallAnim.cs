@@ -11,7 +11,7 @@ public class BallAnim : Pausable
     private float _velocityLenght;
     private float _waitTime;
 
-    public BallAnim(Ball pBall):base("assets\\sprites\\dragon_anim1.png", 4,44)
+    public BallAnim(Ball pBall):base("assets\\sprites\\dragonfinal.png", 4,51)
     {
         _ball = pBall;
         SetOrigin(width / 2, height / 2);
@@ -28,22 +28,22 @@ public class BallAnim : Pausable
             {
                 if (_ball.charge)
                 {
-                if (currentFrame >= 163)
-                        currentFrame = 163;
-                    else if (currentFrame < 127)
-                        currentFrame = 127;
+                if (currentFrame >= 175)
+                        currentFrame = 175;
+                    else if (currentFrame < 137)
+                        currentFrame = 137;
                 }
-                else if (_velocityLenght > 0 && (currentFrame > 175 || currentFrame < 163))
+                else if (_velocityLenght > 0 && (currentFrame > 187 || currentFrame < 175))
                 {
-                    currentFrame = 163;
+                    currentFrame = 175;
                 }
                 else if (_ball.StartedTimer)
                 {
-                    currentFrame = 164;
+                    currentFrame = 176;
                 }
-                else if ((currentFrame > 127 || currentFrame < 86) && _velocityLenght == 0)
+                else if ((currentFrame > 137 || currentFrame < 99) && _velocityLenght == 0)
                 {
-                    currentFrame = 86;
+                    currentFrame = 99;
                 }
 
             }
@@ -57,7 +57,7 @@ public class BallAnim : Pausable
                 else if (currentFrame < 39)
                     currentFrame = 39;
                 }
-                else if (_velocityLenght > 0 && (currentFrame > 86 || currentFrame < 75))
+                else if (_velocityLenght > 0 && (currentFrame > 97 || currentFrame < 75))
                 {
                     currentFrame = 75;
                 }

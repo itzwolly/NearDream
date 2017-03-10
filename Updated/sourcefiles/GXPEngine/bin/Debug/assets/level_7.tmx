@@ -203,7 +203,7 @@
 </data>
  </layer>
  <objectgroup name="Finish">
-  <object id="3" x="1152" y="512" width="64" height="128"/>
+  <object id="3" x="1600" y="320" width="64" height="128"/>
  </objectgroup>
  <objectgroup name="Points" offsetx="1.33333" offsety="0">
   <object id="86" name="path_blocker_1" x="768" y="512">

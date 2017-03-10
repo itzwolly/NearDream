@@ -136,6 +136,7 @@ public class Level : GameObject {
 				_finishedLevel = true;
 				WinScreen ws = new WinScreen(_myGame, this);
 				AddChild(ws);
+                _sounds.StopMusic();
 			}
 			if (Input.GetKeyUp(Key.TILDE)) {
 				if (!_isPaused) {
@@ -150,6 +151,7 @@ public class Level : GameObject {
 				}
 			}
 		}
+        _sounds.StopMusic();
 	}
 
 	public void CreateHUD() {

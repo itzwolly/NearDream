@@ -20,11 +20,15 @@ public class LoadingScreen : Canvas
     private Rectangle _rect;
     private StringFormat _stringFormat = new StringFormat();
     private Map _map;
-    private TMXParser _tmxParser = new TMXParser();
+    
 
     public LoadingScreen(MyGame pMygame) : base(Game.main.width, Game.main.height) {
         _myGame = pMygame;
-        _map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + (_myGame.LevelCounter + 1) + ".tmx");
+        if (_myGame.LevelCounter < 8) {
+            TMXParser _tmxParser = new TMXParser();
+            _map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + (_myGame.LevelCounter + 1) + ".tmx");
+        }
+        
 
         _stringFormat.Alignment = StringAlignment.Near;
         _stringFormat.LineAlignment = StringAlignment.Near;
@@ -78,8 +82,7 @@ public class LoadingScreen : Canvas
         }
         else if (_myGame.LevelCounter == 8)
         {
-            SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
-            new Timer(5000, _myGame.LoadMainMenu);
+            new Timer(1000, _myGame.LoadMainMenu);
         }
     }
 

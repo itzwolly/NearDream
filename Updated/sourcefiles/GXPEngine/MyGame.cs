@@ -226,9 +226,9 @@ public class MyGame : Game //MyGame is a Game
 		return "";
 	}
 
-    public Level GetLevel() {
-        return _level;
-    }
+	public Level GetLevel() {
+		return _level;
+	}
 
 	public static FontFamily GetFont() {
 		return _pfc.Families[0];

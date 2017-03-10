@@ -39,9 +39,9 @@
     <Compile Include="Ball.cs" />
     <Compile Include="Menu\PauseMenu.cs" />
     <Compile Include="Pausable.cs" />
+    <Compile Include="Boom.cs" />
     <Compile Include="View\BallAnim.cs" />
     <Compile Include="Bridge.cs" />
-    <Compile Include="View\Boom.cs" />
     <Compile Include="View\BridgeCollider.cs" />
     <Compile Include="View\BridgePlank.cs" />
     <Compile Include="CollidedOption.cs" />
