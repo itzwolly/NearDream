@@ -14,14 +14,14 @@ public class MyGame : Game //MyGame is a Game
 	private MainMenu _menu;
 	private LoadingScreen _loadingScreen;
 	private static PrivateFontCollection _pfc;
-    private int _levelCounter;
+	private int _levelCounter;
 
-    public int LevelCounter {
-        get { return _levelCounter; }
-        set { _levelCounter = value; }
-    }
+	public int LevelCounter {
+		get { return _levelCounter; }
+		set { _levelCounter = value; }
+	}
 
-    public enum Asset {
+	public enum Asset {
 		NONE,
 		ROOT,
 		SPRITES,
@@ -189,7 +189,7 @@ public class MyGame : Game //MyGame is a Game
 		AddChild(_level);
 		_level.CreateHUD();
 
-        new Timer(1000, LoadData);
+		new Timer(1000, LoadData);
 	}
 
 	private void LoadData() {
@@ -222,8 +222,10 @@ public class MyGame : Game //MyGame is a Game
             case GameState.LEVEL3:
 				if (_level != null) {
 					_level.HasLoaded = false;
+					if (_level.GetHUD() != null) {
+						_level.GetHUD().Destroy();
+					}
 					_level.Destroy();
-					_level.GetHUD().Destroy();
 					_level = null;
 				}
 				break;
@@ -244,6 +246,10 @@ public class MyGame : Game //MyGame is a Game
 			}
 		}
 		return "";
+	}
+
+	public Level GetLevel() {
+		return _level;
 	}
 
 	public static FontFamily GetFont() {

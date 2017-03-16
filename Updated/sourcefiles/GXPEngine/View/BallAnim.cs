@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-public class BallAnim:AnimationSprite
+public class BallAnim : Pausable
 {
     private Ball _ball;
     private float _wait;

@@ -34,7 +34,9 @@ public class Level : GameObject {
 	private List<GameObject> _pressurePlateObjects = new List<GameObject>();
 	private List<StickyBall> _stickyBalls = new List<StickyBall>();
 	private TMXParser _tmxParser = new TMXParser();
+	private PauseMenu _pauseMenu;
 
+	private bool _isPaused;
 	public int wait;
 	private int _currentLevel;
 	private float _xOffset, _yOffset;
@@ -46,15 +48,17 @@ public class Level : GameObject {
 		get { return _finishedLevel; }
 		set { _finishedLevel = value; }
 	}
-
 	public int CurrentLevel {
 		get { return _currentLevel; }
 		set { _currentLevel = value; }
 	}
-
 	public bool HasLoaded {
 		get { return _hasLoaded; }
 		set { _hasLoaded = value; }
+	}
+	public bool IsPaused {
+		get { return _isPaused; }
+		set { _isPaused = value; }
 	}
 
 	public Level(MyGame pMyGame, int pCurrentLevel) {
@@ -96,32 +100,34 @@ public class Level : GameObject {
 
 	private void Update() {
 		if (!_finishedLevel) {
-			wait++;
-			_xOffset = game.x - this.x;
-			_yOffset = game.y - this.y;
+			if (!_isPaused) {
+				wait++;
+				_xOffset = game.x - this.x;
+				_yOffset = game.y - this.y;
 
-			_player.GetReticle().x = Input.mouseX + _xOffset;
-			_player.GetReticle().y = Input.mouseY + _yOffset;
+				_player.GetReticle().x = Input.mouseX + _xOffset;
+				_player.GetReticle().y = Input.mouseY + _yOffset;
 
-			PlayerCamera();
-			_engine.HandlePlayer();
-			_engine.HandleBall();
-			_engine.CheckStones();
-			_engine.HandleStickyBall();
-			_engine.CheckPotCollision();
-			_engine.CheckTrophyCollision();
-			_engine.CheckRopeCollision();
-			_engine.HandleDestructablePlanks();
-			_engine.CheckStickyBall();
+				PlayerCamera();
+				_engine.HandlePlayer();
+				_engine.HandleBall();
+				_engine.CheckStones();
+				_engine.HandleStickyBall();
+				_engine.CheckPotCollision();
+				_engine.CheckTrophyCollision();
+				_engine.CheckRopeCollision();
+				_engine.HandleDestructablePlanks();
+				_engine.CheckStickyBall();
 
-			if (_playerDirection == Player.Direction.LEFT) {
-				// _player.Mirror(true, false);
-				_ball.scaleX = -1.0f;
-				_player.scaleX = -1.0f;
-			} else if (_playerDirection == Player.Direction.RIGHT) {
-				//_player.Mirror(true, false);
-				_player.scaleX = 1.0f;
-				_ball.scaleX = 1.0f;
+				if (_playerDirection == Player.Direction.LEFT) {
+					// _player.Mirror(true, false);
+					_ball.scaleX = -1.0f;
+					_player.scaleX = -1.0f;
+				} else if (_playerDirection == Player.Direction.RIGHT) {
+					//_player.Mirror(true, false);
+					_player.scaleX = 1.0f;
+					_ball.scaleX = 1.0f;
+				}
 			}
 		}
 
@@ -131,6 +137,18 @@ public class Level : GameObject {
 				WinScreen ws = new WinScreen(_myGame, this);
 				AddChild(ws);
                 _sounds.StopMusic();
+			}
+			if (Input.GetKeyUp(Key.TILDE)) {
+				if (!_isPaused) {
+					_pauseMenu = new PauseMenu(_myGame, this);
+					AddChild(_pauseMenu);
+					Pausable.Pause();
+					_isPaused = true;
+				} else {
+					_pauseMenu.Destroy();
+					Pausable.UnPause();
+					_isPaused = false;
+				}
 			}
 		}
         _sounds.StopMusic();

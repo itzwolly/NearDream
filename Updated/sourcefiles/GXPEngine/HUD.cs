@@ -71,21 +71,23 @@ public class HUD : Canvas {
     private void Update() {
         if (_level.HasLoaded) {
             if (!_level.FinishedLevel) {
-                _timerCanvas.graphics.Clear(Color.Transparent);
-                _scoreCanvas.graphics.Clear(Color.Transparent);
-                _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
-                _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
+                if (!_level.IsPaused) {
+                    _timerCanvas.graphics.Clear(Color.Transparent);
+                    _scoreCanvas.graphics.Clear(Color.Transparent);
+                    _timerCanvas.graphics.DrawString(FormatTimer(), _font, Brushes.Black, 0, 5);
+                    _scoreCanvas.graphics.DrawString(_level.GetPlayer().Score.ToString(), _font, Brushes.Black, 0, 5);
 
-                if (_level.GetBall().IsExploding) {
-                    _changeBallCanvas.graphics.Clear(Color.Transparent);
-                    _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
-                    _changeBallCanvas.graphics.DrawString("x" + _level.GetPlayer().StickyAmount, _changeBallFont, Brushes.WhiteSmoke, _changeBallCanvas.width - 39, _changeBallCanvas.height - 31);
-                } else {
-                    _changeBallCanvas.graphics.Clear(Color.Transparent);
-                    _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                    if (_level.GetBall().IsExploding && _level.GetPlayer().StickyAmount > 0) {
+                        _changeBallCanvas.graphics.Clear(Color.Transparent);
+                        _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                        _changeBallCanvas.graphics.DrawString("x" + _level.GetPlayer().StickyAmount, _changeBallFont, Brushes.WhiteSmoke, _changeBallCanvas.width - 39, _changeBallCanvas.height - 31);
+                    } else {
+                        _changeBallCanvas.graphics.Clear(Color.Transparent);
+                        _changeBallCanvas.graphics.DrawString("E", _changeBallFont, Brushes.Black, 70, 0);
+                    }
+
+                    IncreaseTimer();
                 }
-
-                IncreaseTimer();
             }
         }
     }

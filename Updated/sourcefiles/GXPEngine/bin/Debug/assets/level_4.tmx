@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="64" tileheight="64" nextobjectid="53">
  <properties>
+  <property name="Didyouknow" value="Did you know: Fans will change the gravity of the dragon(s)."/>
   <property name="HasTrophies" type="bool" value="false"/>
  </properties>
  <tileset firstgid="1" name="skylines" tilewidth="64" tileheight="64" tilecount="405" columns="27">
@@ -254,7 +255,7 @@
  <objectgroup name="GravityChanger">
   <object id="33" name="Gravitychanger_1" x="1280" y="128" width="128" height="320">
    <properties>
-    <property name="Direction" type="int" value="1"/>
+    <property name="Direction" type="int" value="3"/>
    </properties>
   </object>
  </objectgroup>
