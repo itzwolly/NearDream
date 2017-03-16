@@ -311,7 +311,7 @@ public class Level : GameObject {
 			}
 			if (objGroup.Name == "Rope") {
 				foreach (TiledObject obj in objGroup.Object) {
-					if (_currentLevel == 3 || _currentLevel == 5 || _currentLevel == 6 || _currentLevel == 7 || _currentLevel == 8) {
+					if (_currentLevel == 3 || _currentLevel == 5 || _currentLevel == 6 || _currentLevel == 7 || _currentLevel == 8 || _currentLevel == 9 || _currentLevel == 10) {
 						Rope rope = new Rope(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\ropelong.png");
 						rope.x = obj.X;
 						rope.y = obj.Y + 4;

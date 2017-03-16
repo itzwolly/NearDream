@@ -41,7 +41,7 @@ public class BallAnim:AnimationSprite
                 {
                     currentFrame = 176;
                 }
-                else if ((currentFrame > 137 || currentFrame < 99) && _velocityLenght == 0)
+                else if ((currentFrame > 134 || currentFrame < 99) && _velocityLenght == 0)
                 {
                     currentFrame = 99;
                 }
@@ -54,14 +54,14 @@ public class BallAnim:AnimationSprite
                 {
                 if (currentFrame >= 75)
                     currentFrame = 75;
-                else if (currentFrame < 39)
-                    currentFrame = 39;
+                else if (currentFrame < 36)
+                    currentFrame = 36;
                 }
-                else if (_velocityLenght > 0 && (currentFrame > 97 || currentFrame < 75))
+                else if (_velocityLenght > 0 && (currentFrame > 98 || currentFrame < 75))
                 {
                     currentFrame = 75;
                 }
-                else if ((currentFrame > 38 || currentFrame < 0) && _velocityLenght == 0)
+                else if ((currentFrame > 35 || currentFrame < 0) && _velocityLenght == 0)
                 {
                     currentFrame = 0;
                 }
