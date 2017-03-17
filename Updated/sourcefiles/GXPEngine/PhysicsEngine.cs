@@ -863,7 +863,7 @@ public class PhysicsEngine {
             if (_explosionWait == Ball.WAITFORBOOM) {
                 for (int i = 0; i < _level.GetDestroyables().Count; i++) {
                     Plank plank = _level.GetDestroyables()[i];
-                    if (_level.GetBall().Position.DistanceTo(plank.Position) < Ball.BLASTSIZE) {
+                    if (_level.GetBall().HitTest(plank)) {
                         _level.GetLines().Remove(plank.PlankLine);
                         plank.PlankLine.Destroy();
                         _level.GetDestroyables().Remove(plank);
