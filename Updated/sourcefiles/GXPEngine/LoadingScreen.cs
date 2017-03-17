@@ -24,7 +24,7 @@ public class LoadingScreen : Canvas
 
     public LoadingScreen(MyGame pMygame) : base(Game.main.width, Game.main.height) {
         _myGame = pMygame;
-        if (_myGame.LevelCounter < 8) {
+        if (_myGame.LevelCounter < 10) {
             TMXParser _tmxParser = new TMXParser();
             _map = _tmxParser.ParseFile(MyGame.GetAssetFilePath(MyGame.Asset.ROOT) + "\\level_" + (_myGame.LevelCounter + 1) + ".tmx");
         }
@@ -47,7 +47,7 @@ public class LoadingScreen : Canvas
         if (_myGame.LevelCounter == 0) {
             // add text for level one
             SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
-            new Timer(5000, _myGame.LoadLevelTen);
+            new Timer(3000, _myGame.LoadLevelTen);
         } else if (_myGame.LevelCounter == 1) {
             SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
             new Timer(5000, _myGame.LoadLevelTwo);

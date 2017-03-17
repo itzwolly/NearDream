@@ -56,7 +56,7 @@ public class PhysicsEngine {
         float distanceToLine = differenceVec.Dot(lineNormal);
         float distanceOnLine = differenceVec.Dot(normalizedLineVec);
         if (distanceOnLine <= line.lineLenght && distanceOnLine >= 0 && distanceToLine >= -ball.radius && distanceToLine <= ball.radius) {
-            Console.WriteLine(distanceToLine);
+            //Console.WriteLine(distanceToLine);
             if (distanceToLine > 0)
                 ball.Position.Add(lineNormal.Clone().Scale(ball.radius - distanceToLine + EPSILON));
             else

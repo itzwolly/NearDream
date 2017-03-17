@@ -32,4 +32,16 @@ public class GameTile : AnimationSprite {
     public uint GetTileId() {
         return _tileId;
     }
+
+    public void ChangeAlpha(float pAmount, bool pDecrease) {
+        if (pDecrease) {
+            if (alpha > 0.2f) {
+                alpha -= pAmount;
+            }
+        } else {
+            if (alpha < 1f) {
+                alpha += pAmount;
+            }
+        }
+    }
 }

@@ -122,6 +122,20 @@ public class PauseMenu : GameObject {
                         _myGame.SetState(MyGame.GameState.LEVEL8);
                         _myGame.LoadLevelEight();
                         break;
+                    case 9:
+                        _level.IsPaused = false;
+                        Pausable.UnPause();
+                        this.Destroy();
+                        _myGame.SetState(MyGame.GameState.LEVEL9);
+                        _myGame.LoadLevelNine();
+                        break;
+                    case 10:
+                        _level.IsPaused = false;
+                        Pausable.UnPause();
+                        this.Destroy();
+                        _myGame.SetState(MyGame.GameState.LEVEL10);
+                        _myGame.LoadLevelTen();
+                        break;
                     default:
                         break;
                 }

@@ -28,6 +28,12 @@ public class Plank : Sprite
 
     public NLineSegment GetLine()
     {
-        return _plankLine = new NLineSegment(new Vec2(Position.x - width / 2, Position.y), new Vec2(Position.x + width / 2, Position.y), 0xffffff00, 4);
+        if (SpriteName == "hell_plank") {
+            return _plankLine = new NLineSegment(new Vec2((Position.x - width / 2) - 32, Position.y), new Vec2((Position.x + width / 2) - 32, Position.y), 0xffffff00, 4);
+        } else if (SpriteName == "plank_4") {
+            return _plankLine = new NLineSegment(new Vec2(Position.x, Position.y - height * 3), new Vec2(Position.x, Position.y + height * 3), 0xffffff00, 4);
+        } else {
+            return _plankLine = new NLineSegment(new Vec2(Position.x - width / 2, Position.y), new Vec2(Position.x + width / 2, Position.y), 0xffffff00, 4);
+        }
     }
 }

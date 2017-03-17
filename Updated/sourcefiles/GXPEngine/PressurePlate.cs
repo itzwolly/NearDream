@@ -12,6 +12,7 @@ public class PressurePlate : Sprite
     public NLineSegment coverLine;
     public bool cover;
     private Level _level;
+    float _minX, _maxX;
 
     public bool Open
     {
@@ -25,13 +26,39 @@ public class PressurePlate : Sprite
         set { _pressurePlateName = value; }
     }
 
-    public PressurePlate(Level pLevel, float pX, float pY,string pOpensThis, bool pCover,int coverHight, int coverWidth) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\pressureplate.png")
+    public PressurePlate(Level pLevel, float pX, float pY,string pOpensThis, bool pCover,int coverHeight, int coverWidth, string pName) : base(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\pressureplate.png")
     {
         _level = pLevel;
+        _pressurePlateName = pName;
+
         SetOrigin(width / 2, height / 2);
         x = pX;
         y = pY;
-        coverLine = new NLineSegment(new Vec2(x-coverWidth/2,y-coverHight+height-1), new Vec2(x + coverWidth / 2, y - coverHight+height-1), 0xffffff00, 4);
+
+        if (pName == "Pressureplate_2") {
+            if (pLevel.CurrentLevel != 10) {
+                _minX = x - coverWidth / 2;
+                _maxX = x - coverWidth / 2;
+            } else {
+                _minX = (x - coverWidth / 2) + 68;
+                _maxX = (x + coverWidth / 2) + 35;
+            }
+            coverLine = new NLineSegment(new Vec2(_minX, y - coverHeight + height - 1), new Vec2(_maxX, y - coverHeight + height - 1), 0xffffff00, 4);
+        } else if (pName == "Pressureplate_3") {
+            if (pLevel.CurrentLevel != 10) {
+                _minX = x - coverWidth / 2;
+                _maxX = x - coverWidth / 2;
+            } else {
+                _minX = (x - coverWidth / 2) - 150;
+                _maxX = (x + coverWidth / 2) - 130;
+            }
+            coverLine = new NLineSegment(new Vec2(_minX, y - coverHeight + height - 1), new Vec2(_maxX, y - coverHeight + height - 1), 0xffffff00, 4);
+        } else {
+            coverLine = new NLineSegment(new Vec2(x - coverWidth / 2, y - coverHeight + height - 1), new Vec2(x + coverWidth / 2, y - coverHeight + height - 1), 0xffffff00, 4);
+        }
+
+        Console.WriteLine(pName);
+
         cover = pCover;
         _opensThis = pOpensThis;
     }

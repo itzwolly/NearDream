@@ -37,6 +37,7 @@ public class Polyline
             if (point == "0,0") {
                 continue;
             }
+
             List<string> oddPoint = point.Trim().Split(',').ToList().Where((c, i) => i % 2 != 0).ToList();
             List<string> evenPoint = point.Trim().Split(',').ToList().Where((c, i) => i % 2 == 0).ToList();
 

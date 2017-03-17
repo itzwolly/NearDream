@@ -95,6 +95,12 @@ public class WinScreen : Canvas {
                 {
                     _myGame.LevelCounter = 8;
                     _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                } else if (_level.CurrentLevel == 9) {
+                    _myGame.LevelCounter = 9;
+                    _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+                } else if (_level.CurrentLevel == 10) {
+                    _myGame.LevelCounter = 10;
+                    _myGame.SetState(MyGame.GameState.MAINMENU);
                 }
             } else {
                 _btnNextLevel.currentFrame = 0;
@@ -127,6 +133,12 @@ public class WinScreen : Canvas {
             } else if (_level.CurrentLevel == 8) {
                 _myGame.LevelCounter = 8;
                 _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 9) {
+                _myGame.LevelCounter = 9;
+                _myGame.SetState(MyGame.GameState.LOADINGSCREEN);
+            } else if (_level.CurrentLevel == 10) {
+                _myGame.LevelCounter = 10;
+                _myGame.SetState(MyGame.GameState.MAINMENU);
             }
         }
     }

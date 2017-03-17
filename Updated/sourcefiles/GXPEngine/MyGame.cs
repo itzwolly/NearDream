@@ -83,43 +83,33 @@ public class MyGame : Game //MyGame is a Game
 				break;
 			case GameState.LEVEL1:
 				_level = new Level(this, 1);
-				//AddChild(_level);
 				break;
             case GameState.LEVEL2:
                 _level = new Level(this, 2);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL3:
                 _level = new Level(this, 3);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL4:
                 _level = new Level(this, 4);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL5:
                 _level = new Level(this, 5);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL6:
                 _level = new Level(this, 6);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL7:
                 _level = new Level(this, 7);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL8:
                 _level = new Level(this, 8);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL9:
                 _level = new Level(this, 9);
-                //AddChild(_level);
                 break;
             case GameState.LEVEL10:
                 _level = new Level(this, 10);
-                //AddChild(_level);
                 break;
             default:
 				break;
