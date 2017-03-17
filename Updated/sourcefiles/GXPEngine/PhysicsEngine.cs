@@ -856,6 +856,7 @@ public class PhysicsEngine {
         _level.GetBall().OnPlayer = true;
         _level.GetBall().Step();
         _level.GetBall().InAir = 0;
+        //_level.GetBall().IsExploding = false;
     }
 
     public void HandleStickyBall() {

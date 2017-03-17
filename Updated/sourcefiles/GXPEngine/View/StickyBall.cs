@@ -13,6 +13,7 @@ public class StickyBall : AnimationSprite {
     }
 
     private void Update() {
+        
         _timer++;
         if (_timer == 3) {
             if (currentFrame < frameCount - 3) {
