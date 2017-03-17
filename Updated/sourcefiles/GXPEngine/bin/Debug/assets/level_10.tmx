@@ -310,9 +310,6 @@
   <object id="495" x="1472" y="0">
    <polyline points="0,0 64,256"/>
   </object>
-  <object id="503" x="1472" y="0">
-   <polyline points="0,0 128,128"/>
-  </object>
   <object id="508" x="1536" y="256">
    <polyline points="0,0 64,0"/>
   </object>
@@ -526,6 +523,7 @@
   <object id="683" x="256" y="64">
    <polyline points="0,0 -256,0"/>
   </object>
+<<<<<<< HEAD
   <object id="687" x="448" y="384">
    <polyline points="0,0 128,-128"/>
   </object>
@@ -580,6 +578,14 @@
   <object id="714" x="4480" y="256">
    <polyline points="0,0 64,0"/>
   </object>
+=======
+  <object id="684" x="2688" y="0">
+   <polyline points="0,0 512,0"/>
+  </object>
+  <object id="685" x="1472" y="0">
+   <polyline points="0,0 576,0"/>
+  </object>
+>>>>>>> 809dd481860899f7e6e4cfb897899e31aada9357
  </objectgroup>
  <objectgroup name="GravityChanger">
   <object id="621" name="Gravitychanger_1" x="2112" y="0" width="576" height="128">
@@ -766,9 +772,10 @@
   <object id="522" name="plank_4" x="2048" y="128" width="64" height="192"/>
   <object id="546" name="hell_plank" x="2240" y="768" width="192" height="64"/>
   <object id="571" name="plank_6" x="2624" y="192" width="192" height="64"/>
-  <object id="582" name="plank" x="2624" y="448" width="192" height="64"/>
   <object id="608" name="plank_5" x="2944" y="192" width="192" height="64"/>
   <object id="609" name="plank_7" x="3264" y="576" width="256" height="64"/>
+  <object id="686" name="plank" x="2624" y="448" width="192" height="64"/>
+  <object id="687" name="plank" x="2240" y="768" width="192" height="64"/>
  </objectgroup>
  <objectgroup name="Stickyball">
   <object id="187" name="Dragon_1" x="768" y="0" width="64" height="64"/>

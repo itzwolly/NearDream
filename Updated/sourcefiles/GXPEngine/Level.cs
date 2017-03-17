@@ -137,12 +137,14 @@ public class Level : GameObject {
 			if (Input.GetKeyUp(Key.UP)) {
 				_finishedLevel = true;
 				WinScreen ws = new WinScreen(_myGame, this);
+                ws.x -= x;
 				AddChild(ws);
                 _sounds.StopMusic();
 			}
 			if (Input.GetKeyUp(Key.TILDE)) {
 				if (!_isPaused) {
 					_pauseMenu = new PauseMenu(_myGame, this);
+                    _pauseMenu.x -=x;
 					AddChild(_pauseMenu);
 					Pausable.Pause();
 					_isPaused = true;
