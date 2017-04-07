@@ -167,6 +167,8 @@ public class Level : GameObject {
     }
 
     private void HandleForegroundAlpha () {
+        // TODO: crashes when plank explodes.
+        // fix
         NLineSegment hellPlankLine = _planks.First(s => s.SpriteName == "hell_plank").PlankLine;
         if (_player.x > (hellPlankLine.start.x) - 64 && _player.x < (hellPlankLine.end.x) + 64) {
             foreach (GameTile tile in _foreGround.GetTiles()) {

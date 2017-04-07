@@ -523,7 +523,6 @@
   <object id="683" x="256" y="64">
    <polyline points="0,0 -256,0"/>
   </object>
-<<<<<<< HEAD
   <object id="687" x="448" y="384">
    <polyline points="0,0 128,-128"/>
   </object>
@@ -578,14 +577,12 @@
   <object id="714" x="4480" y="256">
    <polyline points="0,0 64,0"/>
   </object>
-=======
   <object id="684" x="2688" y="0">
    <polyline points="0,0 512,0"/>
   </object>
   <object id="685" x="1472" y="0">
    <polyline points="0,0 576,0"/>
   </object>
->>>>>>> 809dd481860899f7e6e4cfb897899e31aada9357
  </objectgroup>
  <objectgroup name="GravityChanger">
   <object id="621" name="Gravitychanger_1" x="2112" y="0" width="576" height="128">
