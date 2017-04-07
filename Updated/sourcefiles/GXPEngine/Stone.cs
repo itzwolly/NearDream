@@ -14,8 +14,7 @@ using GXPEngine;
 	public bool started;
 	public bool aboutToHit;
 
-	public Stone(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null,bool? pActive = false):base (pRadius,null,null,null)
-		{
+	public Stone(int pRadius, Vec2 pPosition = null, Vec2 pVelocity = null, Color? pColor = null, bool? pActive = false):base (pRadius,null,null,null) {
 		aboutToHit = false;
 		active = pActive ?? false;
 		OnPlayer = true;

@@ -70,70 +70,70 @@ public class PauseMenu : GameObject {
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL1);
+                        //_myGame.SetState(MyGame.GameState.LEVEL1);
                         _myGame.LoadLevelOne();
                         break;
                     case 2:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL2);
+                        //_myGame.SetState(MyGame.GameState.LEVEL2);
                         _myGame.LoadLevelTwo();
                         break;
                     case 3:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL3);
+                        //_myGame.SetState(MyGame.GameState.LEVEL3);
                         _myGame.LoadLevelThree();
                         break;
                     case 4:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL4);
+                        //_myGame.SetState(MyGame.GameState.LEVEL4);
                         _myGame.LoadLevelFour();
                         break;
                     case 5:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL5);
+                        //_myGame.SetState(MyGame.GameState.LEVEL5);
                         _myGame.LoadLevelFive();
                         break;
                     case 6:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL6);
+                        //_myGame.SetState(MyGame.GameState.LEVEL6);
                         _myGame.LoadLevelSix();
                         break;
                     case 7:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL7);
+                        //_myGame.SetState(MyGame.GameState.LEVEL7);
                         _myGame.LoadLevelSeven();
                         break;
                     case 8:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL8);
+                        //_myGame.SetState(MyGame.GameState.LEVEL8);
                         _myGame.LoadLevelEight();
                         break;
                     case 9:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL9);
+                        //_myGame.SetState(MyGame.GameState.LEVEL9);
                         _myGame.LoadLevelNine();
                         break;
                     case 10:
                         _level.IsPaused = false;
                         Pausable.UnPause();
                         this.Destroy();
-                        _myGame.SetState(MyGame.GameState.LEVEL10);
+                        //_myGame.SetState(MyGame.GameState.LEVEL10);
                         _myGame.LoadLevelTen();
                         break;
                     default:

@@ -120,6 +120,7 @@ public class Level : GameObject {
 				_engine.CheckRopeCollision();
 				_engine.HandleDestructablePlanks();
 				_engine.CheckStickyBall();
+                LevelTenWinningCondition();
 
                 if (_playerDirection == Player.Direction.LEFT) {
 					// _player.Mirror(true, false);
@@ -159,9 +160,17 @@ public class Level : GameObject {
 	}
 
     private void LevelTenWinningCondition() {
+        List<NLineSegment> placeholderList = new List<NLineSegment>();
         if (_player.AmountOfTrophies == 3) {
             foreach (NLineSegment line in _lines.Where(s => s.LineName == "level_finish_point")) {
-                line.Destroy();
+                placeholderList.Add(line);
+            }
+            if (placeholderList.Count == 2) {
+                foreach (NLineSegment line in placeholderList) {
+                    Console.WriteLine("Removed line");
+                    line.Destroy();
+                    _lines.Remove(line);
+                }
             }
         }
     }
@@ -169,21 +178,25 @@ public class Level : GameObject {
     private void HandleForegroundAlpha () {
         // TODO: crashes when plank explodes.
         // fix
-        NLineSegment hellPlankLine = _planks.First(s => s.SpriteName == "hell_plank").PlankLine;
-        if (_player.x > (hellPlankLine.start.x) - 64 && _player.x < (hellPlankLine.end.x) + 64) {
-            foreach (GameTile tile in _foreGround.GetTiles()) {
-                tile.ChangeAlpha(0.1f, true);
+        try {
+            NLineSegment hellPlankLine = _planks.First(s => s.SpriteName == "hell_plank").PlankLine;
+            if (_player.x > (hellPlankLine.start.x) - 64 && _player.x < (hellPlankLine.end.x) + 64) {
+                foreach (GameTile tile in _foreGround.GetTiles()) {
+                    tile.ChangeAlpha(0.1f, true);
+                }
+                foreach (GameTile tile in _foreGroundPartTwo.GetTiles()) {
+                    tile.ChangeAlpha(0.1f, true);
+                }
+            } else {
+                foreach (GameTile tile in _foreGround.GetTiles()) {
+                    tile.ChangeAlpha(0.1f, false);
+                }
+                foreach (GameTile tile in _foreGroundPartTwo.GetTiles()) {
+                    tile.ChangeAlpha(0.1f, false);
+                }
             }
-            foreach (GameTile tile in _foreGroundPartTwo.GetTiles()) {
-                tile.ChangeAlpha(0.1f, true);
-            }
-        } else {
-            foreach (GameTile tile in _foreGround.GetTiles()) {
-                tile.ChangeAlpha(0.1f, false);
-            }
-            foreach (GameTile tile in _foreGroundPartTwo.GetTiles()) {
-                tile.ChangeAlpha(0.1f, false);
-            }
+        } catch {
+
         }
     }
 
@@ -236,6 +249,7 @@ public class Level : GameObject {
 				if (_playerDirection == Player.Direction.RIGHT && _engine.collision.dir != CollidedOption.Direction.LEFT) {
 					_foreGround.MoveLayer(Layer.Direction.LEFT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.LEFT, 4.5f);
+                    if (_foreGroundPartThree != null)
                     _foreGroundPartThree.MoveLayer(Layer.Direction.LEFT, 4.5f);
 
                     _groundTiles.MoveLayer(Layer.Direction.LEFT, 0.075f);
@@ -246,6 +260,7 @@ public class Level : GameObject {
 				} else if (_playerDirection == Player.Direction.LEFT && _engine.collision.dir != CollidedOption.Direction.RIGHT) {
 					_foreGround.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 4.5f);
+                    if (_foreGroundPartThree != null)
                     _foreGroundPartThree.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 
 
@@ -436,10 +451,16 @@ public class Level : GameObject {
 						pot.SpriteName = obj.Name;
 						_pots.Add(pot);
                         if (_currentLevel != 10) {
-                            AddChildAt(pot, 8);
+                            if (_currentLevel == 4) {
+                                AddChildAt(pot, 10);
+                            } else if (_currentLevel == 5) {
+                                AddChildAt(pot, 9);
+                            } else {
+                                AddChildAt(pot, 8);
+                            }
                         } else {
                             if (obj.Name == "hell_pot_1" || obj.Name == "hell_pot_2" || obj.Name == "hell_pot_3" || obj.Name == "hell_pot_4") {
-                                AddChildAt(pot, 40);
+                                AddChildAt(pot, 50);
                             } else {
                                 AddChildAt(pot, 8);
                             }
@@ -492,7 +513,12 @@ public class Level : GameObject {
 					foreach (TiledObject obj in objGroup.Object) {
 						//25, new Vec2(_ball.x, _ball.y), null, Color.Blue, false
 						Stone stone = new Stone(28, new Vec2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2), null, Color.Blue, Convert.ToBoolean(obj.Properties.GetPropertyByName("Active").Value));
-						AddChildAt(stone, 5);
+                        if (_currentLevel == 10) {
+                            AddChildAt(stone, 8);
+                        } else {
+                            AddChildAt(stone, 5);
+                        }
+						
 						_stones.Add(stone);
 						stone.Velocity = Vec2.zero;
 					}
