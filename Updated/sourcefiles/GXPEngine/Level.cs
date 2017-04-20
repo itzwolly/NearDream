@@ -416,7 +416,11 @@ public class Level : GameObject {
                         rope.BridgeToDrop = obj.Properties.GetPropertyByName("bridge_to_drop").Value;
                         rope.SpriteName = obj.Name;
                         if (_currentLevel != 10) {
-                            rope.rotation = 330;
+                            if (_currentLevel == 9 && rope.SpriteName == "Rope_2") {
+                                rope.rotation = 300;
+                            } else {
+                                rope.rotation = 330; 
+                            }
                         } else {
                             if (rope.SpriteName == "Rope_1") {
                                 rope.rotation = 280;
@@ -489,8 +493,8 @@ public class Level : GameObject {
 						_destroyables.Add(plank);
                         if (_currentLevel != 10) {
                             AddChildAt(plank, 5);
-                        } else { // hell_plank
-                            if (obj.Name == "plank_4") {
+                        } else { // lvl 10
+                            if (obj.Name == "plank_30") {
                                 plank.rotation = 90;
                             }
                             if (obj.Name == "hell_plank") {

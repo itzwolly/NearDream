@@ -41,10 +41,10 @@ public class ControlsScreen : Canvas {
 
         btnBack = new AnimationButton(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\close_buttons.png", 2, 1); //change to back button
         AddChild(btnBack);
-        btnBack.scale = 0.65f;
+        btnBack.scale = 0.15f;
         btnBack.SetOrigin(width / 2, height / 2);
-        btnBack.x = width * 2 - width / 5;
-        btnBack.y = (-height + height / 8) - 13;
+        btnBack.x = width / 2 ;
+        btnBack.y = btnBack.y - height / 7 - 25;
 
         _regularDragonImage = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\normal_dragon_popup.png");
         _stickyDragonImage = new Bitmap(MyGame.GetAssetFilePath(MyGame.Asset.UI) + "\\enraged_dragon_popup.png");
