@@ -89,7 +89,7 @@ namespace GXPEngine
 			_animation = new BallAnim(this);
 			AddChild(_animation);
 			
-			draw ();
+			//draw ();
 			Step ();
 		}
 
