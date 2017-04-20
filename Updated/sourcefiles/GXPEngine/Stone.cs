@@ -20,6 +20,8 @@ using GXPEngine;
 		OnPlayer = true;
 		started = false;
 		SetOrigin(radius, radius);
+        StoneAnim animation = new StoneAnim(this);
+        AddChild(animation);
 		Position = pPosition ?? Vec2.zero;
 		Velocity = pVelocity ?? Vec2.zero;
 		NextPosition = Position.Clone().Add(Velocity);
