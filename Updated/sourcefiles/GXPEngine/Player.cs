@@ -67,7 +67,7 @@ public class Player : Sprite
 
         _position = new Vec2(pX, pY);
         _velocity = Vec2.zero;
-
+        //this.visible = false;
         SetOrigin(width/2,height/2);
         PlayerAnim animation = new PlayerAnim(this);
         AddChild(animation);
