@@ -24,8 +24,7 @@ public class GravityChanger : Canvas
         x = pX;
         y = pY;
         
-        graphics.Clear(Color.Yellow);
-        alpha = 0.2f;
+        graphics.Clear(Color.Transparent);
 
         if (pDirection == 3) // down
         {
@@ -46,8 +45,6 @@ public class GravityChanger : Canvas
         if (pDirection == 0) {
             changedGravity = new Vec2(0, 0);
         }
-
-        alpha = 0.5f;
     }
 }
 

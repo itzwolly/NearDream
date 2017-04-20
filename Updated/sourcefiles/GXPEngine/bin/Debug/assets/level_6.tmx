@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="64" tileheight="64" nextobjectid="163">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="27" height="15" tilewidth="64" tileheight="64" nextobjectid="170">
  <properties>
   <property name="Didyouknow" value="Did you know: Only stones will interact with pressureplates."/>
   <property name="HasTrophies" type="bool" value="false"/>
@@ -22,16 +22,16 @@
  <tileset firstgid="1698" name="background" tilewidth="64" tileheight="64" tilecount="26" columns="26">
   <image source="sprites/background.png" width="1664" height="64"/>
  </tileset>
- <tileset firstgid="1724" name="midground" tilewidth="64" tileheight="64" tilecount="62" columns="31">
-  <image source="sprites/midground.png" width="1984" height="128"/>
+ <tileset firstgid="1724" name="midground" tilewidth="64" tileheight="64" tilecount="90" columns="30">
+  <image source="sprites/midground.png" width="1920" height="192"/>
  </tileset>
- <tileset firstgid="1786" name="foreground" tilewidth="64" tileheight="64" tilecount="112" columns="28">
+ <tileset firstgid="1814" name="foreground" tilewidth="64" tileheight="64" tilecount="112" columns="28">
   <image source="sprites/foreground.png" width="1792" height="256"/>
  </tileset>
- <tileset firstgid="1898" name="gametiles" tilewidth="64" tileheight="64" tilecount="432" columns="27">
+ <tileset firstgid="1926" name="gametiles" tilewidth="64" tileheight="64" tilecount="432" columns="27">
   <image source="sprites/gametiles.png" width="1728" height="1024"/>
  </tileset>
- <tileset firstgid="2330" name="gametiles" tilewidth="64" tileheight="64" tilecount="432" columns="27">
+ <tileset firstgid="2358" name="gametiles" tilewidth="64" tileheight="64" tilecount="432" columns="27">
   <image source="sprites/gametiles.png" width="1728" height="1024"/>
  </tileset>
  <layer name="Skylines" width="27" height="15">
@@ -150,14 +150,14 @@
  </layer>
  <layer name="Gametiles" width="27" height="15">
   <data encoding="csv">
-0,0,0,2174,2175,2176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2201,2202,2203,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,2229,2175,2295,2296,2297,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,2141,2142,2143,2144,2175,2175,2175,2175,2175,2175,2175,2175,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2175,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2175,2175,2175,0,2175,2175,2222,2223,0,0,0,0,0,2175,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2175,2175,2175,2175,2175,2175,2175,2250,2251,0,0,2254,2255,2175,0,0,0,0,0,0,0,0,0,0,
-0,0,0,2175,2175,2175,2175,2175,2175,2175,2175,2175,2279,2280,2281,2175,2175,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2202,2203,2204,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2229,2230,2231,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,2257,2203,2323,2324,2325,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,2169,2170,2171,2172,2203,2203,2203,2203,2203,2203,2203,2203,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2203,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2203,2203,2203,2203,2203,2088,2089,0,0,0,0,0,0,2203,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2203,2203,2203,2203,2203,2203,2203,2088,2089,0,0,2282,2283,2203,0,0,0,0,0,0,0,0,0,0,
+0,0,0,2203,2203,2203,2203,2203,2203,2203,2203,2203,2307,2308,2309,2203,2203,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -181,8 +181,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1741,1742,1743,1744,1745,1746,1747,1748,1749,1750,1751,1752,1753,1754,0,0,0,1724,1725,1726,1727,1728,1729,1730,1731,1732,1733,
-1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,1784,1785,0,0,0,1755,1756,1757,1758,1759,1760,1761,1762,1763,1764,
+1740,1741,1742,1743,1744,1745,1746,1747,1748,1749,1750,1751,1752,1753,0,0,0,1724,1725,1726,1727,1728,1729,1730,1731,1732,1733,
+1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,0,0,0,1754,1755,1756,1757,1758,1759,1760,1761,1762,1763,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
@@ -199,10 +199,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1789,1790,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1789,1790,1791,1792,1793,
 1817,1818,1819,1820,1821,1822,1823,1824,1825,1826,1827,1828,1829,1830,1831,1832,1833,1834,1835,1836,1837,1838,1817,1818,1819,1820,1821,
 1845,1846,1847,1848,1849,1850,1851,1852,1853,1854,1855,1856,1857,1858,1859,1860,1861,1862,1863,1864,1865,1866,1845,1846,1847,1848,1849,
-1873,1874,1875,1876,1877,1878,1879,1880,1881,1882,1883,1884,1885,1886,1887,1888,1889,1890,1891,1892,1893,1894,1873,1874,1875,1876,1877
+1873,1874,1875,1876,1877,1878,1879,1880,1881,1882,1883,1884,1885,1886,1887,1888,1889,1890,1891,1892,1893,1894,1873,1874,1875,1876,1877,
+1901,1902,1903,1904,1905,1906,1907,1908,1909,1910,1911,1912,1913,1914,1915,1916,1917,1918,1919,1920,1921,1922,1901,1902,1903,1904,1905
 </data>
  </layer>
  <objectgroup name="Finish">
@@ -212,17 +212,8 @@
   <object id="86" name="path_blocker_1" x="768" y="512">
    <polyline points="0,0 0,256"/>
   </object>
-  <object id="116" x="192" y="320">
-   <polyline points="0,0 192,0"/>
-  </object>
   <object id="118" x="320" y="192">
    <polyline points="0,0 -128,-192"/>
-  </object>
-  <object id="120" x="448" y="320">
-   <polyline points="0,0 128,0"/>
-  </object>
-  <object id="121" x="576" y="320">
-   <polyline points="0,0 192,128"/>
   </object>
   <object id="122" x="768" y="448">
    <polyline points="0,0 64,64"/>
@@ -241,15 +232,6 @@
   </object>
   <object id="127" x="1024" y="256">
    <polyline points="0,0 0,128"/>
-  </object>
-  <object id="129" x="384" y="320">
-   <polyline points="0,0 0,64"/>
-  </object>
-  <object id="130" x="384" y="384">
-   <polyline points="0,0 64,0"/>
-  </object>
-  <object id="131" x="448" y="384">
-   <polyline points="0,0 0,-64"/>
   </object>
   <object id="133" x="192" y="320">
    <polyline points="0,0 0,192"/>
@@ -278,16 +260,22 @@
   <object id="154" x="1728" y="384">
    <polyline points="0,0 0,-256"/>
   </object>
+  <object id="167" x="512" y="320">
+   <polyline points="0,0 -320,0"/>
+  </object>
+  <object id="169" x="512" y="320">
+   <polyline points="0,0 256,128"/>
+  </object>
  </objectgroup>
  <objectgroup name="GravityChanger"/>
  <objectgroup name="Fan"/>
  <objectgroup name="Stones">
-  <object id="48" x="192" y="192" width="64" height="64">
+  <object id="132" x="384" y="256" width="64" height="64">
    <properties>
     <property name="Active" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="132" x="448" y="256" width="64" height="64">
+  <object id="163" x="256" y="192" width="64" height="64">
    <properties>
     <property name="Active" type="bool" value="false"/>
    </properties>
@@ -309,18 +297,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="Pressureplates">
-  <object id="157" x="384" y="320" width="64" height="64">
-   <properties>
-    <property name="HasCover" type="bool" value="true"/>
-    <property name="ItemToInteract" value=""/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup name="Pressureplates"/>
  <objectgroup name="Pots">
   <object id="158" x="768" y="128" width="64" height="64"/>
-  <object id="159" x="256" y="256" width="64" height="64"/>
-  <object id="161" x="192" y="704" width="64" height="64"/>
-  <object id="162" x="1216" y="704" width="64" height="64"/>
+  <object id="159" x="192" y="256" width="64" height="64"/>
+  <object id="162" x="960" y="128" width="64" height="64"/>
  </objectgroup>
 </map>

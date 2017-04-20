@@ -47,7 +47,7 @@ public class LoadingScreen : Canvas
         if (_myGame.LevelCounter == 0) {
             // add text for level one
             SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
-            new Timer(3000, _myGame.LoadLevelOne);
+            new Timer(3000, _myGame.LoadLevelEight);
         } else if (_myGame.LevelCounter == 1) {
             SetDidYouKnowText(_map.Properties.GetPropertyByName("Didyouknow").Value);
             new Timer(5000, _myGame.LoadLevelTwo);
