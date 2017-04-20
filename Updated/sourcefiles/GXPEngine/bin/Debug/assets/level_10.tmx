@@ -734,7 +734,7 @@
   <object id="537" x="1856" y="512" width="64" height="64">
    <properties>
     <property name="HasCover" type="bool" value="true"/>
-    <property name="ItemToInteract" value="plank_4"/>
+    <property name="ItemToInteract" value="plank_30"/>
    </properties>
   </object>
   <object id="622" x="2304" y="576" width="64" height="64">
@@ -766,7 +766,7 @@
   <object id="429" name="plank_1" x="448" y="384" width="256" height="64"/>
   <object id="463" name="plank_2" x="1216" y="128" width="192" height="64"/>
   <object id="519" name="plank_3" x="1600" y="256" width="192" height="64"/>
-  <object id="522" name="plank_4" x="2048" y="128" width="64" height="192"/>
+  <object id="522" name="plank_30" x="2048" y="128" width="64" height="192"/>
   <object id="546" name="hell_plank" x="2240" y="768" width="192" height="64"/>
   <object id="571" name="plank_6" x="2624" y="192" width="192" height="64"/>
   <object id="608" name="plank_5" x="2944" y="192" width="192" height="64"/>

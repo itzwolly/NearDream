@@ -458,7 +458,7 @@
    </properties>
    <polyline points="0,0 64,128"/>
   </object>
-  <object id="364" name="Rope_1" x="1600" y="448">
+  <object id="364" name="Rope_2" x="1536" y="448">
    <properties>
     <property name="bridge_to_drop" value="bridge_2"/>
     <property name="path_blocker_name" value="path_blocker_2"/>
