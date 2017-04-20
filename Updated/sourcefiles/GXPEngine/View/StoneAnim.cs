@@ -13,7 +13,7 @@ public class StoneAnim : Pausable {
     }
 
     private void Update() {
-        if (_stone.Velocity.Length()>0.4f) {
+        if (_stone.Velocity.Length()>0.1f) {
             if (_wait > 2) {
                 NextFrame();
                 _wait = 0;
