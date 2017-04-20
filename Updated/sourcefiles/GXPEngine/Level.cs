@@ -222,19 +222,15 @@ public class Level : GameObject {
 			x = 0;
 		}
 
-		//if (y > 0) {
-		//    y = 0;
-		//}
-
-		//if (y < -(game.height)) {
-		//    y = -(game.height);
-		//}
-
-		//Console.WriteLine(x + " | " + -(_map.GetLevelWidth() - game.width)); // should be 2240 - 60 * 30 - game.width, (game.width being 1600)
-
         if (_currentLevel != 10) {
-            if (x < -(_map.GetLevelWidth() - game.width)) {
-                x = -(_map.GetLevelWidth() - game.width);
+            if (_currentLevel == 9) {
+                if (x < -((_map.GetLevelWidth() - 8 * 64) - game.width)) {
+                    x = -((_map.GetLevelWidth() - 8 * 64) - game.width);
+                }
+            } else {
+                if (x < -(_map.GetLevelWidth() - game.width)) {
+                    x = -(_map.GetLevelWidth() - game.width);
+                }
             }
         } else {
             if (x < -((_map.GetLevelWidth() - 7 * 64) - game.width)) {
@@ -256,7 +252,7 @@ public class Level : GameObject {
 					_groundTilesPartTwo.MoveLayer(Layer.Direction.LEFT, 0.075f);
 					_stonesBackground.MoveLayer(Layer.Direction.LEFT, 0.006f);
 					_stonesBackgroundPartTwo.MoveLayer(Layer.Direction.LEFT, 0.006f);
-					MoveTrees(6.5f);
+					//MoveTrees(6.5f);
 				} else if (_playerDirection == Player.Direction.LEFT && _engine.collision.dir != CollidedOption.Direction.RIGHT) {
 					_foreGround.MoveLayer(Layer.Direction.RIGHT, 4.5f);
 					_foreGroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 4.5f);
@@ -268,7 +264,7 @@ public class Level : GameObject {
 					_groundTilesPartTwo.MoveLayer(Layer.Direction.RIGHT, 0.075f);
 					_stonesBackground.MoveLayer(Layer.Direction.RIGHT, 0.006f);
 					_stonesBackgroundPartTwo.MoveLayer(Layer.Direction.RIGHT, 0.006f);
-					MoveTrees(-6.5f);
+					//MoveTrees(-6.5f);
 				}
 			}
 		}
@@ -345,22 +341,30 @@ public class Level : GameObject {
 	private void CreateTiledObjects() {
 		foreach (ObjectGroup objGroup in _map.ObjectGroup) {
 			if (objGroup.Name == "Bridge") {
-				foreach (TiledObject obj in objGroup.Object) {
-					Bridge bridge = new Bridge();
-					bridge.x = obj.X + bridge.width / 2;
-					bridge.y = obj.Y + bridge.height;
-					bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
-					bridge.SpriteName = obj.Name;
-					_bridges.Add(bridge);
-                    if (_currentLevel != 10) {
-                        AddChildAt(bridge, 12);
-                    } else {
-                        AddChildAt(bridge, 29);
+                try {
+                    foreach (TiledObject obj in objGroup.Object) {
+                        Bridge bridge = new Bridge();
+                        bridge.x = obj.X + bridge.width / 2;
+                        bridge.y = obj.Y + bridge.height;
+                        bridge.BridgeName = obj.Properties.GetPropertyByName("bridge_name").Value;
+                        bridge.SpriteName = obj.Name;
+                        _bridges.Add(bridge);
+                        if (_currentLevel != 10) {
+                            if (_currentLevel == 9) {
+                                AddChildAt(bridge, 25);
+                            } else {
+                                AddChildAt(bridge, 12);
+                            }
+                        } else {
+                            AddChildAt(bridge, 25);
+                        }
+                        _pressurePlateObjects.Add(bridge);
+                        bridge.BridgeCollider = new BridgeCollider(obj.X + bridge.width / 2, obj.Y - 180, 450, 400);
+                        _bridgeColliders.Add(bridge.BridgeCollider);
                     }
-					_pressurePlateObjects.Add(bridge);
-					bridge.BridgeCollider = new BridgeCollider(obj.X + bridge.width / 2 , obj.Y - 180, 450, 400);
-					_bridgeColliders.Add(bridge.BridgeCollider);
-				}
+                } catch {
+
+                }
 			}
 			if (objGroup.Name == "GravityChanger") {
 				try {
@@ -388,11 +392,11 @@ public class Level : GameObject {
 						}
 						else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 3)
 						{ // up
-							fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanup.png", 15, 2);
+							fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fandown.png", 2, 15);
 						}
 						else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 1)
 						{ // down
-							fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fandown.png", 2, 15);
+							fan = new Fan(MyGame.GetAssetFilePath(MyGame.Asset.SPRITES) + "\\fanup.png", 15, 2);
 						}
 						else if (_gravityChangers.First(s => s.Name == fanConnectedTo).Direction == 4)
 						{ // left
@@ -433,7 +437,12 @@ public class Level : GameObject {
 						_ropes.Add(rope);
 						_pressurePlateObjects.Add(rope);
                         if (_currentLevel != 10) {
-                            AddChildAt(rope, 20);
+                            if (_currentLevel == 9) {
+                                AddChildAt(rope, 28);
+                            } else {
+                                AddChildAt(rope, 20);
+                            }
+                            
                         } else {
                             if (rope.SpriteName == "Rope_2") {
                                 AddChildAt(rope, 35);
@@ -464,7 +473,7 @@ public class Level : GameObject {
                             }
                         } else {
                             if (obj.Name == "hell_pot_1" || obj.Name == "hell_pot_2" || obj.Name == "hell_pot_3" || obj.Name == "hell_pot_4") {
-                                AddChildAt(pot, 50);
+                                AddChildAt(pot, 40);
                             } else {
                                 AddChildAt(pot, 8);
                             }
@@ -507,7 +516,7 @@ public class Level : GameObject {
                             }
                         }
 						_lines.Add(plank.GetLine());
-						AddChild(plank.PlankLine);
+						//AddChild(plank.PlankLine);
 					}
 				}
 				catch { }
@@ -520,7 +529,12 @@ public class Level : GameObject {
                         if (_currentLevel == 10) {
                             AddChildAt(stone, 8);
                         } else {
-                            AddChildAt(stone, 5);
+                            if (_currentLevel == 9) {
+                                AddChildAt(stone, 8);
+                            } else {
+                                AddChildAt(stone, 5);
+                            }
+                            
                         }
 						
 						_stones.Add(stone);
