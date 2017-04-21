@@ -15,6 +15,7 @@ public class MyGame : Game //MyGame is a Game
 	private LoadingScreen _loadingScreen;
 	private static PrivateFontCollection _pfc;
 	private int _levelCounter;
+    private Sprite cursor;
 
 	public int LevelCounter {
 		get { return _levelCounter; }
@@ -53,16 +54,21 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	//initialize game here
-	public MyGame () : base(1600, 960, false, false) {
+	public MyGame () : base(1600, 960, true, true) {
 		targetFps = 60;
 		_pfc = new PrivateFontCollection();
 		_pfc.AddFontFile(MyGame.GetAssetFilePath(MyGame.Asset.FONT) + "\\Augusta.ttf");
 		SetState(GameState.MAINMENU);
-	}
+        cursor = new Sprite("assets\\sprites\\crosshair.png");
+        cursor.scale = 0.1f;
+        cursor.SetOrigin(width / 2, height / 2);
+        AddChild(cursor);
+    }
 	
 	//update game here
 	private void Update () {
-		//empty
+        cursor.x = Input.mouseX;
+        cursor.y = Input.mouseY;
 	}
 
 	public void SetState(GameState pGameState) {
@@ -117,6 +123,7 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	public void StartGame() {
+
 		SetState(GameState.LOADINGSCREEN);
 	}
 
@@ -249,6 +256,7 @@ public class MyGame : Game //MyGame is a Game
 	public GameState GetState() {
 		return _state;
 	}
+    
 
 	//system starts here
 	static void Main()
