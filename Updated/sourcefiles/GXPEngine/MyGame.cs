@@ -15,7 +15,7 @@ public class MyGame : Game //MyGame is a Game
 	private LoadingScreen _loadingScreen;
 	private static PrivateFontCollection _pfc;
 	private int _levelCounter;
-    private Sprite cursor;
+    private Sprite _cursor;
 
 	public int LevelCounter {
 		get { return _levelCounter; }
@@ -54,21 +54,24 @@ public class MyGame : Game //MyGame is a Game
 	}
 
 	//initialize game here
-	public MyGame () : base(1600, 960, true, true) {
+	public MyGame () : base(1600, 960, false, false) {
 		targetFps = 60;
 		_pfc = new PrivateFontCollection();
 		_pfc.AddFontFile(MyGame.GetAssetFilePath(MyGame.Asset.FONT) + "\\Augusta.ttf");
 		SetState(GameState.MAINMENU);
-        cursor = new Sprite("assets\\sprites\\crosshair.png");
-        cursor.scale = 0.1f;
-        cursor.SetOrigin(width / 2, height / 2);
-        AddChild(cursor);
+        _cursor = new Sprite("assets\\sprites\\crosshair.png");
+        _cursor.scale = 0.1f;
+        _cursor.SetOrigin(width / 2, height / 2);
+        AddChild(_cursor);
     }
 	
 	//update game here
 	private void Update () {
-        cursor.x = Input.mouseX;
-        cursor.y = Input.mouseY;
+        if (_cursor != null)
+        {
+            _cursor.x = Input.mouseX;
+            _cursor.y = Input.mouseY;
+        }
 	}
 
 	public void SetState(GameState pGameState) {
@@ -80,9 +83,12 @@ public class MyGame : Game //MyGame is a Game
 	private void StartState(GameState pGameState) {
 		switch (pGameState) {
 			case GameState.MAINMENU:
-				_menu = new MainMenu(this);
+                _menu = new MainMenu(this);
 				AddChild(_menu);
-				break;
+                _cursor = new Sprite("assets\\sprites\\crosshair.png");
+                _cursor.scale = 0.1f;
+                _cursor.SetOrigin(width / 2, height / 2);
+                break;
 			case GameState.LOADINGSCREEN:
 				_loadingScreen = new LoadingScreen(this);
 				AddChild(_loadingScreen);
@@ -197,6 +203,8 @@ public class MyGame : Game //MyGame is a Game
 		switch (pGameState) {
 			case GameState.MAINMENU:
 				if (_menu != null) {
+                    _cursor.Destroy();
+                    _cursor = null;
 					_menu.Destroy();
 					_menu = null;
 				}

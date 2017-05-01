@@ -108,6 +108,7 @@ public class WinScreen : Canvas {
         }
         if (Input.GetKeyUp(Key.ENTER)) {
             _btnNextLevel.currentFrame = 0;
+            _sounds.StopMedieval();
             Destroy();
             if (_level.CurrentLevel == 1) {
                 _myGame.LevelCounter = 1;
